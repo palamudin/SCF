@@ -19,6 +19,8 @@ namespace SCF.Gameplay
         private const string ReferenceShotgunPath = "Assets/SCF/MovementAni/NVoperatorsoldier.glb";
         private const string Pose3RightGripTargetName = "SCF_Pose3RightGripTarget";
         private const string Pose3LeftGripTargetName = "SCF_Pose3LeftGripTarget";
+        private const string RailgunMuzzleTargetName = "SCF_RailgunMuzzleTarget";
+        private const string RailgunMuzzleMarkerName = "SCF_RailgunMuzzleMarker";
         private static readonly Vector3 LegacyWeaponEulerAngles = new Vector3(0f, 90f, 90f);
         private static readonly Vector3 DefaultWeaponEulerAngles = new Vector3(170f, 90f, 180f);
         private static readonly Vector3 LegacyRightGripPosition = new Vector3(0.02f, -0.05f, 0.15f);
@@ -27,6 +29,8 @@ namespace SCF.Gameplay
         private static readonly Vector3 DefaultLeftGripPosition = new Vector3(-0.04f, -0.02f, 0.28f);
         private static readonly Vector3 Pose3ReferenceRightWristFromShotgunBone = new Vector3(-0.0332f, -0.2147f, -0.8692f);
         private static readonly Vector3 Pose3ReferenceLeftWristFromShotgunBone = new Vector3(0.1325f, -0.2297f, 0.3901f);
+        private static readonly Vector3 DefaultRailgunMuzzleLocalPosition = new Vector3(0.92f, 0.11f, 0f);
+        private static readonly Vector3 DefaultRailgunMuzzleLocalEulerAngles = new Vector3(0f, 90f, 0f);
 
         [Header("References")]
         [SerializeField] private IsometricPlayerInput input;
@@ -91,6 +95,13 @@ namespace SCF.Gameplay
         [SerializeField, Min(0.01f)] private float railgunFireCooldown = 0.42f;
         [SerializeField, Min(1f)] private float railgunFireRange = 120f;
         [SerializeField] private LayerMask railgunHitMask = ~0;
+        [SerializeField] private string railgunMuzzleTransformName = RailgunMuzzleTargetName;
+        [SerializeField] private bool createRailgunMuzzleTarget = true;
+        [SerializeField] private bool preserveTunedRailgunMuzzleTarget = true;
+        [SerializeField] private Vector3 railgunMuzzleLocalPosition = DefaultRailgunMuzzleLocalPosition;
+        [SerializeField] private Vector3 railgunMuzzleLocalEulerAngles = DefaultRailgunMuzzleLocalEulerAngles;
+        [SerializeField] private bool showRailgunMuzzleDebugMarker = true;
+        [SerializeField, Min(0.005f)] private float railgunMuzzleDebugMarkerSize = 0.055f;
         [SerializeField, Min(0f)] private float railgunRaycastStartOffset = 0.1f;
         [SerializeField, Min(0f)] private float railgunMuzzleForwardOffset = 0.08f;
         [SerializeField] private AudioClip railgunFireClip;
@@ -145,6 +156,7 @@ namespace SCF.Gameplay
         private Transform referenceWeaponAnchor;
         private Transform pose3RightGripTarget;
         private Transform pose3LeftGripTarget;
+        private Transform railgunMuzzleTarget;
         private ArmRig rightArm;
         private ArmRig leftArm;
         private float nextRailgunFireTime;
@@ -210,6 +222,22 @@ namespace SCF.Gameplay
             if (string.IsNullOrWhiteSpace(referencePoseClipName))
             {
                 referencePoseClipName = "SHOTGUNpose3";
+            }
+
+            if (string.IsNullOrWhiteSpace(railgunMuzzleTransformName)
+                || string.Equals(railgunMuzzleTransformName, "Point.003", StringComparison.Ordinal))
+            {
+                railgunMuzzleTransformName = RailgunMuzzleTargetName;
+            }
+
+            if (railgunMuzzleLocalPosition.sqrMagnitude <= 0.0001f)
+            {
+                railgunMuzzleLocalPosition = DefaultRailgunMuzzleLocalPosition;
+            }
+
+            if (railgunMuzzleLocalEulerAngles.sqrMagnitude <= 0.0001f)
+            {
+                railgunMuzzleLocalEulerAngles = DefaultRailgunMuzzleLocalEulerAngles;
             }
 
             if (string.IsNullOrWhiteSpace(referenceShotgunMeshName))
@@ -458,6 +486,7 @@ namespace SCF.Gameplay
             else
             {
                 EnsureGrips();
+                EnsureRailgunMuzzleTarget();
                 if (!UseShotgunPose3GripReplica())
                 {
                     AlignWeaponByRightGrip();
@@ -659,9 +688,10 @@ namespace SCF.Gameplay
         private Vector3 ResolveRailgunFireDirection()
         {
             Vector3 direction = Vector3.zero;
-            if (motor != null && motor.HasAimDirection)
+            Transform muzzleTransform = ResolveRailgunMuzzleTransform();
+            if (muzzleTransform != null)
             {
-                direction = motor.AimDirection;
+                direction = muzzleTransform.forward;
             }
 
             if (direction.sqrMagnitude <= 0.0001f && activeWeapon != null)
@@ -669,12 +699,21 @@ namespace SCF.Gameplay
                 direction = activeWeapon.transform.forward;
             }
 
+            if (direction.sqrMagnitude <= 0.0001f && motor != null && motor.HasAimDirection)
+            {
+                direction = motor.AimDirection;
+            }
+
+            if (direction.sqrMagnitude <= 0.0001f && weaponSocket != null)
+            {
+                direction = weaponSocket.forward;
+            }
+
             if (direction.sqrMagnitude <= 0.0001f)
             {
                 direction = transform.forward;
             }
 
-            direction.y = 0f;
             if (direction.sqrMagnitude <= 0.0001f)
             {
                 direction = Vector3.forward;
@@ -685,11 +724,22 @@ namespace SCF.Gameplay
 
         private Vector3 ResolveRailgunMuzzlePosition(Vector3 direction)
         {
+            Transform muzzleTransform = ResolveRailgunMuzzleTransform();
+            if (muzzleTransform != null)
+            {
+                return muzzleTransform.position + direction * railgunMuzzleForwardOffset;
+            }
+
             if (activeWeapon == null)
             {
                 return transform.position + Vector3.up * 1.1f + direction * 0.35f;
             }
 
+            return ResolveFallbackRailgunMuzzlePosition(direction);
+        }
+
+        private Vector3 ResolveFallbackRailgunMuzzlePosition(Vector3 direction)
+        {
             Renderer[] renderers = activeWeapon.GetComponentsInChildren<Renderer>(true);
             Bounds combinedBounds = default;
             bool hasBounds = false;
@@ -719,8 +769,24 @@ namespace SCF.Gameplay
 
             Vector3 extents = combinedBounds.extents;
             float forwardReach = Mathf.Abs(direction.x) * extents.x + Mathf.Abs(direction.z) * extents.z;
-            Vector3 muzzle = combinedBounds.center + direction * forwardReach;
-            return muzzle + direction * railgunMuzzleForwardOffset;
+            Vector3 muzzlePoint = combinedBounds.center + direction * forwardReach;
+            return muzzlePoint + direction * railgunMuzzleForwardOffset;
+        }
+
+        private Transform ResolveRailgunMuzzleTransform()
+        {
+            if (activeWeapon == null || string.IsNullOrWhiteSpace(railgunMuzzleTransformName))
+            {
+                return null;
+            }
+
+            if (railgunMuzzleTarget != null && railgunMuzzleTarget.IsChildOf(activeWeapon.transform))
+            {
+                return railgunMuzzleTarget;
+            }
+
+            railgunMuzzleTarget = FindDescendantByName(activeWeapon.transform, railgunMuzzleTransformName);
+            return railgunMuzzleTarget;
         }
 
         private bool TryFindRailgunHit(Vector3 muzzle, Vector3 direction, out RaycastHit hit)
@@ -817,9 +883,11 @@ namespace SCF.Gameplay
 
         private void ConfigureRailgunTracerParticles(ParticleSystem particles)
         {
+            particles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             ParticleSystem.MainModule main = particles.main;
             main.duration = Mathf.Max(0.05f, railgunTracerMaxTravelTime);
             main.loop = true;
+            main.playOnAwake = false;
             main.simulationSpace = ParticleSystemSimulationSpace.World;
             main.startLifetime = new ParticleSystem.MinMaxCurve(railgunTracerParticleLifetime * 0.65f, railgunTracerParticleLifetime);
             main.startSpeed = 0f;
@@ -906,9 +974,11 @@ namespace SCF.Gameplay
 
         private void ConfigureRailgunImpactParticles(ParticleSystem particles)
         {
+            particles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             ParticleSystem.MainModule main = particles.main;
             main.duration = 0.08f;
             main.loop = false;
+            main.playOnAwake = false;
             main.simulationSpace = ParticleSystemSimulationSpace.World;
             main.startLifetime = new ParticleSystem.MinMaxCurve(0.12f, 0.28f);
             main.startSpeed = new ParticleSystem.MinMaxCurve(0.6f, 2.2f);
@@ -1140,6 +1210,85 @@ namespace SCF.Gameplay
             return grip;
         }
 
+        private void EnsureRailgunMuzzleTarget()
+        {
+            if (activeWeapon == null || string.IsNullOrWhiteSpace(railgunMuzzleTransformName))
+            {
+                railgunMuzzleTarget = null;
+                return;
+            }
+
+            bool wasMissing = railgunMuzzleTarget == null || !railgunMuzzleTarget.IsChildOf(activeWeapon.transform);
+            if (wasMissing)
+            {
+                railgunMuzzleTarget = FindDescendantByName(activeWeapon.transform, railgunMuzzleTransformName);
+            }
+
+            if (railgunMuzzleTarget == null)
+            {
+                if (!createRailgunMuzzleTarget)
+                {
+                    return;
+                }
+
+                railgunMuzzleTarget = new GameObject(railgunMuzzleTransformName).transform;
+                railgunMuzzleTarget.SetParent(activeWeapon.transform, false);
+                railgunMuzzleTarget.localPosition = railgunMuzzleLocalPosition;
+                railgunMuzzleTarget.localRotation = Quaternion.Euler(railgunMuzzleLocalEulerAngles);
+            }
+            else if (!preserveTunedRailgunMuzzleTarget && (wasMissing || Application.isPlaying))
+            {
+                railgunMuzzleTarget.localPosition = railgunMuzzleLocalPosition;
+                railgunMuzzleTarget.localRotation = Quaternion.Euler(railgunMuzzleLocalEulerAngles);
+            }
+
+            railgunMuzzleTarget.localScale = Vector3.one;
+            EnsureTuningHandle(railgunMuzzleTarget.gameObject);
+            EnsureRailgunMuzzleDebugMarker(railgunMuzzleTarget);
+        }
+
+        private void EnsureRailgunMuzzleDebugMarker(Transform target)
+        {
+            if (target == null)
+            {
+                return;
+            }
+
+            Transform existing = FindDirectChild(target, RailgunMuzzleMarkerName);
+            if (!showRailgunMuzzleDebugMarker)
+            {
+                if (existing != null)
+                {
+                    DestroyUnityObject(existing.gameObject);
+                }
+
+                return;
+            }
+
+            Transform marker = existing;
+            if (marker == null)
+            {
+                GameObject markerObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                markerObject.name = RailgunMuzzleMarkerName;
+                marker = markerObject.transform;
+                marker.SetParent(target, false);
+                Collider markerCollider = markerObject.GetComponent<Collider>();
+                if (markerCollider != null)
+                {
+                    DestroyUnityObject(markerCollider);
+                }
+            }
+
+            marker.localPosition = Vector3.zero;
+            marker.localRotation = Quaternion.identity;
+            marker.localScale = Vector3.one * railgunMuzzleDebugMarkerSize;
+            Renderer renderer = marker.GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                renderer.sharedMaterial = ResolveRailgunParticleMaterial();
+            }
+        }
+
         private void ResetWeaponTransform()
         {
             if (activeWeapon == null)
@@ -1158,6 +1307,7 @@ namespace SCF.Gameplay
             else
             {
                 EnsureGrips();
+                EnsureRailgunMuzzleTarget();
                 if (!UseShotgunPose3GripReplica())
                 {
                     AlignWeaponByRightGrip();
@@ -1473,6 +1623,12 @@ namespace SCF.Gameplay
                 shotgunPose3LeftGripEulerAngles = NormalizeEuler(pose3LeftGripTarget.localEulerAngles);
             }
 
+            if (railgunMuzzleTarget != null)
+            {
+                railgunMuzzleLocalPosition = railgunMuzzleTarget.localPosition;
+                railgunMuzzleLocalEulerAngles = NormalizeEuler(railgunMuzzleTarget.localEulerAngles);
+            }
+
             weaponLocalPosition = UseShotgunPose3GripReplica()
                 ? currentWeaponLocalPosition - ResolvePose3WeaponAnchorSocketOffset()
                 : currentWeaponLocalPosition;
@@ -1530,7 +1686,9 @@ namespace SCF.Gameplay
                    + "shotgunPose3RightGripEulerAngles = " + FormatVector(shotgunPose3RightGripEulerAngles) + "\n"
                    + "shotgunPose3LeftGripTuningOffset = " + FormatVector(shotgunPose3LeftGripTuningOffset) + "\n"
                    + "shotgunPose3LeftGripEulerAngles = " + FormatVector(shotgunPose3LeftGripEulerAngles) + "\n"
-                   + "shotgunPose3WeaponAnchorTuningOffset = " + FormatVector(shotgunPose3WeaponAnchorTuningOffset);
+                   + "shotgunPose3WeaponAnchorTuningOffset = " + FormatVector(shotgunPose3WeaponAnchorTuningOffset) + "\n"
+                   + "railgunMuzzleLocalPosition = " + FormatVector(railgunMuzzleLocalPosition) + "\n"
+                   + "railgunMuzzleLocalEulerAngles = " + FormatVector(railgunMuzzleLocalEulerAngles);
         }
 
         private static Vector3 NormalizeEuler(Vector3 eulerAngles)
@@ -1719,6 +1877,7 @@ namespace SCF.Gameplay
             rightGrip = null;
             leftGrip = null;
             referenceWeaponAnchor = null;
+            railgunMuzzleTarget = null;
         }
 
         private void DestroyShotgunPose3GripTargets()

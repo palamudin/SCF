@@ -170,7 +170,8 @@ namespace SCF.Gameplay
         public Vector3 AimDirection { get; private set; } = Vector3.forward;
         public bool HasAimDirection { get; private set; }
         public bool IsGrounded => IsControllerSupported(0.03f);
-        public bool SprintHeld => input != null && input.SprintHeld;
+        public bool AimHeld => input != null && input.AimHeld;
+        public bool SprintHeld => input != null && input.SprintHeld && !AimHeld;
         public float CurrentMaxSpeed => ResolveCurrentMaxSpeed();
         public CharacterMobilityState MobilityState { get; private set; } = CharacterMobilityState.Locomotion;
         public float MobilityStateNormalizedTime { get; private set; }
@@ -2160,6 +2161,13 @@ namespace SCF.Gameplay
             {
                 facingDirection = lockedMobilityDirection;
                 sharpness = MobilityState == CharacterMobilityState.WallRun ? wallRunVisualRotationSharpness : movementRotationSharpness;
+                return true;
+            }
+
+            if (AimHeld && facingMode != CharacterFacingMode.MovementOnly && HasAimDirection && AimDirection.sqrMagnitude > 0.0001f)
+            {
+                facingDirection = AimDirection;
+                sharpness = aimRotationSharpness;
                 return true;
             }
 
