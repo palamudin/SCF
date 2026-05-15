@@ -130,6 +130,7 @@ namespace SCF.EditorTools
             AnimatorController controller = AnimatorController.CreateAnimatorControllerAtPath(ControllerPath);
             controller.name = Path.GetFileNameWithoutExtension(ControllerPath);
             AddParameters(controller);
+            EnableBaseLayerIk(controller);
 
             AnimatorStateMachine stateMachine = controller.layers[0].stateMachine;
             AnimatorState locomotion = stateMachine.AddState("Locomotion", new Vector3(260f, 20f, 0f));
@@ -155,6 +156,18 @@ namespace SCF.EditorTools
 
             AssetDatabase.SaveAssets();
             return controller;
+        }
+
+        private static void EnableBaseLayerIk(AnimatorController controller)
+        {
+            if (controller == null || controller.layers == null || controller.layers.Length == 0)
+            {
+                return;
+            }
+
+            AnimatorControllerLayer[] layers = controller.layers;
+            layers[0].iKPass = true;
+            controller.layers = layers;
         }
 
         private static void EnsureFolder(string folderPath)
@@ -355,10 +368,43 @@ namespace SCF.EditorTools
 
                 SerializedObject serializedMotor = new SerializedObject(motor);
                 SetBool(serializedMotor, "scaleMovementWithTransform", false);
+                SetEnum(serializedMotor, "traversalProfile", (int)SCFTraversalProfile.Standard);
+                SetFloat(serializedMotor, "carriedLoad01", 0f);
+                SetBool(serializedMotor, "separateAimFromLocomotion", true);
+                SetBool(serializedMotor, "lowerBodyAimsWhenIdle", false);
+                SetFloat(serializedMotor, "lowerBodyMoveThreshold", 0.2f);
+                SetFloat(serializedMotor, "maxJumpChargePlanarBoost", 1.4f);
+                SetBool(serializedMotor, "parkourWallJumpKeepsAirMobility", true);
+                SetFloat(serializedMotor, "parkourAirJumpStrength", 0.75f);
+                SetFloat(serializedMotor, "parkourAirRollSpeedBonus", 1.2f);
                 SetFloat(serializedMotor, "wallRunSpeed", 7.4f);
                 SetFloat(serializedMotor, "wallRunGravity", -0.45f);
                 SetFloat(serializedMotor, "wallRunAnimationSpeed", 1f);
                 SetFloat(serializedMotor, "wallRunVisualLeanVariance", 0f);
+                SetInt(serializedMotor, "standardWallRunStepLimit", 3);
+                SetFloat(serializedMotor, "standardWallRunStepDuration", 0.27f);
+                SetFloat(serializedMotor, "standardWallRunHeightMultiplier", 0.82f);
+                SetFloat(serializedMotor, "standardWallJumpUpwardMultiplier", 0.55f);
+                SetFloat(serializedMotor, "standardWallJumpAwayMultiplier", 1f);
+                SetFloat(serializedMotor, "standardWallRunRegrabCooldown", 0.55f);
+                SetBool(serializedMotor, "standardWallRunRequiresReleaseBeforeRegrab", true);
+                SetFloat(serializedMotor, "standardWallRunSlideOffDownSpeed", -1.6f);
+                SetBool(serializedMotor, "enableParkourWallClimbUp", true);
+                SetFloat(serializedMotor, "wallClimbUpApproachDot", 0.72f);
+                SetFloat(serializedMotor, "wallClimbUpSpeed", 4.2f);
+                SetFloat(serializedMotor, "wallClimbUpMaxDuration", 2.2f);
+                SetFloat(serializedMotor, "wallClimbLedgeReachSlack", 0.12f);
+                SetFloat(serializedMotor, "wallClimbTopForwardClearance", 0.55f);
+                SetFloat(serializedMotor, "wallClimbTopProbeHeight", 0.75f);
+                SetBool(serializedMotor, "enableParkourAutoTraversal", true);
+                SetFloat(serializedMotor, "parkourAutoTraversalHeadHeightMultiplier", 1f);
+                SetFloat(serializedMotor, "parkourAutoSlideMinHeightMultiplier", 0.68f);
+                SetFloat(serializedMotor, "parkourSlideVaultDurationMultiplier", 0.9f);
+                SetFloat(serializedMotor, "parkourSlideVaultRollSpeedBonus", 1.6f);
+                SetFloat(serializedMotor, "parkourManualTraversalDurationMultiplier", 1.35f);
+                SetFloat(serializedMotor, "parkourManualVaultMaxHeightMultiplier", 0.78f);
+                SetFloat(serializedMotor, "standardVaultDurationMultiplier", 1.65f);
+                SetFloat(serializedMotor, "standardClimbDurationMultiplier", 2.1f);
                 serializedMotor.ApplyModifiedPropertiesWithoutUndo();
                 EditorUtility.SetDirty(motor);
             }
@@ -372,6 +418,25 @@ namespace SCF.EditorTools
                 serializedBridge.ApplyModifiedPropertiesWithoutUndo();
                 EditorUtility.SetDirty(bridge);
             }
+
+            SCFAimBodyDifferentiator bodyDifferentiator = player.GetComponent<SCFAimBodyDifferentiator>();
+            if (bodyDifferentiator == null)
+            {
+                bodyDifferentiator = Undo.AddComponent<SCFAimBodyDifferentiator>(player);
+            }
+
+            bodyDifferentiator.Configure(motor, animator);
+            bodyDifferentiator.SetAimTorsoDuringWallRun(true);
+            EditorUtility.SetDirty(bodyDifferentiator);
+
+            SCFClimbHandContactIK climbHandIK = player.GetComponent<SCFClimbHandContactIK>();
+            if (climbHandIK == null)
+            {
+                climbHandIK = Undo.AddComponent<SCFClimbHandContactIK>(player);
+            }
+
+            climbHandIK.Configure(motor, animator, true);
+            EditorUtility.SetDirty(climbHandIK);
 
             MotionMatchingSignalHub signalHub = player.GetComponent<MotionMatchingSignalHub>();
             if (signalHub != null)
@@ -399,6 +464,24 @@ namespace SCF.EditorTools
             if (property != null)
             {
                 property.floatValue = value;
+            }
+        }
+
+        private static void SetInt(SerializedObject serializedObject, string propertyName, int value)
+        {
+            SerializedProperty property = serializedObject.FindProperty(propertyName);
+            if (property != null)
+            {
+                property.intValue = value;
+            }
+        }
+
+        private static void SetEnum(SerializedObject serializedObject, string propertyName, int value)
+        {
+            SerializedProperty property = serializedObject.FindProperty(propertyName);
+            if (property != null)
+            {
+                property.enumValueIndex = value;
             }
         }
 

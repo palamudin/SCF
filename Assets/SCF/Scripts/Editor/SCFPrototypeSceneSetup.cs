@@ -88,6 +88,8 @@ namespace SCF.EditorTools
             EnsureComponent<CursorLockGuard>(player);
             IsometricCharacterMotor motor = EnsureComponent<IsometricCharacterMotor>(player);
             MovementAnimatorBridge animatorBridge = EnsureComponent<MovementAnimatorBridge>(player);
+            SCFAimBodyDifferentiator bodyDifferentiator = EnsureComponent<SCFAimBodyDifferentiator>(player);
+            SCFClimbHandContactIK climbHandIK = EnsureComponent<SCFClimbHandContactIK>(player);
             MotionMatchingSignalHub signalHub = EnsureComponent<MotionMatchingSignalHub>(player);
             SCFMotionSelector motionSelector = EnsureComponent<SCFMotionSelector>(player);
 
@@ -100,6 +102,9 @@ namespace SCF.EditorTools
 
             motor.Configure(playerInput, sceneCamera, facingRoot);
             animatorBridge.Configure(animator);
+            bodyDifferentiator.Configure(motor, animator);
+            bodyDifferentiator.SetAimTorsoDuringWallRun(true);
+            climbHandIK.Configure(motor, animator, true);
             signalHub.Configure(animator);
             motionSelector.Configure(animator, SCFMotionDatabaseBaker.BuildBaseDatabase());
             SCFMotionSystemSetup.DisableLegacyMotionComponents(player);

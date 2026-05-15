@@ -82,6 +82,11 @@ namespace SCF.Gameplay
 
         private Vector3 ResolveFacingDirection()
         {
+            if (motor != null && motor.SeparateAimFromLocomotion && motor.BodyFacingDirection.sqrMagnitude > idleFacingDeadZone)
+            {
+                return motor.BodyFacingDirection.normalized;
+            }
+
             if (motor != null && motor.HasAimDirection)
             {
                 return motor.AimDirection;

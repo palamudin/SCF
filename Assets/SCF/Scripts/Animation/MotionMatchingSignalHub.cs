@@ -22,7 +22,7 @@ namespace SCF.Gameplay
 
         public Vector3 DesiredVelocity => motor != null ? motor.DesiredVelocity : Vector3.zero;
         public Vector3 PlanarVelocity => motor != null ? motor.PlanarVelocity : Vector3.zero;
-        public Vector3 DesiredFacing => motor != null ? motor.AimDirection : transform.forward;
+        public Vector3 DesiredFacing => ResolveDesiredFacing();
         public bool IsSprinting => motor != null && motor.SprintHeld;
 
         private void Reset()
@@ -53,6 +53,21 @@ namespace SCF.Gameplay
         public void Configure(Animator targetAnimator)
         {
             animator = targetAnimator;
+        }
+
+        private Vector3 ResolveDesiredFacing()
+        {
+            if (motor == null)
+            {
+                return transform.forward;
+            }
+
+            if (motor.SeparateAimFromLocomotion && motor.BodyFacingDirection.sqrMagnitude > 0.0001f)
+            {
+                return motor.BodyFacingDirection;
+            }
+
+            return motor.HasAimDirection ? motor.AimDirection : transform.forward;
         }
 
         public void HandleRootMotion(

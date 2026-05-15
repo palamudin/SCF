@@ -64,6 +64,8 @@ namespace SCF.EditorTools
             IsometricCharacterMotor motor = EnsureComponent<IsometricCharacterMotor>(player);
             ConfigureMotorDefaults(motor);
             MovementAnimatorBridge bridge = EnsureComponent<MovementAnimatorBridge>(player);
+            SCFAimBodyDifferentiator bodyDifferentiator = EnsureComponent<SCFAimBodyDifferentiator>(player);
+            SCFClimbHandContactIK climbHandIK = EnsureComponent<SCFClimbHandContactIK>(player);
             MotionMatchingSignalHub signalHub = EnsureComponent<MotionMatchingSignalHub>(player);
             SCFMotionSelector motionSelector = EnsureComponent<SCFMotionSelector>(player);
             SCFCharacterVisualSlot visualSlot = EnsureComponent<SCFCharacterVisualSlot>(player);
@@ -81,10 +83,13 @@ namespace SCF.EditorTools
 
             motor.Configure(input, camera, facingRoot);
             bridge.Configure(animator);
+            bodyDifferentiator.Configure(motor, animator);
+            bodyDifferentiator.SetAimTorsoDuringWallRun(true);
+            climbHandIK.Configure(motor, animator, true);
             signalHub.Configure(animator);
             motionSelector.Configure(animator, motionDatabase);
 
-            MarkDirty(player, characterController, input, motor, bridge, signalHub, motionSelector, visualSlot, panel);
+            MarkDirty(player, characterController, input, motor, bridge, bodyDifferentiator, climbHandIK, signalHub, motionSelector, visualSlot, panel);
         }
 
         private static void ConfigureVisualSlotDefaults(SCFCharacterVisualSlot visualSlot)
@@ -110,15 +115,52 @@ namespace SCF.EditorTools
             SerializedObject serializedMotor = new SerializedObject(motor);
             SetBool(serializedMotor, "enableVault", true);
             SetBool(serializedMotor, "enableProne", false);
+            SetEnum(serializedMotor, "traversalProfile", (int)SCFTraversalProfile.Standard);
+            SetFloat(serializedMotor, "carriedLoad01", 0f);
             SetFloat(serializedMotor, "parkourHopDuration", 0.13f);
             SetFloat(serializedMotor, "parkourHopSpeed", 6.2f);
             SetFloat(serializedMotor, "minJumpHeight", 0.75f);
             SetFloat(serializedMotor, "maxJumpHeight", 2.2f);
+            SetFloat(serializedMotor, "maxJumpChargePlanarBoost", 1.4f);
+            SetBool(serializedMotor, "parkourWallJumpKeepsAirMobility", true);
+            SetFloat(serializedMotor, "parkourAirJumpStrength", 0.75f);
+            SetFloat(serializedMotor, "parkourAirRollSpeedBonus", 1.2f);
+            SetBool(serializedMotor, "separateAimFromLocomotion", true);
+            SetBool(serializedMotor, "lowerBodyAimsWhenIdle", false);
+            SetFloat(serializedMotor, "lowerBodyMoveThreshold", 0.2f);
+            SetInt(serializedMotor, "standardWallRunStepLimit", 3);
+            SetFloat(serializedMotor, "standardWallRunStepDuration", 0.27f);
+            SetFloat(serializedMotor, "standardWallRunHeightMultiplier", 0.82f);
+            SetFloat(serializedMotor, "heavyWallRunHeightMultiplier", 0.68f);
+            SetFloat(serializedMotor, "standardWallJumpUpwardMultiplier", 0.55f);
+            SetFloat(serializedMotor, "standardWallJumpAwayMultiplier", 1f);
+            SetFloat(serializedMotor, "standardWallRunRegrabCooldown", 0.55f);
+            SetBool(serializedMotor, "standardWallRunRequiresReleaseBeforeRegrab", true);
+            SetFloat(serializedMotor, "standardWallRunSlideOffDownSpeed", -1.6f);
+            SetBool(serializedMotor, "enableParkourWallClimbUp", true);
+            SetFloat(serializedMotor, "wallClimbUpApproachDot", 0.72f);
+            SetFloat(serializedMotor, "wallClimbUpSpeed", 4.2f);
+            SetFloat(serializedMotor, "wallClimbUpMaxDuration", 2.2f);
+            SetFloat(serializedMotor, "wallClimbLedgeReachSlack", 0.12f);
+            SetFloat(serializedMotor, "wallClimbTopForwardClearance", 0.55f);
+            SetFloat(serializedMotor, "wallClimbTopProbeHeight", 0.75f);
+            SetFloat(serializedMotor, "standardVaultDurationMultiplier", 1.65f);
+            SetFloat(serializedMotor, "standardClimbDurationMultiplier", 2.1f);
+            SetFloat(serializedMotor, "standardClimbMaxHeight", 1.55f);
+            SetFloat(serializedMotor, "heavyClimbMaxHeight", 1.18f);
+            SetFloat(serializedMotor, "loadTraversalDurationMultiplier", 1.45f);
             SetFloat(serializedMotor, "climbMinHeight", 1.35f);
             SetFloat(serializedMotor, "climbMaxHeight", 2.05f);
             SetFloat(serializedMotor, "climbForwardClearance", 0.45f);
             SetFloat(serializedMotor, "climbDuration", 0.78f);
             SetFloat(serializedMotor, "climbArcHeight", 0.2f);
+            SetBool(serializedMotor, "enableParkourAutoTraversal", true);
+            SetFloat(serializedMotor, "parkourAutoTraversalHeadHeightMultiplier", 1f);
+            SetFloat(serializedMotor, "parkourAutoSlideMinHeightMultiplier", 0.68f);
+            SetFloat(serializedMotor, "parkourSlideVaultDurationMultiplier", 0.9f);
+            SetFloat(serializedMotor, "parkourSlideVaultRollSpeedBonus", 1.6f);
+            SetFloat(serializedMotor, "parkourManualTraversalDurationMultiplier", 1.35f);
+            SetFloat(serializedMotor, "parkourManualVaultMaxHeightMultiplier", 0.78f);
             serializedMotor.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(motor);
         }
@@ -141,6 +183,24 @@ namespace SCF.EditorTools
             }
         }
 
+        private static void SetInt(SerializedObject serializedObject, string propertyName, int value)
+        {
+            SerializedProperty property = serializedObject.FindProperty(propertyName);
+            if (property != null)
+            {
+                property.intValue = value;
+            }
+        }
+
+        private static void SetEnum(SerializedObject serializedObject, string propertyName, int value)
+        {
+            SerializedProperty property = serializedObject.FindProperty(propertyName);
+            if (property != null)
+            {
+                property.enumValueIndex = value;
+            }
+        }
+
         private static RuntimeAnimatorController BuildBaseTraversalController()
         {
             EnsureFolder(ControllerFolder);
@@ -151,6 +211,7 @@ namespace SCF.EditorTools
 
             AnimatorController controller = AnimatorController.CreateAnimatorControllerAtPath(ControllerPath);
             AddParameters(controller);
+            EnableBaseLayerIk(controller);
 
             AnimatorStateMachine stateMachine = controller.layers[0].stateMachine;
             AnimatorState locomotion = stateMachine.AddState("MxM Locomotion", new Vector3(250f, 0f, 0f));
@@ -185,6 +246,18 @@ namespace SCF.EditorTools
 
             AssetDatabase.SaveAssets();
             return controller;
+        }
+
+        private static void EnableBaseLayerIk(AnimatorController controller)
+        {
+            if (controller == null || controller.layers == null || controller.layers.Length == 0)
+            {
+                return;
+            }
+
+            AnimatorControllerLayer[] layers = controller.layers;
+            layers[0].iKPass = true;
+            controller.layers = layers;
         }
 
         private static BlendTree BuildLocomotionBlendTree(AnimatorController controller)

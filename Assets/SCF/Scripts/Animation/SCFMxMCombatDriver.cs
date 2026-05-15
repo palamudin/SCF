@@ -21,6 +21,7 @@ namespace SCF.Gameplay
         [SerializeField] private string wallRunEventName = "WallRun";
         [SerializeField] private int eventPriority = 1;
         [SerializeField] private bool exitEventsWithMotion = true;
+        [SerializeField] private bool suppressParkourWallRunEvents = true;
 
         [Header("MxM Required Tags")]
         [SerializeField] private bool syncRequiredTags = true;
@@ -86,7 +87,10 @@ namespace SCF.Gameplay
             if (motor.WallRunSequence != observedWallRunSequence)
             {
                 observedWallRunSequence = motor.WallRunSequence;
-                BeginEvent(wallRunEvent, wallRunEventName);
+                if (!ShouldSuppressParkourWallRunEvent())
+                {
+                    BeginEvent(wallRunEvent, wallRunEventName);
+                }
             }
 
             // Vault/climb/prone are parked while the core movement set is being tuned.
@@ -120,7 +124,7 @@ namespace SCF.Gameplay
                     return FindTag(combatRollRequiredTag);
 
                 case CharacterMobilityState.WallRun:
-                    return FindTag(wallRunRequiredTag);
+                    return ShouldSuppressParkourWallRunEvent() ? ETags.None : FindTag(wallRunRequiredTag);
 
                 default:
                     return ETags.None;
@@ -164,6 +168,14 @@ namespace SCF.Gameplay
             {
                 mxmAnimator.BeginEvent(eventId, eventPriority, exitEventsWithMotion);
             }
+        }
+
+        private bool ShouldSuppressParkourWallRunEvent()
+        {
+            return suppressParkourWallRunEvents
+                   && motor != null
+                   && motor.TraversalProfile == SCFTraversalProfile.Parkour
+                   && motor.IsWallRunning;
         }
 
         private int FindEventId(string eventName)

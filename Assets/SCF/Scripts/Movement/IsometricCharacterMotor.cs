@@ -24,6 +24,12 @@ namespace SCF.Gameplay
         Climb
     }
 
+    public enum SCFTraversalProfile
+    {
+        Standard,
+        Parkour
+    }
+
     [DisallowMultipleComponent]
     [RequireComponent(typeof(CharacterController))]
     [DefaultExecutionOrder(-60)]
@@ -51,8 +57,12 @@ namespace SCF.Gameplay
         [SerializeField, Min(0.1f)] private float minJumpHeight = 0.95f;
         [SerializeField, Min(0.1f)] private float maxJumpHeight = 2.75f;
         [SerializeField, Min(0f)] private float jumpPlanarSpeed = 5.5f;
+        [SerializeField, Min(0f)] private float maxJumpChargePlanarBoost = 1.4f;
         [SerializeField, Min(0.05f)] private float jumpAnimationDuration = 0.72f;
         [SerializeField, Range(0f, 1f)] private float airborneMoveMultiplier = 0.35f;
+        [SerializeField] private bool parkourWallJumpKeepsAirMobility = true;
+        [SerializeField, Range(0f, 1f)] private float parkourAirJumpStrength = 0.75f;
+        [SerializeField, Min(0f)] private float parkourAirRollSpeedBonus = 1.2f;
         [SerializeField, Min(0.01f)] private float combatRollDuration = 0.58f;
         [SerializeField, Min(0f)] private float combatRollSpeed = 8.4f;
         [Tooltip("RedNotRed parkour uses 0.13s hop windows for back/side traversal pops.")]
@@ -60,10 +70,28 @@ namespace SCF.Gameplay
         [SerializeField, Min(0f)] private float parkourHopSpeed = 6.2f;
         [SerializeField, Range(-1f, 1f)] private float parkourHopForwardDot = 0.35f;
         [SerializeField, Min(0f)] private float proneCrawlSpeed = 1.45f;
-        [SerializeField, Range(0f, 1f)] private float jumpChargeMoveMultiplier = 0.25f;
         [SerializeField, Min(0.1f)] private float proneControllerHeight = 0.7f;
         [SerializeField] private Vector3 proneControllerCenter = new Vector3(0f, 0.36f, 0f);
         [SerializeField, Min(0.1f)] private float controllerPoseBlendSpeed = 12f;
+
+        [Header("Traversal Profile")]
+        [SerializeField] private SCFTraversalProfile traversalProfile;
+        [SerializeField, Range(0f, 1f)] private float carriedLoad01;
+        [Tooltip("Non-parkour characters are kicked off the wall after this many implied steps.")]
+        [SerializeField, Min(1)] private int standardWallRunStepLimit = 3;
+        [SerializeField, Min(0.05f)] private float standardWallRunStepDuration = 0.27f;
+        [SerializeField, Range(0.45f, 1.25f)] private float standardWallRunHeightMultiplier = 0.82f;
+        [SerializeField, Range(0.45f, 1.25f)] private float heavyWallRunHeightMultiplier = 0.68f;
+        [SerializeField, Range(0.1f, 1f)] private float standardWallJumpUpwardMultiplier = 0.55f;
+        [SerializeField, Range(0.1f, 1.25f)] private float standardWallJumpAwayMultiplier = 1f;
+        [SerializeField, Min(0f)] private float standardWallRunRegrabCooldown = 0.55f;
+        [SerializeField] private bool standardWallRunRequiresReleaseBeforeRegrab = true;
+        [SerializeField] private float standardWallRunSlideOffDownSpeed = -1.6f;
+        [SerializeField, Min(1f)] private float standardVaultDurationMultiplier = 1.65f;
+        [SerializeField, Min(1f)] private float standardClimbDurationMultiplier = 2.1f;
+        [SerializeField, Min(0.05f)] private float standardClimbMaxHeight = 1.55f;
+        [SerializeField, Min(0.05f)] private float heavyClimbMaxHeight = 1.18f;
+        [SerializeField, Min(1f)] private float loadTraversalDurationMultiplier = 1.45f;
 
         [Header("Wall Run")]
         [SerializeField] private LayerMask traversalMask = ~0;
@@ -92,6 +120,15 @@ namespace SCF.Gameplay
         [SerializeField, Min(0f)] private float wallJumpRollMomentumBonus = 2.8f;
         [SerializeField, Min(0f)] private float wallJumpRollInputWindow = 0.45f;
 
+        [Header("Parkour Wall Climb")]
+        [SerializeField] private bool enableParkourWallClimbUp = true;
+        [SerializeField, Range(0.3f, 1f)] private float wallClimbUpApproachDot = 0.72f;
+        [SerializeField, Min(0f)] private float wallClimbUpSpeed = 4.2f;
+        [SerializeField, Min(0.1f)] private float wallClimbUpMaxDuration = 2.2f;
+        [SerializeField, Min(0f)] private float wallClimbLedgeReachSlack = 0.12f;
+        [SerializeField, Min(0f)] private float wallClimbTopForwardClearance = 0.55f;
+        [SerializeField, Min(0f)] private float wallClimbTopProbeHeight = 0.75f;
+
         [Header("Vault")]
         [SerializeField] private bool enableVault = true;
         [SerializeField] private bool enableProne;
@@ -106,11 +143,21 @@ namespace SCF.Gameplay
         [SerializeField, Min(0.05f)] private float climbForwardClearance = 0.45f;
         [SerializeField, Min(0.05f)] private float climbDuration = 0.78f;
         [SerializeField, Min(0f)] private float climbArcHeight = 0.2f;
+        [SerializeField] private bool enableParkourAutoTraversal = true;
+        [SerializeField, Range(0.5f, 1.2f)] private float parkourAutoTraversalHeadHeightMultiplier = 1f;
+        [SerializeField, Range(0.35f, 1f)] private float parkourAutoSlideMinHeightMultiplier = 0.68f;
+        [SerializeField, Range(0.25f, 2f)] private float parkourSlideVaultDurationMultiplier = 0.9f;
+        [SerializeField, Min(0f)] private float parkourSlideVaultRollSpeedBonus = 1.6f;
+        [SerializeField, Min(1f)] private float parkourManualTraversalDurationMultiplier = 1.35f;
+        [SerializeField, Range(0.45f, 1.1f)] private float parkourManualVaultMaxHeightMultiplier = 0.78f;
 
         [Header("Facing")]
         [SerializeField] private CharacterFacingMode facingMode = CharacterFacingMode.AimThenMovement;
         [SerializeField, Min(0.1f)] private float movementRotationSharpness = 16f;
         [SerializeField, Min(0.1f)] private float aimRotationSharpness = 24f;
+        [SerializeField] private bool separateAimFromLocomotion = true;
+        [SerializeField] private bool lowerBodyAimsWhenIdle;
+        [SerializeField, Min(0f)] private float lowerBodyMoveThreshold = 0.2f;
 
         [Header("Aiming")]
         [SerializeField] private LayerMask aimSurfaceMask = ~0;
@@ -135,9 +182,21 @@ namespace SCF.Gameplay
         public bool IsCombatRolling => MobilityState == CharacterMobilityState.CombatRoll;
         public bool IsProne => MobilityState == CharacterMobilityState.Prone;
         public bool IsWallRunning => MobilityState == CharacterMobilityState.WallRun;
+        public bool IsWallClimbingUp => IsWallRunning && wallRunIsVertical;
         public bool IsVaulting => MobilityState == CharacterMobilityState.Vault;
+        public bool IsVaultSliding => IsVaulting && activeTraversalUsesSlide;
         public bool IsClimbing => MobilityState == CharacterMobilityState.Climb;
         public bool IsObstacleTraversing => IsVaulting || IsClimbing;
+        public SCFTraversalProfile TraversalProfile => traversalProfile;
+        public float CarriedLoad01 => carriedLoad01;
+        public bool SeparateAimFromLocomotion => separateAimFromLocomotion;
+        public Vector3 BodyFacingDirection { get; private set; } = Vector3.forward;
+        public Vector3 WallNormal => wallNormal;
+        public Vector3 WallSurfacePoint => wallRunSurfacePoint;
+        public LayerMask TraversalMask => traversalMask;
+        public float ControllerWorldHeight => GetControllerWorldHeight();
+        public float ControllerFootY => GetControllerFootY();
+        public float WallRunCycle01 => Mathf.Repeat(mobilityStateTimer / Mathf.Max(0.001f, wallRunMaxDuration), 1f);
         public float WallRunSide { get; private set; } = 1f;
         public float WallRunAnimationSpeed => wallRunAnimationSpeed;
         public int CombatRollSequence { get; private set; }
@@ -153,25 +212,35 @@ namespace SCF.Gameplay
             public Vector3 ContactPosition;
             public Vector3 ForwardDirection;
             public bool ShouldClimb;
+            public bool ShouldSlide;
 
-            public TraversalCandidate(Vector3 landingPosition, Vector3 contactPosition, Vector3 forwardDirection, bool shouldClimb)
+            public TraversalCandidate(Vector3 landingPosition, Vector3 contactPosition, Vector3 forwardDirection, bool shouldClimb, bool shouldSlide = false)
             {
                 LandingPosition = landingPosition;
                 ContactPosition = contactPosition;
                 ForwardDirection = forwardDirection;
                 ShouldClimb = shouldClimb;
+                ShouldSlide = shouldSlide;
             }
         }
 
         private float verticalVelocity;
         private float mobilityStateTimer;
         private bool jumpHasLeftGround;
+        private bool mobilityTapStartedAirborne;
+        private bool jumpChargeStartedAirborne;
+        private bool combatRollStartedAirborne;
+        private bool parkourAirMobilityAvailable;
         private float jumpRetainedPlanarSpeed;
         private float activeCombatRollDuration;
         private float activeCombatRollSpeed;
         private float activeCombatRollSpeedBonus;
         private float wallRunRetainedSpeed;
         private float wallJumpRollBoostTimer;
+        private float wallRunRegrabLockoutTimer;
+        private bool standardWallRunAwaitingRelease;
+        private bool wallRunIsVertical;
+        private Collider wallRunCollider;
         private Vector3 lockedMobilityDirection = Vector3.forward;
         private Vector3 wallNormal = Vector3.back;
         private Vector3 wallRunDirection = Vector3.forward;
@@ -182,6 +251,7 @@ namespace SCF.Gameplay
         private Vector3 vaultContactPosition;
         private Vector3 vaultEndPosition;
         private bool hasVaultContactPosition;
+        private bool activeTraversalUsesSlide;
         private float activeTraversalDuration;
         private float activeTraversalArcHeight;
         private float standingControllerHeight;
@@ -228,6 +298,16 @@ namespace SCF.Gameplay
             CacheStandingControllerPose();
         }
 
+        public void SetTraversalProfile(SCFTraversalProfile profile)
+        {
+            traversalProfile = profile;
+        }
+
+        public void SetCarriedLoad(float load01)
+        {
+            carriedLoad01 = Mathf.Clamp01(load01);
+        }
+
         public void Tick(float deltaTime)
         {
             if (deltaTime <= 0f)
@@ -271,7 +351,7 @@ namespace SCF.Gameplay
 
             if (MobilityState == CharacterMobilityState.JumpCharge)
             {
-                return ScaleMetric(walkSpeed) * jumpChargeMoveMultiplier;
+                return ScaleMetric(SprintHeld ? sprintSpeed : walkSpeed);
             }
 
             if (MobilityState == CharacterMobilityState.Falling)
@@ -281,7 +361,7 @@ namespace SCF.Gameplay
 
             if (MobilityState == CharacterMobilityState.WallRun)
             {
-                return Mathf.Max(ScaleMetric(wallRunSpeed), wallRunRetainedSpeed);
+                return ResolveActiveWallRunSpeed();
             }
 
             if (IsObstacleTraversing)
@@ -309,9 +389,19 @@ namespace SCF.Gameplay
                 return CurrentMaxSpeed * Mathf.Clamp01(MoveInput.magnitude);
             }
 
+            if (MobilityState == CharacterMobilityState.JumpCharge && jumpChargeStartedAirborne)
+            {
+                return Mathf.Max(jumpRetainedPlanarSpeed, CurrentMaxSpeed * Mathf.Clamp01(MoveInput.magnitude));
+            }
+
+            if (MobilityState == CharacterMobilityState.MobilityTapWindow && mobilityTapStartedAirborne)
+            {
+                return Mathf.Max(jumpRetainedPlanarSpeed, CurrentMaxSpeed * Mathf.Clamp01(MoveInput.magnitude));
+            }
+
             if (MobilityState == CharacterMobilityState.WallRun)
             {
-                return Mathf.Max(ScaleMetric(wallRunSpeed), wallRunRetainedSpeed);
+                return ResolveActiveWallRunSpeed();
             }
 
             if (IsObstacleTraversing)
@@ -329,6 +419,12 @@ namespace SCF.Gameplay
                 return lockedMobilityDirection * desiredSpeed;
             }
 
+            if ((MobilityState == CharacterMobilityState.JumpCharge && jumpChargeStartedAirborne)
+                || (MobilityState == CharacterMobilityState.MobilityTapWindow && mobilityTapStartedAirborne))
+            {
+                return lockedMobilityDirection * desiredSpeed;
+            }
+
             if (MobilityState == CharacterMobilityState.WallRun)
             {
                 return wallRunDirection * desiredSpeed;
@@ -340,6 +436,12 @@ namespace SCF.Gameplay
             }
 
             return moveDirection * desiredSpeed;
+        }
+
+        private float ResolveActiveWallRunSpeed()
+        {
+            float profileSpeed = wallRunIsVertical ? wallClimbUpSpeed : wallRunSpeed;
+            return Mathf.Max(ScaleMetric(profileSpeed), wallRunRetainedSpeed);
         }
 
         private void UpdateMobility(float deltaTime)
@@ -365,6 +467,11 @@ namespace SCF.Gameplay
             switch (MobilityState)
             {
                 case CharacterMobilityState.Locomotion:
+                    if (TryBeginAutoTraversal())
+                    {
+                        break;
+                    }
+
                     if (input.MobilityPressedThisFrame)
                     {
                         BeginMobilityTapWindow();
@@ -381,6 +488,11 @@ namespace SCF.Gameplay
 
                 case CharacterMobilityState.Jumping:
                     mobilityStateTimer += deltaTime;
+                    if (input.MobilityPressedThisFrame && TryBeginParkourAirMobility())
+                    {
+                        break;
+                    }
+
                     if (wallJumpRollBoostTimer > 0f && input.MobilityPressedThisFrame)
                     {
                         BeginCombatRoll(wallJumpRollMomentumBonus);
@@ -395,6 +507,11 @@ namespace SCF.Gameplay
 
                 case CharacterMobilityState.Falling:
                     mobilityStateTimer += deltaTime;
+                    if (input.MobilityPressedThisFrame && TryBeginParkourAirMobility())
+                    {
+                        break;
+                    }
+
                     if (input.MobilityHeld)
                     {
                         TryBeginWallRun();
@@ -421,11 +538,32 @@ namespace SCF.Gameplay
             MobilityStateNormalizedTime = ResolveMobilityNormalizedTime();
         }
 
-        private void BeginMobilityTapWindow()
+        private bool TryBeginParkourAirMobility()
+        {
+            if (!parkourAirMobilityAvailable || !IsParkourTraversal())
+            {
+                return false;
+            }
+
+            parkourAirMobilityAvailable = false;
+            BeginMobilityTapWindow(true);
+            return true;
+        }
+
+        private void BeginMobilityTapWindow(bool startedAirborne = false)
         {
             MobilityState = CharacterMobilityState.MobilityTapWindow;
             mobilityStateTimer = 0f;
             JumpCharge01 = 0f;
+            mobilityTapStartedAirborne = startedAirborne;
+            jumpChargeStartedAirborne = false;
+            combatRollStartedAirborne = false;
+            if (startedAirborne)
+            {
+                lockedMobilityDirection = PlanarVelocity.sqrMagnitude > 0.01f ? PlanarVelocity.normalized : ResolveMobilityDirection();
+                jumpRetainedPlanarSpeed = Mathf.Max(PlanarVelocity.magnitude, jumpRetainedPlanarSpeed, ScaleMetric(jumpPlanarSpeed));
+                jumpHasLeftGround = true;
+            }
         }
 
         private void TickWallJumpRollWindow(float deltaTime)
@@ -434,11 +572,26 @@ namespace SCF.Gameplay
             {
                 wallJumpRollBoostTimer = Mathf.Max(0f, wallJumpRollBoostTimer - deltaTime);
             }
+
+            if (wallRunRegrabLockoutTimer > 0f)
+            {
+                wallRunRegrabLockoutTimer = Mathf.Max(0f, wallRunRegrabLockoutTimer - deltaTime);
+            }
+
+            if (standardWallRunAwaitingRelease && (input == null || !input.MobilityHeld))
+            {
+                standardWallRunAwaitingRelease = false;
+            }
         }
 
         private void TickMobilityTapWindow(float deltaTime)
         {
             mobilityStateTimer += deltaTime;
+            if (mobilityTapStartedAirborne)
+            {
+                TickAirMobilityTapWindow();
+                return;
+            }
 
             if (input.MobilityReleasedThisFrame)
             {
@@ -460,9 +613,31 @@ namespace SCF.Gameplay
             }
         }
 
+        private void TickAirMobilityTapWindow()
+        {
+            if (input.MobilityReleasedThisFrame)
+            {
+                if (mobilityStateTimer < rollTapThreshold)
+                {
+                    BeginCombatRoll(parkourAirRollSpeedBonus, true);
+                }
+                else
+                {
+                    LaunchChargedJump(parkourAirJumpStrength);
+                }
+
+                return;
+            }
+
+            if (mobilityStateTimer >= rollTapThreshold)
+            {
+                BeginJumpCharge(true);
+            }
+        }
+
         private void LaunchHeldTraversal(bool released)
         {
-            if (TryBeginVault())
+            if (TryBeginVault(false))
             {
                 return;
             }
@@ -473,15 +648,35 @@ namespace SCF.Gameplay
                 return;
             }
 
-            BeginJumpCharge();
+            BeginJumpCharge(false);
         }
 
-        private void BeginJumpCharge()
+        private bool TryBeginAutoTraversal()
+        {
+            if (!enableParkourAutoTraversal
+                || !IsParkourTraversal()
+                || !SprintHeld
+                || MoveInput.magnitude < wallRunMinMoveInput)
+            {
+                return false;
+            }
+
+            return TryBeginVault(true);
+        }
+
+        private void BeginJumpCharge(bool startedAirborne)
         {
             MobilityState = CharacterMobilityState.JumpCharge;
             mobilityStateTimer = 0f;
             JumpCharge01 = 0f;
-            lockedMobilityDirection = ResolveMobilityDirection();
+            jumpChargeStartedAirborne = startedAirborne;
+            mobilityTapStartedAirborne = false;
+            lockedMobilityDirection = startedAirborne && PlanarVelocity.sqrMagnitude > 0.01f ? PlanarVelocity.normalized : ResolveMobilityDirection();
+            if (startedAirborne)
+            {
+                jumpRetainedPlanarSpeed = Mathf.Max(PlanarVelocity.magnitude, jumpRetainedPlanarSpeed, ScaleMetric(jumpPlanarSpeed));
+                jumpHasLeftGround = true;
+            }
         }
 
         private void TickJumpCharge(float deltaTime)
@@ -497,12 +692,21 @@ namespace SCF.Gameplay
 
         private void LaunchChargedJump(float charge01)
         {
+            bool launchedFromAir = jumpChargeStartedAirborne
+                                   || mobilityTapStartedAirborne
+                                   || MobilityState == CharacterMobilityState.Jumping
+                                   || MobilityState == CharacterMobilityState.Falling;
             MobilityState = CharacterMobilityState.Jumping;
             mobilityStateTimer = 0f;
             JumpCharge01 = Mathf.Clamp01(charge01);
-            jumpHasLeftGround = false;
-            lockedMobilityDirection = ResolveMobilityDirection();
-            jumpRetainedPlanarSpeed = Mathf.Max(PlanarVelocity.magnitude, ScaleMetric(jumpPlanarSpeed));
+            jumpHasLeftGround = launchedFromAir;
+            mobilityTapStartedAirborne = false;
+            jumpChargeStartedAirborne = false;
+            combatRollStartedAirborne = false;
+            parkourAirMobilityAvailable = false;
+            lockedMobilityDirection = PlanarVelocity.sqrMagnitude > 0.01f ? PlanarVelocity.normalized : ResolveMobilityDirection();
+            float chargeSpeedBoost = ScaleMetric(maxJumpChargePlanarBoost) * JumpCharge01;
+            jumpRetainedPlanarSpeed = Mathf.Max(PlanarVelocity.magnitude + chargeSpeedBoost, jumpRetainedPlanarSpeed, ScaleMetric(jumpPlanarSpeed));
             verticalVelocity = Mathf.Sqrt(2f * Mathf.Abs(ScaleMetric(gravity)) * ScaleMetric(Mathf.Lerp(minJumpHeight, maxJumpHeight, JumpCharge01)));
             if (input != null && input.MobilityHeld && MoveInput.magnitude >= wallRunMinMoveInput && TryFindRunnableWall(lockedMobilityDirection, out _))
             {
@@ -514,6 +718,13 @@ namespace SCF.Gameplay
 
         private bool ShouldBeginEnvironmentalFall()
         {
+            if ((MobilityState == CharacterMobilityState.MobilityTapWindow && mobilityTapStartedAirborne)
+                || (MobilityState == CharacterMobilityState.JumpCharge && jumpChargeStartedAirborne)
+                || (MobilityState == CharacterMobilityState.CombatRoll && combatRollStartedAirborne))
+            {
+                return false;
+            }
+
             if (MobilityState != CharacterMobilityState.Locomotion
                 && MobilityState != CharacterMobilityState.MobilityTapWindow
                 && MobilityState != CharacterMobilityState.Prone)
@@ -534,6 +745,9 @@ namespace SCF.Gameplay
             MobilityState = CharacterMobilityState.Falling;
             mobilityStateTimer = 0f;
             JumpCharge01 = 0f;
+            mobilityTapStartedAirborne = false;
+            jumpChargeStartedAirborne = false;
+            combatRollStartedAirborne = false;
             jumpHasLeftGround = true;
             lockedMobilityDirection = PlanarVelocity.sqrMagnitude > 0.01f ? PlanarVelocity.normalized : ResolveMobilityDirection();
             jumpRetainedPlanarSpeed = Mathf.Max(0f, PlanarVelocity.magnitude);
@@ -547,22 +761,50 @@ namespace SCF.Gameplay
 
             if (mobilityStateTimer >= ResolveActiveCombatRollDuration())
             {
+                if (combatRollStartedAirborne && !IsControllerSupported(0.08f))
+                {
+                    BeginAirborneFallFromCurrentMotion();
+                    return;
+                }
+
                 ReturnToFeet();
             }
         }
 
-        private void BeginCombatRoll(float speedBonus = 0f)
+        private void BeginCombatRoll(float speedBonus = 0f, bool startedAirborne = false)
         {
             MobilityState = CharacterMobilityState.CombatRoll;
             mobilityStateTimer = 0f;
             JumpCharge01 = 0f;
+            mobilityTapStartedAirborne = false;
+            jumpChargeStartedAirborne = false;
+            combatRollStartedAirborne = startedAirborne;
+            parkourAirMobilityAvailable = false;
             activeCombatRollSpeedBonus = speedBonus;
             lockedMobilityDirection = PlanarVelocity.sqrMagnitude > 0.01f ? PlanarVelocity.normalized : ResolveMobilityDirection();
             bool forwardRoll = IsForwardMobilityDirection(lockedMobilityDirection);
             activeCombatRollDuration = forwardRoll ? combatRollDuration : parkourHopDuration;
             activeCombatRollSpeed = forwardRoll ? combatRollSpeed : parkourHopSpeed;
-            verticalVelocity = Mathf.Min(verticalVelocity, ScaleMetric(groundedStickForce));
+            if (!startedAirborne)
+            {
+                verticalVelocity = Mathf.Min(verticalVelocity, ScaleMetric(groundedStickForce));
+            }
+
             CombatRollSequence++;
+        }
+
+        private void BeginAirborneFallFromCurrentMotion()
+        {
+            MobilityState = CharacterMobilityState.Falling;
+            mobilityStateTimer = 0f;
+            JumpCharge01 = 0f;
+            mobilityTapStartedAirborne = false;
+            jumpChargeStartedAirborne = false;
+            combatRollStartedAirborne = false;
+            jumpHasLeftGround = true;
+            lockedMobilityDirection = PlanarVelocity.sqrMagnitude > 0.01f ? PlanarVelocity.normalized : ResolveMobilityDirection();
+            jumpRetainedPlanarSpeed = Mathf.Max(0f, PlanarVelocity.magnitude);
+            verticalVelocity = Mathf.Min(verticalVelocity, 0f);
         }
 
         private void BeginProne()
@@ -584,13 +826,20 @@ namespace SCF.Gameplay
             MobilityState = CharacterMobilityState.Locomotion;
             mobilityStateTimer = 0f;
             JumpCharge01 = 0f;
+            mobilityTapStartedAirborne = false;
+            jumpChargeStartedAirborne = false;
+            combatRollStartedAirborne = false;
+            parkourAirMobilityAvailable = false;
             jumpRetainedPlanarSpeed = 0f;
             activeCombatRollDuration = 0f;
             activeCombatRollSpeed = 0f;
             activeCombatRollSpeedBonus = 0f;
             wallRunRetainedSpeed = 0f;
             wallJumpRollBoostTimer = 0f;
+            wallRunIsVertical = false;
+            wallRunCollider = null;
             hasVaultContactPosition = false;
+            activeTraversalUsesSlide = false;
             activeTraversalDuration = 0f;
             activeTraversalArcHeight = 0f;
         }
@@ -639,10 +888,31 @@ namespace SCF.Gameplay
                 return false;
             }
 
+            if (!IsParkourTraversal() && wallRunRegrabLockoutTimer > 0f)
+            {
+                return false;
+            }
+
+            if (!IsParkourTraversal() && standardWallRunAwaitingRelease)
+            {
+                return false;
+            }
+
             Vector3 moveDirection = CameraRelativeDirection(MoveInput);
             if (!TryFindRunnableWall(moveDirection, out RaycastHit wallHit))
             {
                 return false;
+            }
+
+            if (!CanStartWallRunAtCurrentHeight())
+            {
+                return false;
+            }
+
+            if (ShouldBeginParkourWallClimbUp(moveDirection, wallHit.normal))
+            {
+                BeginWallClimbUp(wallHit);
+                return true;
             }
 
             BeginWallRun(wallHit, moveDirection);
@@ -657,17 +927,45 @@ namespace SCF.Gameplay
                 return;
             }
 
+            wallRunIsVertical = false;
+            wallRunCollider = wallHit.collider;
             wallRunSurfacePoint = wallHit.point;
             wallRunDirection = ResolveWallRunDirection(wallNormal, desiredDirection);
             UpdateWallRunSide();
             lockedMobilityDirection = wallRunDirection;
             wallRunRetainedSpeed = Mathf.Max(PlanarVelocity.magnitude, ScaleMetric(wallRunSpeed));
-            wallRunGroundY = SampleTraversalGroundY(transform.position, GetControllerFootY());
+            wallRunGroundY = SampleWallRunGroundY(GetControllerFootY());
             wallRunTargetCenterY = ResolveWallRunTargetCenterY();
             MobilityState = CharacterMobilityState.WallRun;
             mobilityStateTimer = 0f;
             JumpCharge01 = 0f;
+            parkourAirMobilityAvailable = false;
             verticalVelocity = Mathf.Max(verticalVelocity, ScaleMetric(groundedStickForce) * 0.25f);
+            WallRunSequence++;
+        }
+
+        private void BeginWallClimbUp(RaycastHit wallHit)
+        {
+            wallNormal = Vector3.ProjectOnPlane(wallHit.normal, Vector3.up).normalized;
+            if (wallNormal.sqrMagnitude <= 0.0001f)
+            {
+                return;
+            }
+
+            wallRunIsVertical = true;
+            wallRunCollider = wallHit.collider;
+            wallRunSurfacePoint = wallHit.point;
+            wallRunDirection = -wallNormal;
+            UpdateWallRunSide();
+            lockedMobilityDirection = wallRunDirection;
+            wallRunRetainedSpeed = Mathf.Max(PlanarVelocity.magnitude, ScaleMetric(wallClimbUpSpeed));
+            wallRunGroundY = SampleWallRunGroundY(GetControllerFootY());
+            wallRunTargetCenterY = GetCurrentControllerCenterY();
+            MobilityState = CharacterMobilityState.WallRun;
+            mobilityStateTimer = 0f;
+            JumpCharge01 = 0f;
+            parkourAirMobilityAvailable = false;
+            verticalVelocity = Mathf.Max(verticalVelocity, ScaleMetric(wallClimbUpSpeed));
             WallRunSequence++;
         }
 
@@ -678,6 +976,18 @@ namespace SCF.Gameplay
             if (input == null || !input.MobilityHeld)
             {
                 BeginWallJumpFromRun();
+                return;
+            }
+
+            if (wallRunIsVertical)
+            {
+                TickWallClimbUp(deltaTime);
+                return;
+            }
+
+            if (!IsParkourTraversal() && mobilityStateTimer >= ResolveStandardWallRunDurationLimit())
+            {
+                SlideOffStandardWallRun();
                 return;
             }
 
@@ -695,8 +1005,54 @@ namespace SCF.Gameplay
             UpdateWallRunSide();
             lockedMobilityDirection = wallRunDirection;
             wallRunRetainedSpeed = Mathf.Max(wallRunRetainedSpeed, PlanarVelocity.magnitude);
-            wallRunGroundY = SampleTraversalGroundY(transform.position, wallRunGroundY);
+            wallRunGroundY = SampleWallRunGroundY(wallRunGroundY);
             wallRunTargetCenterY = Mathf.Max(wallRunTargetCenterY, ResolveWallRunTargetCenterY());
+        }
+
+        private void TickWallClimbUp(float deltaTime)
+        {
+            if (TryBeginWallClimbTopOut())
+            {
+                return;
+            }
+
+            Vector3 moveDirection = CameraRelativeDirection(MoveInput);
+            Vector3 desiredDirection = moveDirection.sqrMagnitude > 0.0001f ? moveDirection : wallRunDirection;
+            if (!TryRefreshWallRunContact(desiredDirection, out RaycastHit wallHit))
+            {
+                if (!TryBeginWallClimbTopOut())
+                {
+                    DetachFromWallRun(false);
+                }
+
+                return;
+            }
+
+            wallNormal = Vector3.ProjectOnPlane(wallHit.normal, Vector3.up).normalized;
+            if (wallNormal.sqrMagnitude <= 0.0001f)
+            {
+                DetachFromWallRun(false);
+                return;
+            }
+
+            wallRunCollider = wallHit.collider;
+            wallRunSurfacePoint = wallHit.point;
+            wallRunDirection = -wallNormal;
+            UpdateWallRunSide();
+            lockedMobilityDirection = wallRunDirection;
+            wallRunRetainedSpeed = Mathf.Max(wallRunRetainedSpeed, PlanarVelocity.magnitude, ScaleMetric(wallClimbUpSpeed));
+            wallRunGroundY = SampleWallRunGroundY(wallRunGroundY);
+            wallRunTargetCenterY = GetCurrentControllerCenterY();
+
+            if (TryBeginWallClimbTopOut())
+            {
+                return;
+            }
+
+            if (mobilityStateTimer >= wallClimbUpMaxDuration)
+            {
+                DetachFromWallRun(false);
+            }
         }
 
         private bool TryRefreshWallRunContact(Vector3 desiredDirection, out RaycastHit wallHit)
@@ -709,20 +1065,108 @@ namespace SCF.Gameplay
             return TryFindRunnableWall(desiredDirection, out wallHit);
         }
 
+        private bool ShouldBeginParkourWallClimbUp(Vector3 desiredDirection, Vector3 hitNormal)
+        {
+            if (!enableParkourWallClimbUp || !IsParkourTraversal())
+            {
+                return false;
+            }
+
+            Vector3 direction = Vector3.ProjectOnPlane(desiredDirection, Vector3.up);
+            Vector3 normal = Vector3.ProjectOnPlane(hitNormal, Vector3.up);
+            if (direction.sqrMagnitude <= 0.0001f || normal.sqrMagnitude <= 0.0001f)
+            {
+                return false;
+            }
+
+            float approachDot = Vector3.Dot(direction.normalized, -normal.normalized);
+            return approachDot >= wallClimbUpApproachDot;
+        }
+
+        private bool TryBeginWallClimbTopOut()
+        {
+            if (!wallRunIsVertical || !TryResolveWallClimbTopOut(out TraversalCandidate traversal))
+            {
+                return false;
+            }
+
+            BeginWallClimbTopOut(traversal);
+            return true;
+        }
+
+        private bool TryResolveWallClimbTopOut(out TraversalCandidate traversal)
+        {
+            traversal = default(TraversalCandidate);
+            if (!wallRunIsVertical || wallRunCollider == null || wallNormal.sqrMagnitude <= 0.0001f)
+            {
+                return false;
+            }
+
+            Bounds obstacleBounds = wallRunCollider.bounds;
+            float topY = obstacleBounds.max.y;
+            float headY = characterController != null && characterController.enabled
+                ? characterController.bounds.max.y
+                : transform.position.y + GetControllerWorldHeight();
+            if (headY + ScaleMetric(wallClimbLedgeReachSlack) < topY)
+            {
+                return false;
+            }
+
+            Vector3 climbDirection = -wallNormal.normalized;
+            float controllerRadius = GetControllerWorldRadius();
+            Vector3 edgePoint = wallRunSurfacePoint.sqrMagnitude > 0.0001f
+                ? wallRunSurfacePoint
+                : transform.position - climbDirection * controllerRadius;
+
+            Vector3 contactPosition = edgePoint + climbDirection * controllerRadius;
+            contactPosition.y = topY + 0.04f;
+
+            Vector3 landingPosition = edgePoint + climbDirection * (controllerRadius + ScaleMetric(wallClimbTopForwardClearance));
+            landingPosition.y = SampleWallClimbTopY(landingPosition, topY);
+
+            traversal = new TraversalCandidate(landingPosition, contactPosition, climbDirection, true);
+            return true;
+        }
+
+        private void BeginWallClimbTopOut(TraversalCandidate traversal)
+        {
+            MobilityState = CharacterMobilityState.Climb;
+            mobilityStateTimer = 0f;
+            JumpCharge01 = 0f;
+            parkourAirMobilityAvailable = false;
+            vaultStartPosition = transform.position;
+            vaultContactPosition = traversal.ContactPosition;
+            vaultEndPosition = traversal.LandingPosition;
+            hasVaultContactPosition = true;
+            activeTraversalUsesSlide = false;
+            activeTraversalDuration = ResolveTraversalDuration(true, true, false);
+            activeTraversalArcHeight = climbArcHeight;
+            lockedMobilityDirection = traversal.ForwardDirection.sqrMagnitude > 0.0001f ? traversal.ForwardDirection.normalized : -wallNormal.normalized;
+            PlanarVelocity = Vector3.zero;
+            verticalVelocity = 0f;
+            wallRunIsVertical = false;
+            wallRunCollider = null;
+            ClimbSequence++;
+        }
+
         private void BeginWallJumpFromRun()
         {
             Vector3 awayFromWall = wallNormal.sqrMagnitude > 0.0001f ? wallNormal.normalized : Vector3.zero;
             float retainedSpeed = Mathf.Max(PlanarVelocity.magnitude, wallRunRetainedSpeed, ScaleMetric(wallRunSpeed));
-            Vector3 momentum = wallRunDirection * retainedSpeed + awayFromWall * ScaleMetric(wallJumpAwaySpeed);
+            Vector3 momentum = wallRunDirection * retainedSpeed + awayFromWall * ScaleMetric(wallJumpAwaySpeed * ResolveWallJumpAwayMultiplier());
             lockedMobilityDirection = momentum.sqrMagnitude > 0.0001f ? momentum.normalized : ResolveMobilityDirection();
             jumpRetainedPlanarSpeed = momentum.magnitude;
             PlanarVelocity = lockedMobilityDirection * jumpRetainedPlanarSpeed;
             MobilityState = CharacterMobilityState.Jumping;
             mobilityStateTimer = 0f;
             JumpCharge01 = 1f;
+            parkourAirMobilityAvailable = IsParkourTraversal() && parkourWallJumpKeepsAirMobility;
             jumpHasLeftGround = true;
-            verticalVelocity = Mathf.Max(verticalVelocity, ScaleMetric(wallJumpUpwardSpeed));
+            verticalVelocity = Mathf.Max(verticalVelocity, ScaleMetric(wallJumpUpwardSpeed * ResolveWallJumpUpwardMultiplier()));
             wallJumpRollBoostTimer = wallJumpRollInputWindow;
+            wallRunIsVertical = false;
+            wallRunCollider = null;
+            BeginStandardWallRunLockout();
             JumpSequence++;
         }
 
@@ -731,12 +1175,47 @@ namespace SCF.Gameplay
             MobilityState = CharacterMobilityState.Jumping;
             mobilityStateTimer = 0f;
             jumpHasLeftGround = true;
+            parkourAirMobilityAvailable = IsParkourTraversal() && parkourWallJumpKeepsAirMobility;
             lockedMobilityDirection = wallRunDirection.sqrMagnitude > 0.0001f ? wallRunDirection : ResolveMobilityDirection();
             jumpRetainedPlanarSpeed = Mathf.Max(PlanarVelocity.magnitude, wallRunRetainedSpeed, ScaleMetric(jumpPlanarSpeed));
             verticalVelocity = Mathf.Min(verticalVelocity, 0f);
             if (!keepRollBoost)
             {
                 wallJumpRollBoostTimer = 0f;
+            }
+
+            wallRunIsVertical = false;
+            wallRunCollider = null;
+            BeginStandardWallRunLockout();
+        }
+
+        private void SlideOffStandardWallRun()
+        {
+            float retainedSpeed = Mathf.Max(PlanarVelocity.magnitude, wallRunRetainedSpeed, ScaleMetric(wallRunSpeed));
+            lockedMobilityDirection = wallRunDirection.sqrMagnitude > 0.0001f ? wallRunDirection : ResolveMobilityDirection();
+            jumpRetainedPlanarSpeed = retainedSpeed;
+            PlanarVelocity = lockedMobilityDirection * retainedSpeed;
+            MobilityState = CharacterMobilityState.Falling;
+            mobilityStateTimer = 0f;
+            JumpCharge01 = 0f;
+            parkourAirMobilityAvailable = false;
+            jumpHasLeftGround = true;
+            verticalVelocity = Mathf.Min(verticalVelocity, ScaleMetric(standardWallRunSlideOffDownSpeed));
+            wallJumpRollBoostTimer = 0f;
+            wallRunIsVertical = false;
+            wallRunCollider = null;
+            BeginStandardWallRunLockout();
+        }
+
+        private void BeginStandardWallRunLockout()
+        {
+            if (!IsParkourTraversal())
+            {
+                wallRunRegrabLockoutTimer = Mathf.Max(wallRunRegrabLockoutTimer, standardWallRunRegrabCooldown);
+                if (standardWallRunRequiresReleaseBeforeRegrab)
+                {
+                    standardWallRunAwaitingRelease = true;
+                }
             }
         }
 
@@ -779,17 +1258,72 @@ namespace SCF.Gameplay
 
         private float ResolveWallRunTargetCenterY()
         {
-            float targetFromGround = wallRunGroundY + GetControllerWorldHeight() * wallRunHeadHeightMultiplier;
+            float targetFromGround = wallRunGroundY + GetControllerWorldHeight() * ResolveWallRunHeightMultiplier();
 
             if (characterController != null && characterController.enabled)
             {
-                return Mathf.Max(characterController.bounds.center.y, targetFromGround);
+                return IsParkourTraversal()
+                    ? Mathf.Max(characterController.bounds.center.y, targetFromGround)
+                    : targetFromGround;
             }
 
-            return Mathf.Max(transform.position.y, targetFromGround);
+            return IsParkourTraversal()
+                ? Mathf.Max(transform.position.y, targetFromGround)
+                : targetFromGround;
         }
 
-        private bool TryBeginVault()
+        private bool CanStartWallRunAtCurrentHeight()
+        {
+            if (IsParkourTraversal())
+            {
+                return true;
+            }
+
+            float groundY = SampleWallRunGroundY(GetControllerFootY());
+            float maxCenterY = groundY + GetControllerWorldHeight() * ResolveWallRunHeightMultiplier() + ScaleMetric(0.12f);
+            float currentCenterY = characterController != null && characterController.enabled
+                ? characterController.bounds.center.y
+                : transform.position.y;
+            return currentCenterY <= maxCenterY;
+        }
+
+        private float ResolveWallRunHeightMultiplier()
+        {
+            if (IsParkourTraversal())
+            {
+                return wallRunHeadHeightMultiplier;
+            }
+
+            return Mathf.Lerp(standardWallRunHeightMultiplier, heavyWallRunHeightMultiplier, carriedLoad01);
+        }
+
+        private float ResolveStandardWallRunDurationLimit()
+        {
+            float loadPenalty = Mathf.Lerp(1f, 0.65f, carriedLoad01);
+            return Mathf.Max(0.05f, standardWallRunStepLimit * standardWallRunStepDuration * loadPenalty);
+        }
+
+        private float ResolveWallJumpUpwardMultiplier()
+        {
+            if (IsParkourTraversal())
+            {
+                return 1f;
+            }
+
+            return Mathf.Lerp(standardWallJumpUpwardMultiplier, standardWallJumpUpwardMultiplier * 0.65f, carriedLoad01);
+        }
+
+        private float ResolveWallJumpAwayMultiplier()
+        {
+            if (IsParkourTraversal())
+            {
+                return 1f;
+            }
+
+            return Mathf.Lerp(standardWallJumpAwayMultiplier, standardWallJumpAwayMultiplier * 0.8f, carriedLoad01);
+        }
+
+        private bool TryBeginVault(bool automaticTraversal)
         {
             if (!enableVault)
             {
@@ -802,12 +1336,13 @@ namespace SCF.Gameplay
             }
 
             Vector3 moveDirection = CameraRelativeDirection(MoveInput);
-            if (!TryFindVault(moveDirection, out TraversalCandidate traversal))
+            if (!TryFindVault(moveDirection, automaticTraversal, out TraversalCandidate traversal))
             {
                 return false;
             }
 
             bool shouldClimb = traversal.ShouldClimb;
+            bool shouldSlide = traversal.ShouldSlide;
             MobilityState = shouldClimb ? CharacterMobilityState.Climb : CharacterMobilityState.Vault;
             mobilityStateTimer = 0f;
             JumpCharge01 = 0f;
@@ -815,8 +1350,9 @@ namespace SCF.Gameplay
             vaultContactPosition = traversal.ContactPosition;
             vaultEndPosition = traversal.LandingPosition;
             hasVaultContactPosition = true;
-            activeTraversalDuration = shouldClimb ? climbDuration : vaultDuration;
-            activeTraversalArcHeight = shouldClimb ? climbArcHeight : vaultArcHeight;
+            activeTraversalUsesSlide = shouldSlide;
+            activeTraversalDuration = ResolveTraversalDuration(shouldClimb, automaticTraversal, shouldSlide);
+            activeTraversalArcHeight = shouldClimb ? climbArcHeight : shouldSlide ? vaultArcHeight * 0.35f : vaultArcHeight;
             lockedMobilityDirection = traversal.ForwardDirection.sqrMagnitude > 0.0001f ? traversal.ForwardDirection.normalized : moveDirection.normalized;
             verticalVelocity = 0f;
             if (shouldClimb)
@@ -882,6 +1418,29 @@ namespace SCF.Gameplay
             }
 
             return 0f;
+        }
+
+        private float ResolveTraversalDuration(bool shouldClimb, bool automaticTraversal, bool shouldSlide)
+        {
+            float duration = shouldClimb ? climbDuration : vaultDuration;
+            if (IsParkourTraversal())
+            {
+                if (shouldSlide)
+                {
+                    duration *= parkourSlideVaultDurationMultiplier;
+                }
+
+                if (!automaticTraversal)
+                {
+                    duration *= parkourManualTraversalDurationMultiplier;
+                }
+
+                return duration;
+            }
+
+            float profileMultiplier = shouldClimb ? standardClimbDurationMultiplier : standardVaultDurationMultiplier;
+            float loadMultiplier = Mathf.Lerp(1f, loadTraversalDurationMultiplier, carriedLoad01);
+            return duration * profileMultiplier * loadMultiplier;
         }
 
         private bool TryFindRunnableWall(Vector3 desiredDirection, out RaycastHit wallHit)
@@ -968,7 +1527,7 @@ namespace SCF.Gameplay
             return false;
         }
 
-        private bool TryFindVault(Vector3 desiredDirection, out TraversalCandidate traversal)
+        private bool TryFindVault(Vector3 desiredDirection, bool automaticTraversal, out TraversalCandidate traversal)
         {
             traversal = default(TraversalCandidate);
             if (desiredDirection.sqrMagnitude <= 0.0001f)
@@ -981,10 +1540,26 @@ namespace SCF.Gameplay
             float distance = GetControllerWorldRadius() + ScaleMetric(vaultProbeDistance);
             float footY = GetControllerFootY();
             float worldHeight = GetControllerWorldHeight();
-            float maxTraversalHeight = Mathf.Max(ScaleMetric(vaultMaxHeight), ScaleMetric(climbMaxHeight));
+            float effectiveVaultMinHeight = ScaleMetric(vaultMinHeight);
+            float effectiveVaultMaxHeight = ResolveEffectiveVaultMaxHeight();
+            float effectiveClimbMinHeight = ScaleMetric(climbMinHeight);
+            float effectiveClimbMaxHeight = ResolveEffectiveClimbMaxHeight();
+            if (IsParkourTraversal() && !automaticTraversal)
+            {
+                effectiveVaultMaxHeight = Mathf.Min(effectiveVaultMaxHeight, worldHeight * parkourManualVaultMaxHeightMultiplier);
+            }
+
+            float autoTraversalMaxHeight = worldHeight * parkourAutoTraversalHeadHeightMultiplier;
+            float autoSlideMinHeight = worldHeight * parkourAutoSlideMinHeightMultiplier;
+            float maxTraversalHeight = Mathf.Max(effectiveVaultMaxHeight, effectiveClimbMaxHeight);
+            if (IsParkourTraversal() && automaticTraversal)
+            {
+                maxTraversalHeight = Mathf.Max(maxTraversalHeight, autoTraversalMaxHeight);
+            }
+
             float[] probeHeights =
             {
-                Mathf.Min(maxTraversalHeight, ScaleMetric(vaultMinHeight) + radius),
+                Mathf.Min(maxTraversalHeight, effectiveVaultMinHeight + radius),
                 Mathf.Min(maxTraversalHeight, worldHeight * 0.52f),
                 Mathf.Min(maxTraversalHeight, worldHeight * 0.82f)
             };
@@ -1009,20 +1584,73 @@ namespace SCF.Gameplay
 
                     Bounds bounds = hit.collider.bounds;
                     float obstacleHeight = bounds.max.y - footY;
-                    if (obstacleHeight < ScaleMetric(vaultMinHeight) || obstacleHeight > ScaleMetric(climbMaxHeight))
+                    if (obstacleHeight < effectiveVaultMinHeight)
                     {
                         continue;
                     }
 
-                    bool shouldClimb = obstacleHeight >= ScaleMetric(climbMinHeight);
+                    bool shouldSlide = false;
+                    bool canVault = obstacleHeight <= effectiveVaultMaxHeight;
+                    bool canClimb = obstacleHeight >= effectiveClimbMinHeight && obstacleHeight <= effectiveClimbMaxHeight;
+                    if (IsParkourTraversal() && automaticTraversal)
+                    {
+                        if (obstacleHeight > autoTraversalMaxHeight)
+                        {
+                            continue;
+                        }
+
+                        shouldSlide = obstacleHeight >= autoSlideMinHeight;
+                        canVault = true;
+                        canClimb = false;
+                    }
+
+                    if (!canVault && !canClimb)
+                    {
+                        continue;
+                    }
+
+                    bool shouldClimb = !canVault || obstacleHeight >= effectiveClimbMinHeight;
+                    if (shouldSlide)
+                    {
+                        shouldClimb = false;
+                    }
+
                     Vector3 contactPosition = ResolveTraversalContact(bounds, hit.point, direction, shouldClimb);
                     Vector3 landingPosition = ResolveTraversalLanding(bounds, hit.point, direction, shouldClimb);
-                    traversal = new TraversalCandidate(landingPosition, contactPosition, direction, shouldClimb);
+                    traversal = new TraversalCandidate(landingPosition, contactPosition, direction, shouldClimb, shouldSlide);
                     return true;
                 }
             }
 
             return false;
+        }
+
+        private float ResolveEffectiveVaultMaxHeight()
+        {
+            if (IsParkourTraversal())
+            {
+                return ScaleMetric(vaultMaxHeight);
+            }
+
+            float loadedVaultMax = Mathf.Max(vaultMinHeight, vaultMaxHeight * 0.82f);
+            return ScaleMetric(Mathf.Lerp(vaultMaxHeight, loadedVaultMax, carriedLoad01));
+        }
+
+        private float ResolveEffectiveClimbMaxHeight()
+        {
+            if (IsParkourTraversal())
+            {
+                return ScaleMetric(climbMaxHeight);
+            }
+
+            float unloadedMax = Mathf.Min(climbMaxHeight, standardClimbMaxHeight);
+            float loadedMax = Mathf.Min(unloadedMax, heavyClimbMaxHeight);
+            return ScaleMetric(Mathf.Lerp(unloadedMax, loadedMax, carriedLoad01));
+        }
+
+        private bool IsParkourTraversal()
+        {
+            return traversalProfile == SCFTraversalProfile.Parkour;
         }
 
         private Vector3 ResolveTraversalContact(Bounds obstacleBounds, Vector3 hitPoint, Vector3 direction, bool shouldClimb)
@@ -1076,6 +1704,33 @@ namespace SCF.Gameplay
             return Mathf.Max(transform.position.y, fallbackY) + 0.04f;
         }
 
+        private float SampleWallRunGroundY(float fallbackY)
+        {
+            Vector3 origin = transform.position + Vector3.up * GetControllerWorldHeight();
+            float distance = GetControllerWorldHeight() + ScaleMetric(14f);
+            if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, distance, traversalMask, QueryTriggerInteraction.Ignore)
+                && !IsSelfHit(hit.transform))
+            {
+                return hit.point.y + 0.04f;
+            }
+
+            return fallbackY;
+        }
+
+        private float SampleWallClimbTopY(Vector3 landingPosition, float fallbackTopY)
+        {
+            Vector3 origin = landingPosition + Vector3.up * (GetControllerWorldHeight() + ScaleMetric(wallClimbTopProbeHeight));
+            float distance = GetControllerWorldHeight() + ScaleMetric(wallClimbTopProbeHeight + 1f);
+            if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, distance, traversalMask, QueryTriggerInteraction.Ignore)
+                && !IsSelfHit(hit.transform)
+                && hit.normal.y > 0.35f)
+            {
+                return hit.point.y + 0.04f;
+            }
+
+            return fallbackTopY + 0.04f;
+        }
+
         private bool IsSelfHit(Transform hitTransform)
         {
             return hitTransform != null && (hitTransform == transform || hitTransform.IsChildOf(transform));
@@ -1089,7 +1744,11 @@ namespace SCF.Gameplay
                 return;
             }
 
-            bool isAirborne = MobilityState == CharacterMobilityState.Jumping || MobilityState == CharacterMobilityState.Falling;
+            bool isAirborne = MobilityState == CharacterMobilityState.Jumping
+                              || MobilityState == CharacterMobilityState.Falling
+                              || (MobilityState == CharacterMobilityState.JumpCharge && jumpChargeStartedAirborne)
+                              || (MobilityState == CharacterMobilityState.MobilityTapWindow && mobilityTapStartedAirborne)
+                              || (MobilityState == CharacterMobilityState.CombatRoll && combatRollStartedAirborne);
             bool isWallRunning = MobilityState == CharacterMobilityState.WallRun;
             if (!isAirborne && !isWallRunning && characterController != null && characterController.enabled && IsControllerSupported(0.03f) && verticalVelocity < 0f)
             {
@@ -1097,7 +1756,7 @@ namespace SCF.Gameplay
             }
             else if (isWallRunning)
             {
-                verticalVelocity = ScaleMetric(wallRunGravity);
+                verticalVelocity = wallRunIsVertical ? ScaleMetric(wallClimbUpSpeed) : ScaleMetric(wallRunGravity);
             }
             else
             {
@@ -1186,7 +1845,7 @@ namespace SCF.Gameplay
 
             Vector3 currentCenter = characterController.bounds.center;
             Vector3 desiredCenter = wallRunSurfacePoint + wallNormal * (GetControllerWorldRadius() + ScaleMetric(wallRunContactOffset));
-            desiredCenter.y = wallRunTargetCenterY;
+            desiredCenter.y = wallRunIsVertical ? currentCenter.y : wallRunTargetCenterY;
 
             Vector3 delta = desiredCenter - currentCenter;
             Vector3 horizontalCorrection = Vector3.ProjectOnPlane(delta, Vector3.up);
@@ -1235,6 +1894,15 @@ namespace SCF.Gameplay
                 }
 
                 verticalVelocity = ScaleMetric(groundedStickForce);
+                if (activeTraversalUsesSlide)
+                {
+                    Vector3 rollDirection = lockedMobilityDirection.sqrMagnitude > 0.0001f ? lockedMobilityDirection.normalized : ResolveMobilityDirection();
+                    PlanarVelocity = rollDirection * Mathf.Max(ScaleMetric(combatRollSpeed), PlanarVelocity.magnitude);
+                    activeTraversalUsesSlide = false;
+                    BeginCombatRoll(parkourSlideVaultRollSpeedBonus);
+                    return;
+                }
+
                 ReturnToFeet();
             }
         }
@@ -1305,6 +1973,16 @@ namespace SCF.Gameplay
             }
 
             return characterController.bounds.min.y;
+        }
+
+        private float GetCurrentControllerCenterY()
+        {
+            if (characterController == null || !characterController.enabled)
+            {
+                return transform.position.y;
+            }
+
+            return characterController.bounds.center.y;
         }
 
         private float ScaleMetric(float value)
@@ -1450,32 +2128,12 @@ namespace SCF.Gameplay
         private void UpdateFacing(float deltaTime)
         {
             Transform root = facingRoot != null ? facingRoot : transform;
-            Vector3 facingDirection = Vector3.zero;
-            float sharpness = movementRotationSharpness;
-
-            if ((MobilityState == CharacterMobilityState.CombatRoll
-                    || MobilityState == CharacterMobilityState.Jumping
-                    || MobilityState == CharacterMobilityState.WallRun
-                    || IsObstacleTraversing)
-                && lockedMobilityDirection.sqrMagnitude > 0.0001f)
-            {
-                facingDirection = lockedMobilityDirection;
-                sharpness = aimRotationSharpness;
-            }
-            else if (facingMode != CharacterFacingMode.MovementOnly && HasAimDirection)
-            {
-                facingDirection = AimDirection;
-                sharpness = aimRotationSharpness;
-            }
-            else if (facingMode != CharacterFacingMode.AimOnly && PlanarVelocity.sqrMagnitude > 0.0025f)
-            {
-                facingDirection = PlanarVelocity.normalized;
-            }
-
-            if (facingDirection.sqrMagnitude <= 0.0001f)
+            if (!TryResolveBodyFacingDirection(out Vector3 facingDirection, out float sharpness))
             {
                 return;
             }
+
+            BodyFacingDirection = facingDirection.normalized;
 
             Quaternion targetRotation = MobilityState == CharacterMobilityState.WallRun
                 ? ResolveWallRunVisualRotation(facingDirection)
@@ -1489,8 +2147,73 @@ namespace SCF.Gameplay
             root.rotation = Quaternion.Slerp(root.rotation, targetRotation, blend);
         }
 
+        private bool TryResolveBodyFacingDirection(out Vector3 facingDirection, out float sharpness)
+        {
+            facingDirection = Vector3.zero;
+            sharpness = movementRotationSharpness;
+
+            if ((MobilityState == CharacterMobilityState.CombatRoll
+                    || MobilityState == CharacterMobilityState.Jumping
+                    || MobilityState == CharacterMobilityState.WallRun
+                    || IsObstacleTraversing)
+                && lockedMobilityDirection.sqrMagnitude > 0.0001f)
+            {
+                facingDirection = lockedMobilityDirection;
+                sharpness = MobilityState == CharacterMobilityState.WallRun ? wallRunVisualRotationSharpness : movementRotationSharpness;
+                return true;
+            }
+
+            Vector3 planarMove = Vector3.ProjectOnPlane(PlanarVelocity, Vector3.up);
+            bool hasMovementFacing = facingMode != CharacterFacingMode.AimOnly
+                                     && planarMove.sqrMagnitude > lowerBodyMoveThreshold * lowerBodyMoveThreshold;
+
+            if (separateAimFromLocomotion)
+            {
+                if (hasMovementFacing)
+                {
+                    facingDirection = planarMove.normalized;
+                    sharpness = movementRotationSharpness;
+                    return true;
+                }
+
+                if (lowerBodyAimsWhenIdle && facingMode != CharacterFacingMode.MovementOnly && HasAimDirection)
+                {
+                    facingDirection = AimDirection;
+                    sharpness = aimRotationSharpness;
+                    return true;
+                }
+            }
+            else if (facingMode != CharacterFacingMode.MovementOnly && HasAimDirection)
+            {
+                facingDirection = AimDirection;
+                sharpness = aimRotationSharpness;
+                return true;
+            }
+
+            if (hasMovementFacing)
+            {
+                facingDirection = planarMove.normalized;
+                sharpness = movementRotationSharpness;
+                return true;
+            }
+
+            if (facingMode == CharacterFacingMode.AimOnly && HasAimDirection)
+            {
+                facingDirection = AimDirection;
+                sharpness = aimRotationSharpness;
+                return true;
+            }
+
+            return false;
+        }
+
         private Quaternion ResolveWallRunVisualRotation(Vector3 fallbackDirection)
         {
+            if (wallRunIsVertical && wallNormal.sqrMagnitude > 0.0001f)
+            {
+                return Quaternion.LookRotation(-wallNormal.normalized, Vector3.up);
+            }
+
             Vector3 forward = wallRunDirection.sqrMagnitude > 0.0001f ? wallRunDirection.normalized : fallbackDirection.normalized;
             float oscillation = Mathf.Sin(mobilityStateTimer * Mathf.PI * 2f * wallRunVisualLeanFrequency) * wallRunVisualLeanVariance;
             float lean = (wallRunVisualLeanDegrees + oscillation) * WallRunSide;

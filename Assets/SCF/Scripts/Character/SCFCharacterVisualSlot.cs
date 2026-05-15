@@ -93,6 +93,8 @@ namespace SCF.Gameplay
             {
                 ConfigureAnimator(activeAnimator);
             }
+
+            RebindMovementStack();
         }
 
         public void Configure(RuntimeAnimatorController controller)
@@ -713,6 +715,7 @@ namespace SCF.Gameplay
             if (motor != null)
             {
                 motor.Configure(input, camera, facingRoot);
+                motor.SetTraversalProfile(IsParkourCharacterActive() ? SCFTraversalProfile.Parkour : SCFTraversalProfile.Standard);
             }
 
             MovementAnimatorBridge bridge = GetComponent<MovementAnimatorBridge>();
@@ -720,6 +723,23 @@ namespace SCF.Gameplay
             {
                 bridge.Configure(activeAnimator);
             }
+
+            SCFAimBodyDifferentiator bodyDifferentiator = GetComponent<SCFAimBodyDifferentiator>();
+            if (bodyDifferentiator == null)
+            {
+                bodyDifferentiator = gameObject.AddComponent<SCFAimBodyDifferentiator>();
+            }
+
+            bodyDifferentiator.Configure(motor, activeAnimator);
+            bodyDifferentiator.SetAimTorsoDuringWallRun(IsParkourCharacterActive());
+
+            SCFClimbHandContactIK climbHandIK = GetComponent<SCFClimbHandContactIK>();
+            if (climbHandIK == null)
+            {
+                climbHandIK = gameObject.AddComponent<SCFClimbHandContactIK>();
+            }
+
+            climbHandIK.Configure(motor, activeAnimator, IsParkourCharacterActive());
 
             MotionMatchingSignalHub signalHub = GetComponent<MotionMatchingSignalHub>();
             if (signalHub != null)
@@ -764,6 +784,17 @@ namespace SCF.Gameplay
             }
 
             return humanoidMotionDatabase;
+        }
+
+        private bool IsParkourCharacterActive()
+        {
+            if (string.IsNullOrWhiteSpace(activeCharacterName))
+            {
+                return false;
+            }
+
+            return activeCharacterName.IndexOf("Parkour", StringComparison.OrdinalIgnoreCase) >= 0
+                   || activeCharacterName.IndexOf("Frank", StringComparison.OrdinalIgnoreCase) >= 0;
         }
     }
 }

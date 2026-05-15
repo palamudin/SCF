@@ -40,6 +40,9 @@ namespace SCF.Gameplay
         [SerializeField] private string mobilityStateParameter = "MobilityState";
         [SerializeField, Min(0.01f)] private float jumpPulseDuration = 0.12f;
 
+        [Header("Controller Guard")]
+        [SerializeField] private bool suppressParkourWallRunControllerState = true;
+
         private int speedHash;
         private int moveXHash;
         private int moveZHash;
@@ -218,7 +221,7 @@ namespace SCF.Gameplay
 
             if (hasWallRun)
             {
-                animator.SetBool(wallRunHash, motor.IsWallRunning);
+                animator.SetBool(wallRunHash, motor.IsWallRunning && !ShouldSuppressParkourWallRunControllerState());
             }
 
             if (hasWallRunSide)
@@ -358,7 +361,7 @@ namespace SCF.Gameplay
             if (motor.WallRunSequence != observedWallRunSequence)
             {
                 observedWallRunSequence = motor.WallRunSequence;
-                if (hasWallRunTrigger)
+                if (hasWallRunTrigger && !ShouldSuppressParkourWallRunControllerState())
                 {
                     animator.SetTrigger(wallRunTriggerHash);
                 }
@@ -405,6 +408,14 @@ namespace SCF.Gameplay
             }
 
             return false;
+        }
+
+        private bool ShouldSuppressParkourWallRunControllerState()
+        {
+            return suppressParkourWallRunControllerState
+                   && motor != null
+                   && motor.TraversalProfile == SCFTraversalProfile.Parkour
+                   && motor.IsWallRunning;
         }
     }
 }

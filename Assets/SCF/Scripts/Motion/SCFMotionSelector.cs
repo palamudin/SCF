@@ -230,7 +230,7 @@ namespace SCF.Gameplay
 
                 if (motor.IsVaulting)
                 {
-                    return ChooseActionMotion(SCFMotionType.Vault, ResolveLocalMotionDirection(), out cost);
+                    return ChooseVaultMotion(out cost);
                 }
 
                 if (motor.IsClimbing)
@@ -262,9 +262,11 @@ namespace SCF.Gameplay
         private int ChooseWallRunLocomotion(out float cost)
         {
             float side = motor != null && motor.WallRunSide < 0f ? -1f : 1f;
-            Vector2 wallRunSideDirection = Vector2.right * side;
+            Vector2 wallRunDirection = motor != null && motor.TraversalProfile == SCFTraversalProfile.Parkour
+                ? Vector2.up
+                : Vector2.right * side;
             float speed = motor != null ? motor.PlanarVelocity.magnitude : 0f;
-            int locomotion = database.FindBestLocomotion(wallRunSideDirection, speed, selectedMotionIndex, currentClipBias, out cost);
+            int locomotion = database.FindBestLocomotion(wallRunDirection, speed, selectedMotionIndex, currentClipBias, out cost);
             if (locomotion >= 0)
             {
                 return locomotion;
@@ -282,6 +284,27 @@ namespace SCF.Gameplay
             }
 
             return database.FindBestLocomotion(desiredDirection, motor != null ? motor.PlanarVelocity.magnitude : 0f, selectedMotionIndex, currentClipBias, out cost);
+        }
+
+        private int ChooseVaultMotion(out float cost)
+        {
+            Vector2 direction = ResolveLocalMotionDirection();
+            if (motor != null && motor.IsVaultSliding)
+            {
+                int slide = database.FindBestByType(SCFMotionType.VaultSlide, direction, selectedMotionIndex, currentClipBias, out cost);
+                if (slide >= 0)
+                {
+                    return slide;
+                }
+
+                int rollFallback = database.FindBestByType(SCFMotionType.CombatRoll, Vector2.up, selectedMotionIndex, currentClipBias, out cost);
+                if (rollFallback >= 0)
+                {
+                    return rollFallback;
+                }
+            }
+
+            return ChooseActionMotion(SCFMotionType.Vault, direction, out cost);
         }
 
         private int ChooseAirborneMotion(out float cost)
@@ -486,6 +509,7 @@ namespace SCF.Gameplay
                     end = combatRollClipEnd;
                     break;
                 case SCFMotionType.Vault:
+                case SCFMotionType.VaultSlide:
                     start = vaultClipStart;
                     end = vaultClipEnd;
                     break;
@@ -530,6 +554,7 @@ namespace SCF.Gameplay
             return (motionType == SCFMotionType.CombatRoll && motor.IsCombatRolling)
                 || (motionType == SCFMotionType.Jump && motor.IsAirborne)
                 || (motionType == SCFMotionType.Vault && motor.IsVaulting)
+                || (motionType == SCFMotionType.VaultSlide && motor.IsVaulting && motor.IsVaultSliding)
                 || (motionType == SCFMotionType.Climb && motor.IsClimbing);
         }
 

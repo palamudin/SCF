@@ -11,7 +11,8 @@ namespace SCF.Gameplay
         CombatRoll,
         WallRun,
         Vault,
-        Climb
+        Climb,
+        VaultSlide
     }
 
     [Flags]
@@ -27,7 +28,8 @@ namespace SCF.Gameplay
         CombatRoll = 1 << 6,
         WallRun = 1 << 7,
         Vault = 1 << 8,
-        Climb = 1 << 9
+        Climb = 1 << 9,
+        VaultSlide = 1 << 10
     }
 
     [Serializable]
