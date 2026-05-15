@@ -1,0 +1,1929 @@
+using System;
+using System.Collections;
+using System.Globalization;
+using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+namespace SCF.Gameplay
+{
+    [DisallowMultipleComponent]
+    [RequireComponent(typeof(IsometricCharacterMotor))]
+    [DefaultExecutionOrder(95)]
+    public sealed class SCFWeaponVisualSlot : MonoBehaviour
+    {
+        private const int CurrentRailgunProfileRevision = 11;
+        private const string PrototypeRailgunPath = "Assets/SCF/2.8 rail-gun prototype_Texture_Packed.blend";
+        private const string RailgunFireClipPath = "Assets/SCF/Audio/kalsstockmedia-a-large-explosive-laser-gun-shot-scifi-410622.mp3";
+        private const string ReferenceShotgunPath = "Assets/SCF/MovementAni/NVoperatorsoldier.glb";
+        private const string Pose3RightGripTargetName = "SCF_Pose3RightGripTarget";
+        private const string Pose3LeftGripTargetName = "SCF_Pose3LeftGripTarget";
+        private static readonly Vector3 LegacyWeaponEulerAngles = new Vector3(0f, 90f, 90f);
+        private static readonly Vector3 DefaultWeaponEulerAngles = new Vector3(170f, 90f, 180f);
+        private static readonly Vector3 LegacyRightGripPosition = new Vector3(0.02f, -0.05f, 0.15f);
+        private static readonly Vector3 DefaultRightGripPosition = new Vector3(0.02f, -0.05f, 0.12f);
+        private static readonly Vector3 LegacyLeftGripPosition = new Vector3(-0.06f, 0.01f, 0.38f);
+        private static readonly Vector3 DefaultLeftGripPosition = new Vector3(-0.04f, -0.02f, 0.28f);
+        private static readonly Vector3 Pose3ReferenceRightWristFromShotgunBone = new Vector3(-0.0332f, -0.2147f, -0.8692f);
+        private static readonly Vector3 Pose3ReferenceLeftWristFromShotgunBone = new Vector3(0.1325f, -0.2297f, 0.3901f);
+
+        [Header("References")]
+        [SerializeField] private IsometricPlayerInput input;
+        [SerializeField] private IsometricCharacterMotor motor;
+        [SerializeField] private Animator animator;
+
+        [Header("Railgun Profile")]
+        [SerializeField] private GameObject railgunPrototype;
+        [SerializeField] private GameObject referenceShotgunPrototype;
+        [SerializeField] private bool equipRailgunOnSoldier = true;
+        [SerializeField] private bool useReferenceShotgunPrototype;
+        [SerializeField] private int railgunProfileRevision;
+        [SerializeField] private string torsoSocketName = "SCF_ChestWeaponSocket";
+        [SerializeField] private string rightGripName = "SCF_RightPistolGrip";
+        [SerializeField] private string leftGripName = "SCF_LeftUnderbarrelGrip";
+        [SerializeField] private string referenceShotgunMeshName = "SHOTGUN";
+        [SerializeField] private string referenceShotgunAnchorName = "SHOTGUNbone";
+        [SerializeField] private string referenceRightGripName = "HandWrist.R";
+        [SerializeField] private string referenceLeftGripName = "HandWrist.L";
+        [SerializeField] private string referencePoseClipName = "SHOTGUNpose3";
+        [SerializeField, Range(0f, 1f)] private float referencePoseSampleTime01 = 0f;
+
+        [Header("Body Socket")]
+        [Tooltip("Chest-bone local weapon socket offset.")]
+        [SerializeField] private Vector3 restSocketOffset = new Vector3(0.18f, 0.02f, 0.26f);
+        [Tooltip("Right-click raised chest-bone local weapon socket offset.")]
+        [SerializeField] private Vector3 raisedSocketOffset = new Vector3(0.06f, 0.08f, 0.3f);
+        [SerializeField] private Vector3 restSocketEulerAngles = new Vector3(0f, 0f, 0f);
+        [SerializeField] private Vector3 raisedSocketEulerAngles = new Vector3(-5f, 0f, 0f);
+        [SerializeField, Min(0.1f)] private float raiseSharpness = 14f;
+
+        [Header("Weapon Local Fit")]
+        [SerializeField] private Vector3 weaponLocalPosition = Vector3.zero;
+        [SerializeField] private Vector3 weaponLocalEulerAngles = new Vector3(170f, 90f, 180f);
+        [SerializeField] private Vector3 weaponLocalScale = Vector3.one;
+
+        [Header("Weapon Anchor")]
+        [SerializeField] private bool anchorWeaponByRightGrip = true;
+        [SerializeField] private Vector3 restRightGripSocketOffset = Vector3.zero;
+        [SerializeField] private Vector3 raisedRightGripSocketOffset = new Vector3(0f, 0.01f, 0.02f);
+
+        [Header("Shotgun Pose3 Replica")]
+        [SerializeField] private bool useShotgunPose3GripReplica = true;
+        [SerializeField, Min(0.01f)] private float shotgunPose3Scale = 0.27f;
+        [SerializeField] private Vector3 shotgunPose3RightGripTuningOffset = new Vector3(0f, -0.08f, -0.14f);
+        [SerializeField] private Vector3 shotgunPose3LeftGripTuningOffset = new Vector3(-0.105261f, 0.15405f, -0.000011f);
+        [SerializeField] private Vector3 shotgunPose3WeaponAnchorTuningOffset = Vector3.zero;
+        [SerializeField] private Vector3 shotgunPose3RightGripEulerAngles = new Vector3(-106.2f, -23.89999f, -75.70001f);
+        [SerializeField] private Vector3 shotgunPose3LeftGripEulerAngles = new Vector3(-134.6f, 146.4f, -11.4f);
+
+        [Header("Railgun Live Tuning")]
+        [SerializeField] private bool enableRailgunLiveTuning = true;
+        [SerializeField] private bool preserveTunedRailgunTransform = true;
+        [SerializeField] private bool preserveTunedGripTargets = true;
+        [SerializeField] private bool captureTuningEveryFrame;
+        [SerializeField] private bool copyTuningOnCapture = true;
+        [SerializeField] private KeyCode captureTuningHotkey = KeyCode.F8;
+
+        [Header("Railgun Fire")]
+        [SerializeField] private bool enableRailgunFire = true;
+        [SerializeField] private bool fireRailgunWhileHeld;
+        [SerializeField, Min(0.01f)] private float railgunFireCooldown = 0.42f;
+        [SerializeField, Min(1f)] private float railgunFireRange = 120f;
+        [SerializeField] private LayerMask railgunHitMask = ~0;
+        [SerializeField, Min(0f)] private float railgunRaycastStartOffset = 0.1f;
+        [SerializeField, Min(0f)] private float railgunMuzzleForwardOffset = 0.08f;
+        [SerializeField] private AudioClip railgunFireClip;
+        [SerializeField, Range(0f, 1f)] private float railgunFireVolume = 0.85f;
+        [SerializeField, Range(0f, 1f)] private float railgunFireSpatialBlend = 0.72f;
+        [SerializeField, Range(0.1f, 3f)] private float railgunFireMinPitch = 0.96f;
+        [SerializeField, Range(0.1f, 3f)] private float railgunFireMaxPitch = 1.04f;
+        [SerializeField] private Color railgunBeamColor = new Color(0.35f, 0.95f, 1f, 0.95f);
+        [SerializeField] private Color railgunBeamCoreColor = new Color(1f, 1f, 1f, 0.9f);
+        [SerializeField, Min(0.001f)] private float railgunBeamWidth = 0.045f;
+        [SerializeField, Min(0.01f)] private float railgunBeamLifetime = 0.11f;
+        [SerializeField, Min(1f)] private float railgunTracerProjectileSpeed = 260f;
+        [SerializeField, Min(0.01f)] private float railgunTracerMaxTravelTime = 0.09f;
+        [SerializeField, Min(0.01f)] private float railgunTracerParticleLifetime = 0.42f;
+        [SerializeField, Min(0.001f)] private float railgunTracerParticleSize = 0.045f;
+        [SerializeField, Min(0.001f)] private float railgunTracerRadius = 0.08f;
+        [SerializeField, Min(0f)] private float railgunTracerArcSpeed = 5.5f;
+        [SerializeField, Min(0f)] private float railgunTracerEmissionPerDistance = 95f;
+        [SerializeField, Min(0f)] private int railgunImpactBurstCount = 28;
+
+        [Header("Grip Targets")]
+        [SerializeField] private Vector3 rightGripLocalPosition = new Vector3(0.02f, -0.05f, 0.12f);
+        [SerializeField] private Vector3 rightGripLocalEulerAngles = new Vector3(0f, 90f, 90f);
+        [SerializeField] private Vector3 leftGripLocalPosition = new Vector3(-0.04f, -0.02f, 0.28f);
+        [SerializeField] private Vector3 leftGripLocalEulerAngles = new Vector3(0f, 90f, 90f);
+
+        [Header("Hand IK")]
+        [SerializeField] private bool enableHandIk = true;
+        [SerializeField] private bool useAnimatorIk;
+        [SerializeField, Range(0f, 1f)] private float rightHandIkWeight = 0.95f;
+        [SerializeField, Range(0f, 1f)] private float leftHandIkWeight = 1f;
+        [SerializeField, Range(0f, 1f)] private float genericBoneFallbackWeight = 1f;
+        [SerializeField] private bool applyBoneFallbackForHumanoids = true;
+        [SerializeField, Range(0f, 2f)] private float rightArmReachWeight = 0.85f;
+        [SerializeField, Range(0f, 2f)] private float leftArmReachWeight = 1.35f;
+        [SerializeField, Range(1, 8)] private int genericSolveIterations = 6;
+        [SerializeField, Range(0f, 1f)] private float finalGripPositionWeight = 0.72f;
+        [SerializeField, Range(0f, 1f)] private float finalGripRotationWeight = 0.9f;
+        [SerializeField, Min(0.1f)] private float handIkBlendSharpness = 16f;
+
+        [Header("Debug")]
+        [SerializeField] private string activeCharacterName;
+        [SerializeField] private GameObject activeWeapon;
+        [SerializeField, Range(0f, 1f)] private float raised01;
+        [SerializeField, Range(0f, 1f)] private float currentRightHandWeight;
+        [SerializeField, Range(0f, 1f)] private float currentLeftHandWeight;
+
+        private Transform weaponSocket;
+        private Transform rightGrip;
+        private Transform leftGrip;
+        private Transform chestAnchor;
+        private Transform referenceWeaponAnchor;
+        private Transform pose3RightGripTarget;
+        private Transform pose3LeftGripTarget;
+        private ArmRig rightArm;
+        private ArmRig leftArm;
+        private float nextRailgunFireTime;
+        private Material railgunBeamMaterial;
+        private Material railgunParticleMaterial;
+
+        public bool HasActiveWeapon => activeWeapon != null;
+        public float Raised01 => raised01;
+
+        private struct ArmRig
+        {
+            public Transform Shoulder;
+            public Transform UpperArm;
+            public Transform Forearm;
+            public Transform Hand;
+        }
+
+        private void Awake()
+        {
+            ApplyRailgunProfileDefaultsIfNeeded();
+            ResolveRailgunFireClip();
+            ResolveReferences();
+            CacheBones();
+            EnsureAnimatorIkRelay();
+        }
+
+        private void OnValidate()
+        {
+            ApplyRailgunProfileDefaultsIfNeeded();
+            ResolveRailgunFireClip();
+
+            if (NearlyEqual(weaponLocalEulerAngles, LegacyWeaponEulerAngles))
+            {
+                weaponLocalEulerAngles = DefaultWeaponEulerAngles;
+            }
+
+            if (NearlyEqual(rightGripLocalPosition, LegacyRightGripPosition))
+            {
+                rightGripLocalPosition = DefaultRightGripPosition;
+            }
+
+            if (NearlyEqual(leftGripLocalPosition, LegacyLeftGripPosition))
+            {
+                leftGripLocalPosition = DefaultLeftGripPosition;
+            }
+
+            if (Mathf.Abs(leftHandIkWeight - 0.88f) <= 0.001f)
+            {
+                leftHandIkWeight = 1f;
+            }
+
+            if (Mathf.Abs(genericBoneFallbackWeight - 0.65f) <= 0.001f)
+            {
+                genericBoneFallbackWeight = 1f;
+            }
+
+            shotgunPose3Scale = Mathf.Max(0.01f, shotgunPose3Scale);
+            railgunFireMaxPitch = Mathf.Max(railgunFireMinPitch, railgunFireMaxPitch);
+        }
+
+        private void ApplyRailgunProfileDefaultsIfNeeded()
+        {
+            if (string.IsNullOrWhiteSpace(referencePoseClipName))
+            {
+                referencePoseClipName = "SHOTGUNpose3";
+            }
+
+            if (string.IsNullOrWhiteSpace(referenceShotgunMeshName))
+            {
+                referenceShotgunMeshName = "SHOTGUN";
+            }
+
+            if (string.IsNullOrWhiteSpace(referenceShotgunAnchorName))
+            {
+                referenceShotgunAnchorName = "SHOTGUNbone";
+            }
+
+            if (string.IsNullOrWhiteSpace(referenceRightGripName))
+            {
+                referenceRightGripName = "HandWrist.R";
+            }
+
+            if (string.IsNullOrWhiteSpace(referenceLeftGripName))
+            {
+                referenceLeftGripName = "HandWrist.L";
+            }
+
+            if (railgunProfileRevision >= CurrentRailgunProfileRevision)
+            {
+                return;
+            }
+
+            if (railgunProfileRevision >= 9)
+            {
+                ApplyRailgunSocketDefaults();
+                ApplyRailgunGripTargetDefaults();
+                ApplyRailgunWeaponTransformDefaults();
+                railgunProfileRevision = CurrentRailgunProfileRevision;
+                return;
+            }
+
+            if (railgunProfileRevision >= 8)
+            {
+                ApplyRailgunSocketDefaults();
+                ApplyRailgunGripTargetDefaults();
+                ApplyRailgunWeaponTransformDefaults();
+                railgunProfileRevision = CurrentRailgunProfileRevision;
+                return;
+            }
+
+            if (railgunProfileRevision >= 7)
+            {
+                ApplyRailgunSocketDefaults();
+                ApplyRailgunGripTargetDefaults();
+                ApplyRailgunWeaponTransformDefaults();
+                railgunProfileRevision = CurrentRailgunProfileRevision;
+                return;
+            }
+
+            if (railgunProfileRevision >= 6)
+            {
+                ApplyRailgunSocketDefaults();
+                ApplyRailgunGripTargetDefaults();
+                ApplyRailgunWeaponTransformDefaults();
+                railgunProfileRevision = CurrentRailgunProfileRevision;
+                return;
+            }
+
+            if (railgunProfileRevision >= 5)
+            {
+                ApplyRailgunSocketDefaults();
+                ApplyRailgunGripTargetDefaults();
+                ApplyRailgunWeaponTransformDefaults();
+                railgunProfileRevision = CurrentRailgunProfileRevision;
+                return;
+            }
+
+            if (railgunProfileRevision >= 4)
+            {
+                useReferenceShotgunPrototype = false;
+                useShotgunPose3GripReplica = true;
+                ApplyRailgunSocketDefaults();
+                ApplyRailgunGripTargetDefaults();
+                ApplyRailgunWeaponTransformDefaults();
+                railgunProfileRevision = CurrentRailgunProfileRevision;
+                return;
+            }
+
+            if (railgunProfileRevision >= 3)
+            {
+                useReferenceShotgunPrototype = false;
+                useShotgunPose3GripReplica = true;
+                ApplyRailgunSocketDefaults();
+                ApplyRailgunGripTargetDefaults();
+                ApplyRailgunWeaponTransformDefaults();
+                if (shotgunPose3RightGripEulerAngles == Vector3.zero)
+                {
+                    shotgunPose3RightGripEulerAngles = new Vector3(-106.2f, -23.89999f, -75.70001f);
+                }
+
+                if (shotgunPose3LeftGripEulerAngles == Vector3.zero)
+                {
+                    shotgunPose3LeftGripEulerAngles = new Vector3(-134.6f, 146.4f, -11.4f);
+                }
+
+                if (shotgunPose3LeftGripTuningOffset == Vector3.zero)
+                {
+                    shotgunPose3LeftGripTuningOffset = new Vector3(-0.105261f, 0.15405f, -0.000011f);
+                }
+
+                railgunProfileRevision = CurrentRailgunProfileRevision;
+                return;
+            }
+
+            ApplyRailgunSocketDefaults();
+
+            useReferenceShotgunPrototype = false;
+            anchorWeaponByRightGrip = true;
+            restRightGripSocketOffset = Vector3.zero;
+            raisedRightGripSocketOffset = new Vector3(0f, 0.01f, 0.02f);
+            useShotgunPose3GripReplica = true;
+            shotgunPose3Scale = 0.27f;
+            shotgunPose3RightGripTuningOffset = new Vector3(0f, -0.08f, -0.14f);
+            shotgunPose3LeftGripTuningOffset = new Vector3(-0.105261f, 0.15405f, -0.000011f);
+            shotgunPose3WeaponAnchorTuningOffset = Vector3.zero;
+            shotgunPose3RightGripEulerAngles = new Vector3(-106.2f, -23.89999f, -75.70001f);
+            shotgunPose3LeftGripEulerAngles = new Vector3(-134.6f, 146.4f, -11.4f);
+            ApplyRailgunWeaponTransformDefaults();
+
+            rightGripLocalPosition = new Vector3(0.02f, -0.07f, 0.09f);
+            rightGripLocalEulerAngles = new Vector3(0f, 90f, 90f);
+            leftGripLocalPosition = new Vector3(-0.07f, -0.06f, 0.34f);
+            leftGripLocalEulerAngles = new Vector3(0f, 90f, 90f);
+
+            useAnimatorIk = true;
+            rightHandIkWeight = 1f;
+            leftHandIkWeight = 1f;
+            genericBoneFallbackWeight = 1f;
+            applyBoneFallbackForHumanoids = true;
+            rightArmReachWeight = 1.1f;
+            leftArmReachWeight = 1.5f;
+            genericSolveIterations = 6;
+            finalGripPositionWeight = 0.58f;
+            finalGripRotationWeight = 0.9f;
+            handIkBlendSharpness = 18f;
+
+            railgunProfileRevision = CurrentRailgunProfileRevision;
+        }
+
+        private void ApplyRailgunSocketDefaults()
+        {
+            restSocketOffset = new Vector3(0.18f, 0.02f, 0.26f);
+            raisedSocketOffset = new Vector3(0.06f, 0.08f, 0.3f);
+            restSocketEulerAngles = Vector3.zero;
+            raisedSocketEulerAngles = new Vector3(-5f, 0f, 0f);
+        }
+
+        private void ApplyRailgunGripTargetDefaults()
+        {
+            useReferenceShotgunPrototype = false;
+            useShotgunPose3GripReplica = true;
+            anchorWeaponByRightGrip = true;
+            restRightGripSocketOffset = Vector3.zero;
+            raisedRightGripSocketOffset = new Vector3(0f, 0.01f, 0.02f);
+            shotgunPose3Scale = Mathf.Max(0.01f, shotgunPose3Scale <= 0f ? 0.27f : shotgunPose3Scale);
+            shotgunPose3RightGripTuningOffset = new Vector3(0f, -0.08f, -0.14f);
+            shotgunPose3LeftGripTuningOffset = new Vector3(-0.105261f, 0.15405f, -0.000011f);
+            shotgunPose3RightGripEulerAngles = new Vector3(-106.2f, -23.89999f, -75.70001f);
+            shotgunPose3LeftGripEulerAngles = new Vector3(-134.6f, 146.4f, -11.4f);
+        }
+
+        private void ApplyRailgunWeaponTransformDefaults()
+        {
+            weaponLocalPosition = new Vector3(-0.06f, -0.02f, -0.04f) - ResolvePose3WeaponAnchorSocketOffset();
+            weaponLocalEulerAngles = new Vector3(-4.95f, -90.25f, 25.36f);
+            weaponLocalScale = Vector3.one * 0.8f;
+        }
+
+        public void Configure(IsometricCharacterMotor characterMotor, Animator targetAnimator, string characterName)
+        {
+            ApplyRailgunProfileDefaultsIfNeeded();
+            motor = characterMotor;
+            animator = targetAnimator;
+            activeCharacterName = characterName ?? string.Empty;
+            ResolveReferences();
+            CacheBones();
+            EnsureAnimatorIkRelay();
+
+            if (ShouldEquipRailgun())
+            {
+                EquipRailgun();
+            }
+            else
+            {
+                ClearWeapon();
+            }
+        }
+
+        public void ApplyAnimatorIK(int layerIndex, Animator sourceAnimator)
+        {
+            if (!useAnimatorIk)
+            {
+                return;
+            }
+
+            Animator targetAnimator = sourceAnimator != null ? sourceAnimator : animator;
+            if (targetAnimator == null || targetAnimator != animator || !targetAnimator.isHuman)
+            {
+                return;
+            }
+
+            if (!CanApplyHandIk())
+            {
+                ClearAnimatorIkGoals(targetAnimator);
+                return;
+            }
+
+            ApplyHumanoidHandIk(targetAnimator, AvatarIKGoal.RightHand, rightGrip, currentRightHandWeight);
+            ApplyHumanoidHandIk(targetAnimator, AvatarIKGoal.LeftHand, leftGrip, currentLeftHandWeight);
+        }
+
+        private void LateUpdate()
+        {
+            ResolveReferences();
+
+            if (activeWeapon == null)
+            {
+                currentRightHandWeight = 0f;
+                currentLeftHandWeight = 0f;
+                return;
+            }
+
+            if (chestAnchor == null || rightArm.Hand == null || leftArm.Hand == null)
+            {
+                CacheBones();
+            }
+
+            float blend = 1f - Mathf.Exp(-handIkBlendSharpness * Time.deltaTime);
+            bool canApplyIk = CanApplyHandIk();
+            currentRightHandWeight = Mathf.Lerp(currentRightHandWeight, canApplyIk ? rightHandIkWeight : 0f, blend);
+            currentLeftHandWeight = Mathf.Lerp(currentLeftHandWeight, canApplyIk ? leftHandIkWeight : 0f, blend);
+
+            UpdateRaisedBlend();
+            UpdateWeaponSocket();
+            ApplyWeaponLocalFit();
+            if (IsReferenceShotgunInstance())
+            {
+                AlignReferenceShotgunToSocket();
+                CacheReferenceShotgunGrips();
+            }
+            else
+            {
+                EnsureGrips();
+                if (!UseShotgunPose3GripReplica())
+                {
+                    AlignWeaponByRightGrip();
+                }
+            }
+
+            if (ShouldApplyBoneFallback())
+            {
+                ApplyGenericArmToGrip(rightArm, rightGrip, currentRightHandWeight, rightArmReachWeight);
+                ApplyGenericArmToGrip(leftArm, leftGrip, currentLeftHandWeight, leftArmReachWeight);
+            }
+
+            TickRailgunLiveTuningCapture();
+            TickRailgunFire();
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            DrawGripGizmo(weaponSocket, Color.yellow, 0.04f);
+            DrawGripGizmo(rightGrip, Color.cyan, 0.03f);
+            DrawGripGizmo(leftGrip, Color.green, 0.03f);
+        }
+
+        private void OnDestroy()
+        {
+            DestroyUnityObject(railgunBeamMaterial);
+            DestroyUnityObject(railgunParticleMaterial);
+        }
+
+        private void ResolveReferences()
+        {
+            if (input == null)
+            {
+                input = GetComponent<IsometricPlayerInput>();
+            }
+
+            if (motor == null)
+            {
+                motor = GetComponent<IsometricCharacterMotor>();
+            }
+
+            if (animator == null)
+            {
+                animator = GetComponentInChildren<Animator>(true);
+            }
+        }
+
+        private void EnsureAnimatorIkRelay()
+        {
+            if (animator == null)
+            {
+                return;
+            }
+
+            SCFWeaponIkRelay relay = animator.GetComponent<SCFWeaponIkRelay>();
+            if (relay == null)
+            {
+                relay = animator.gameObject.AddComponent<SCFWeaponIkRelay>();
+            }
+
+            relay.enabled = true;
+            relay.Configure(this);
+        }
+
+        private bool ShouldEquipRailgun()
+        {
+            return equipRailgunOnSoldier
+                   && animator != null
+                   && IsSoldierCharacter(activeCharacterName)
+                   && ResolveWeaponPrototype() != null;
+        }
+
+        private void EquipRailgun()
+        {
+            GameObject prototype = ResolveWeaponPrototype();
+            if (prototype == null || animator == null)
+            {
+                ClearWeapon();
+                return;
+            }
+
+            CacheBones();
+            EnsureWeaponSocket();
+            if (weaponSocket == null)
+            {
+                ClearWeapon();
+                return;
+            }
+
+            string weaponInstanceName = IsUsingReferenceShotgun() ? "SCF_Selected_ReferenceShotgun" : "SCF_Selected_Railgun";
+            if (activeWeapon != null && activeWeapon.name.StartsWith(weaponInstanceName, StringComparison.Ordinal))
+            {
+                ResetWeaponTransform();
+                return;
+            }
+
+            ClearWeaponInstanceOnly();
+            activeWeapon = Instantiate(prototype, weaponSocket);
+            activeWeapon.name = weaponInstanceName;
+            EnsureTuningHandle(activeWeapon);
+            ResetWeaponTransform();
+            if (IsUsingReferenceShotgun())
+            {
+                PrepareReferenceShotgunInstance();
+            }
+
+            StripColliders(activeWeapon);
+        }
+
+        private GameObject ResolveWeaponPrototype()
+        {
+            GameObject reference = IsUsingReferenceShotgun() ? ResolveReferenceShotgunPrototype() : null;
+            return reference != null ? reference : ResolveRailgunPrototype();
+        }
+
+        private bool IsUsingReferenceShotgun()
+        {
+            return useReferenceShotgunPrototype;
+        }
+
+        private GameObject ResolveRailgunPrototype()
+        {
+            if (railgunPrototype != null)
+            {
+                return railgunPrototype;
+            }
+
+#if UNITY_EDITOR
+            railgunPrototype = AssetDatabase.LoadAssetAtPath<GameObject>(PrototypeRailgunPath);
+#endif
+            return railgunPrototype;
+        }
+
+        private GameObject ResolveReferenceShotgunPrototype()
+        {
+            if (referenceShotgunPrototype != null)
+            {
+                return referenceShotgunPrototype;
+            }
+
+#if UNITY_EDITOR
+            referenceShotgunPrototype = AssetDatabase.LoadAssetAtPath<GameObject>(ReferenceShotgunPath);
+#endif
+            return referenceShotgunPrototype;
+        }
+
+        private AudioClip ResolveRailgunFireClip()
+        {
+            if (railgunFireClip != null)
+            {
+                return railgunFireClip;
+            }
+
+#if UNITY_EDITOR
+            railgunFireClip = AssetDatabase.LoadAssetAtPath<AudioClip>(RailgunFireClipPath);
+#endif
+            return railgunFireClip;
+        }
+
+        private void TickRailgunFire()
+        {
+            if (!Application.isPlaying
+                || !enableRailgunFire
+                || input == null
+                || activeWeapon == null
+                || !activeWeapon.name.StartsWith("SCF_Selected_Railgun", StringComparison.Ordinal))
+            {
+                return;
+            }
+
+            bool requested = input.AttackPressedThisFrame || (fireRailgunWhileHeld && input.AttackHeld);
+            if (!requested || Time.time < nextRailgunFireTime)
+            {
+                return;
+            }
+
+            FireRailgun();
+            nextRailgunFireTime = Time.time + railgunFireCooldown;
+        }
+
+        private void FireRailgun()
+        {
+            Vector3 direction = ResolveRailgunFireDirection();
+            Vector3 muzzle = ResolveRailgunMuzzlePosition(direction);
+            Vector3 impact = TryFindRailgunHit(muzzle, direction, out RaycastHit hit)
+                ? hit.point
+                : muzzle + direction * railgunFireRange;
+
+            SpawnRailgunBeam(muzzle, impact);
+            SpawnRailgunCorkscrewTracer(muzzle, impact);
+            if (hit.collider != null)
+            {
+                SpawnRailgunImpact(hit.point, hit.normal);
+            }
+
+            PlayRailgunFireSound(muzzle);
+        }
+
+        private Vector3 ResolveRailgunFireDirection()
+        {
+            Vector3 direction = Vector3.zero;
+            if (motor != null && motor.HasAimDirection)
+            {
+                direction = motor.AimDirection;
+            }
+
+            if (direction.sqrMagnitude <= 0.0001f && activeWeapon != null)
+            {
+                direction = activeWeapon.transform.forward;
+            }
+
+            if (direction.sqrMagnitude <= 0.0001f)
+            {
+                direction = transform.forward;
+            }
+
+            direction.y = 0f;
+            if (direction.sqrMagnitude <= 0.0001f)
+            {
+                direction = Vector3.forward;
+            }
+
+            return direction.normalized;
+        }
+
+        private Vector3 ResolveRailgunMuzzlePosition(Vector3 direction)
+        {
+            if (activeWeapon == null)
+            {
+                return transform.position + Vector3.up * 1.1f + direction * 0.35f;
+            }
+
+            Renderer[] renderers = activeWeapon.GetComponentsInChildren<Renderer>(true);
+            Bounds combinedBounds = default;
+            bool hasBounds = false;
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                Renderer renderer = renderers[i];
+                if (renderer == null || !renderer.enabled)
+                {
+                    continue;
+                }
+
+                if (!hasBounds)
+                {
+                    combinedBounds = renderer.bounds;
+                    hasBounds = true;
+                }
+                else
+                {
+                    combinedBounds.Encapsulate(renderer.bounds);
+                }
+            }
+
+            if (!hasBounds)
+            {
+                return activeWeapon.transform.position + direction * (0.35f + railgunMuzzleForwardOffset);
+            }
+
+            Vector3 extents = combinedBounds.extents;
+            float forwardReach = Mathf.Abs(direction.x) * extents.x + Mathf.Abs(direction.z) * extents.z;
+            Vector3 muzzle = combinedBounds.center + direction * forwardReach;
+            return muzzle + direction * railgunMuzzleForwardOffset;
+        }
+
+        private bool TryFindRailgunHit(Vector3 muzzle, Vector3 direction, out RaycastHit hit)
+        {
+            hit = default;
+            Vector3 origin = muzzle + direction * railgunRaycastStartOffset;
+            RaycastHit[] hits = Physics.RaycastAll(origin, direction, railgunFireRange, railgunHitMask, QueryTriggerInteraction.Ignore);
+            if (hits == null || hits.Length == 0)
+            {
+                return false;
+            }
+
+            Array.Sort(hits, (left, right) => left.distance.CompareTo(right.distance));
+            for (int i = 0; i < hits.Length; i++)
+            {
+                if (IsOwnRailgunHit(hits[i].transform))
+                {
+                    continue;
+                }
+
+                hit = hits[i];
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool IsOwnRailgunHit(Transform hitTransform)
+        {
+            return hitTransform != null
+                   && (hitTransform == transform
+                       || hitTransform.IsChildOf(transform)
+                       || (activeWeapon != null && hitTransform.IsChildOf(activeWeapon.transform)));
+        }
+
+        private void SpawnRailgunBeam(Vector3 start, Vector3 end)
+        {
+            GameObject beamObject = new GameObject("SCF_RailgunBeam");
+            LineRenderer line = beamObject.AddComponent<LineRenderer>();
+            line.useWorldSpace = true;
+            line.positionCount = 2;
+            line.SetPosition(0, start);
+            line.SetPosition(1, end);
+            line.material = ResolveRailgunBeamMaterial();
+            line.startWidth = railgunBeamWidth;
+            line.endWidth = railgunBeamWidth * 0.42f;
+            line.startColor = railgunBeamCoreColor;
+            line.endColor = railgunBeamColor;
+            line.numCapVertices = 6;
+            line.numCornerVertices = 2;
+            line.alignment = LineAlignment.View;
+            line.textureMode = LineTextureMode.Stretch;
+            StartCoroutine(FadeRailgunBeam(line, beamObject));
+        }
+
+        private IEnumerator FadeRailgunBeam(LineRenderer line, GameObject beamObject)
+        {
+            float age = 0f;
+            float startWidth = line != null ? line.startWidth : railgunBeamWidth;
+            float endWidth = line != null ? line.endWidth : railgunBeamWidth * 0.42f;
+            while (line != null && age < railgunBeamLifetime)
+            {
+                float t = Mathf.Clamp01(age / Mathf.Max(0.001f, railgunBeamLifetime));
+                float alpha = 1f - t;
+                line.startWidth = Mathf.Lerp(startWidth, 0.001f, t);
+                line.endWidth = Mathf.Lerp(endWidth, 0.001f, t);
+                line.startColor = WithAlpha(railgunBeamCoreColor, railgunBeamCoreColor.a * alpha);
+                line.endColor = WithAlpha(railgunBeamColor, railgunBeamColor.a * alpha);
+                age += Time.deltaTime;
+                yield return null;
+            }
+
+            DestroyUnityObject(beamObject);
+        }
+
+        private void SpawnRailgunCorkscrewTracer(Vector3 start, Vector3 end)
+        {
+            Vector3 direction = end - start;
+            float distance = direction.magnitude;
+            if (distance <= 0.001f)
+            {
+                return;
+            }
+
+            GameObject tracerObject = new GameObject("SCF_RailgunCorkscrewTracer");
+            tracerObject.transform.SetPositionAndRotation(start, Quaternion.LookRotation(direction.normalized, Vector3.up));
+            ParticleSystem particles = tracerObject.AddComponent<ParticleSystem>();
+            ConfigureRailgunTracerParticles(particles);
+            particles.Play(true);
+
+            float travelTime = Mathf.Clamp(distance / Mathf.Max(1f, railgunTracerProjectileSpeed), 0.015f, railgunTracerMaxTravelTime);
+            StartCoroutine(MoveRailgunTracer(tracerObject.transform, particles, start, end, travelTime));
+        }
+
+        private void ConfigureRailgunTracerParticles(ParticleSystem particles)
+        {
+            ParticleSystem.MainModule main = particles.main;
+            main.duration = Mathf.Max(0.05f, railgunTracerMaxTravelTime);
+            main.loop = true;
+            main.simulationSpace = ParticleSystemSimulationSpace.World;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(railgunTracerParticleLifetime * 0.65f, railgunTracerParticleLifetime);
+            main.startSpeed = 0f;
+            main.startSize = new ParticleSystem.MinMaxCurve(railgunTracerParticleSize * 0.65f, railgunTracerParticleSize);
+            main.startColor = railgunBeamColor;
+            main.maxParticles = 1800;
+
+            ParticleSystem.EmissionModule emission = particles.emission;
+            emission.enabled = true;
+            emission.rateOverTime = 0f;
+            emission.rateOverDistance = railgunTracerEmissionPerDistance;
+
+            ParticleSystem.ShapeModule shape = particles.shape;
+            shape.enabled = true;
+            shape.shapeType = ParticleSystemShapeType.Circle;
+            shape.radius = railgunTracerRadius;
+            shape.radiusThickness = 0f;
+            shape.arc = 360f;
+            shape.arcMode = ParticleSystemShapeMultiModeValue.Loop;
+            shape.arcSpeed = railgunTracerArcSpeed;
+
+            ParticleSystem.ColorOverLifetimeModule colorOverLifetime = particles.colorOverLifetime;
+            colorOverLifetime.enabled = true;
+            Gradient gradient = new Gradient();
+            gradient.SetKeys(
+                new[]
+                {
+                    new GradientColorKey(railgunBeamCoreColor, 0f),
+                    new GradientColorKey(railgunBeamColor, 0.35f),
+                    new GradientColorKey(railgunBeamColor, 1f)
+                },
+                new[]
+                {
+                    new GradientAlphaKey(railgunBeamColor.a, 0f),
+                    new GradientAlphaKey(railgunBeamColor.a * 0.72f, 0.55f),
+                    new GradientAlphaKey(0f, 1f)
+                });
+            colorOverLifetime.color = gradient;
+
+            ParticleSystemRenderer renderer = particles.GetComponent<ParticleSystemRenderer>();
+            renderer.renderMode = ParticleSystemRenderMode.Billboard;
+            renderer.material = ResolveRailgunParticleMaterial();
+            renderer.sortingFudge = 2f;
+        }
+
+        private IEnumerator MoveRailgunTracer(Transform tracer, ParticleSystem particles, Vector3 start, Vector3 end, float travelTime)
+        {
+            float age = 0f;
+            while (tracer != null && age < travelTime)
+            {
+                float t = Mathf.Clamp01(age / Mathf.Max(0.001f, travelTime));
+                tracer.position = Vector3.Lerp(start, end, t);
+                age += Time.deltaTime;
+                yield return null;
+            }
+
+            if (tracer != null)
+            {
+                tracer.position = end;
+            }
+
+            if (particles != null)
+            {
+                particles.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+            }
+
+            yield return new WaitForSeconds(railgunTracerParticleLifetime + 0.08f);
+            if (tracer != null)
+            {
+                DestroyUnityObject(tracer.gameObject);
+            }
+        }
+
+        private void SpawnRailgunImpact(Vector3 position, Vector3 normal)
+        {
+            GameObject impactObject = new GameObject("SCF_RailgunImpact");
+            Vector3 forward = normal.sqrMagnitude > 0.0001f ? normal.normalized : Vector3.up;
+            impactObject.transform.SetPositionAndRotation(position + forward * 0.02f, Quaternion.LookRotation(forward, Vector3.up));
+            ParticleSystem particles = impactObject.AddComponent<ParticleSystem>();
+            ConfigureRailgunImpactParticles(particles);
+            particles.Play(true);
+            Destroy(impactObject, railgunTracerParticleLifetime + 0.35f);
+        }
+
+        private void ConfigureRailgunImpactParticles(ParticleSystem particles)
+        {
+            ParticleSystem.MainModule main = particles.main;
+            main.duration = 0.08f;
+            main.loop = false;
+            main.simulationSpace = ParticleSystemSimulationSpace.World;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(0.12f, 0.28f);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(0.6f, 2.2f);
+            main.startSize = new ParticleSystem.MinMaxCurve(railgunTracerParticleSize, railgunTracerParticleSize * 3.2f);
+            main.startColor = railgunBeamCoreColor;
+            main.maxParticles = 96;
+
+            ParticleSystem.EmissionModule emission = particles.emission;
+            emission.enabled = true;
+            emission.rateOverTime = 0f;
+            short burstCount = (short)Mathf.Clamp(railgunImpactBurstCount, 0, short.MaxValue);
+            emission.SetBursts(new[] { new ParticleSystem.Burst(0f, burstCount) });
+
+            ParticleSystem.ShapeModule shape = particles.shape;
+            shape.enabled = true;
+            shape.shapeType = ParticleSystemShapeType.Hemisphere;
+            shape.radius = 0.06f;
+
+            ParticleSystemRenderer renderer = particles.GetComponent<ParticleSystemRenderer>();
+            renderer.renderMode = ParticleSystemRenderMode.Billboard;
+            renderer.material = ResolveRailgunParticleMaterial();
+            renderer.sortingFudge = 3f;
+        }
+
+        private void PlayRailgunFireSound(Vector3 position)
+        {
+            AudioClip clip = ResolveRailgunFireClip();
+            if (clip == null)
+            {
+                return;
+            }
+
+            GameObject audioObject = new GameObject("SCF_RailgunFireAudio");
+            audioObject.transform.position = position;
+            AudioSource source = audioObject.AddComponent<AudioSource>();
+            source.clip = clip;
+            source.volume = railgunFireVolume;
+            source.spatialBlend = railgunFireSpatialBlend;
+            source.pitch = UnityEngine.Random.Range(railgunFireMinPitch, railgunFireMaxPitch);
+            source.rolloffMode = AudioRolloffMode.Linear;
+            source.minDistance = 2f;
+            source.maxDistance = 45f;
+            source.Play();
+            Destroy(audioObject, Mathf.Max(0.1f, clip.length / Mathf.Max(0.1f, Mathf.Abs(source.pitch))) + 0.1f);
+        }
+
+        private Material ResolveRailgunBeamMaterial()
+        {
+            if (railgunBeamMaterial == null)
+            {
+                railgunBeamMaterial = CreateRailgunMaterial(railgunBeamCoreColor);
+            }
+
+            return railgunBeamMaterial;
+        }
+
+        private Material ResolveRailgunParticleMaterial()
+        {
+            if (railgunParticleMaterial == null)
+            {
+                railgunParticleMaterial = CreateRailgunMaterial(railgunBeamColor);
+            }
+
+            return railgunParticleMaterial;
+        }
+
+        private static Material CreateRailgunMaterial(Color color)
+        {
+            Shader shader = Shader.Find("Particles/Standard Unlit")
+                            ?? Shader.Find("Sprites/Default")
+                            ?? Shader.Find("HDRP/Unlit")
+                            ?? Shader.Find("Universal Render Pipeline/Unlit")
+                            ?? Shader.Find("Unlit/Color")
+                            ?? Shader.Find("Standard");
+            if (shader == null)
+            {
+                return null;
+            }
+
+            Material material = new Material(shader);
+            material.hideFlags = HideFlags.DontSave;
+            material.renderQueue = 3000;
+            SetMaterialColor(material, color);
+            return material;
+        }
+
+        private static void SetMaterialColor(Material material, Color color)
+        {
+            if (material == null)
+            {
+                return;
+            }
+
+            if (material.HasProperty("_BaseColor"))
+            {
+                material.SetColor("_BaseColor", color);
+            }
+
+            if (material.HasProperty("_Color"))
+            {
+                material.SetColor("_Color", color);
+            }
+
+            if (material.HasProperty("_EmissiveColor"))
+            {
+                material.SetColor("_EmissiveColor", color * 2f);
+            }
+        }
+
+        private void CacheBones()
+        {
+            chestAnchor = null;
+            rightArm = default;
+            leftArm = default;
+
+            if (animator == null)
+            {
+                return;
+            }
+
+            if (animator.avatar != null && animator.isHuman)
+            {
+                chestAnchor = FirstNonNull(
+                    animator.GetBoneTransform(HumanBodyBones.UpperChest),
+                    animator.GetBoneTransform(HumanBodyBones.Chest),
+                    animator.GetBoneTransform(HumanBodyBones.Spine),
+                    animator.GetBoneTransform(HumanBodyBones.Hips),
+                    animator.transform);
+
+                rightArm.Shoulder = animator.GetBoneTransform(HumanBodyBones.RightShoulder);
+                rightArm.UpperArm = animator.GetBoneTransform(HumanBodyBones.RightUpperArm);
+                rightArm.Forearm = animator.GetBoneTransform(HumanBodyBones.RightLowerArm);
+                rightArm.Hand = animator.GetBoneTransform(HumanBodyBones.RightHand);
+
+                leftArm.Shoulder = animator.GetBoneTransform(HumanBodyBones.LeftShoulder);
+                leftArm.UpperArm = animator.GetBoneTransform(HumanBodyBones.LeftUpperArm);
+                leftArm.Forearm = animator.GetBoneTransform(HumanBodyBones.LeftLowerArm);
+                leftArm.Hand = animator.GetBoneTransform(HumanBodyBones.LeftHand);
+                return;
+            }
+
+            Transform root = animator.transform;
+            chestAnchor = FirstNonNull(
+                FindFirstBone(root, "upperchest", "upper_chest", "spine2", "spine02", "spine_02", "spine 2", "ccbasespine02"),
+                FindFirstBone(root, "chest", "spine1", "spine01", "spine_01", "spine 1", "ccbasespine01"),
+                FindFirstBone(root, "waist", "spine", "ccbasespine"),
+                root);
+
+            rightArm.Shoulder = FindFirstBone(root, "rightshoulder", "rshoulder", "shoulder_r", "r_shoulder", "rightclavicle", "rclavicle", "clavicle_r", "r_clavicle", "ccbaserclavicle");
+            rightArm.UpperArm = FindFirstBone(root, "rightupperarm", "rupperarm", "upperarm_r", "r_upperarm", "ccbaserupperarm", "rightarm");
+            rightArm.Forearm = FindFirstBone(root, "rightforearm", "rightlowerarm", "rforearm", "rlowerarm", "forearm_r", "lowerarm_r", "r_forearm", "r_lowerarm", "ccbaserforearm");
+            rightArm.Hand = FindFirstBone(root, "righthand", "rhand", "hand_r", "r_hand", "ccbaserhand");
+
+            leftArm.Shoulder = FindFirstBone(root, "leftshoulder", "lshoulder", "shoulder_l", "l_shoulder", "leftclavicle", "lclavicle", "clavicle_l", "l_clavicle", "ccbaselclavicle");
+            leftArm.UpperArm = FindFirstBone(root, "leftupperarm", "lupperarm", "upperarm_l", "l_upperarm", "ccbaselupperarm", "leftarm");
+            leftArm.Forearm = FindFirstBone(root, "leftforearm", "leftlowerarm", "lforearm", "llowerarm", "forearm_l", "lowerarm_l", "l_forearm", "l_lowerarm", "ccbaselforearm");
+            leftArm.Hand = FindFirstBone(root, "lefthand", "lhand", "hand_l", "l_hand", "ccbaselhand");
+        }
+
+        private void EnsureWeaponSocket()
+        {
+            Transform socketParent = ResolveSocketParent();
+            if (socketParent == null)
+            {
+                weaponSocket = null;
+                return;
+            }
+
+            if (weaponSocket != null)
+            {
+                if (weaponSocket.parent != socketParent)
+                {
+                    weaponSocket.SetParent(socketParent, false);
+                }
+
+                return;
+            }
+
+            Transform existing = FindDirectChild(socketParent, torsoSocketName);
+            if (existing == null)
+            {
+                existing = FindDescendantByName(transform, torsoSocketName);
+            }
+
+            weaponSocket = existing != null ? existing : new GameObject(torsoSocketName).transform;
+            weaponSocket.SetParent(socketParent, false);
+            weaponSocket.localScale = Vector3.one;
+            UpdateWeaponSocket();
+        }
+
+        private void EnsureGrips()
+        {
+            if (UseShotgunPose3GripReplica())
+            {
+                if (IsReferenceShotgunInstance())
+                {
+                    referenceWeaponAnchor = FindDescendantByName(activeWeapon.transform, referenceShotgunAnchorName);
+                }
+
+                EnsureShotgunPose3GripTargets();
+                return;
+            }
+
+            if (IsReferenceShotgunInstance())
+            {
+                CacheReferenceShotgunGrips();
+                return;
+            }
+
+            if (activeWeapon == null)
+            {
+                rightGrip = null;
+                leftGrip = null;
+                return;
+            }
+
+            rightGrip = EnsureGrip(rightGripName, rightGripLocalPosition, rightGripLocalEulerAngles);
+            leftGrip = EnsureGrip(leftGripName, leftGripLocalPosition, leftGripLocalEulerAngles);
+        }
+
+        private Transform EnsureGrip(string gripName, Vector3 localPosition, Vector3 localEulerAngles)
+        {
+            Transform existing = activeWeapon.transform.Find(gripName);
+            Transform grip = existing != null ? existing : new GameObject(gripName).transform;
+            grip.SetParent(activeWeapon.transform, false);
+            grip.localPosition = localPosition;
+            grip.localRotation = Quaternion.Euler(localEulerAngles);
+            grip.localScale = Vector3.one;
+            return grip;
+        }
+
+        private void ResetWeaponTransform()
+        {
+            if (activeWeapon == null)
+            {
+                return;
+            }
+
+            ApplyWeaponLocalFit(true);
+            UpdateWeaponSocket();
+            if (IsReferenceShotgunInstance())
+            {
+                PrepareReferenceShotgunInstance();
+                AlignReferenceShotgunToSocket();
+                CacheReferenceShotgunGrips();
+            }
+            else
+            {
+                EnsureGrips();
+                if (!UseShotgunPose3GripReplica())
+                {
+                    AlignWeaponByRightGrip();
+                }
+            }
+        }
+
+        private void ApplyWeaponLocalFit(bool force = false)
+        {
+            if (activeWeapon == null)
+            {
+                return;
+            }
+
+            if (!force && ShouldPreserveTunedRailgunTransform())
+            {
+                return;
+            }
+
+            if (IsReferenceShotgunInstance())
+            {
+                activeWeapon.transform.localPosition = Vector3.zero;
+                activeWeapon.transform.localRotation = Quaternion.identity;
+                activeWeapon.transform.localScale = Vector3.one;
+                return;
+            }
+
+            activeWeapon.transform.localPosition = UseShotgunPose3GripReplica()
+                ? weaponLocalPosition + ResolvePose3WeaponAnchorSocketOffset()
+                : weaponLocalPosition;
+            activeWeapon.transform.localRotation = Quaternion.Euler(weaponLocalEulerAngles);
+            activeWeapon.transform.localScale = SanitizedScale(weaponLocalScale);
+        }
+
+        private void AlignWeaponByRightGrip()
+        {
+            if (!anchorWeaponByRightGrip || activeWeapon == null || weaponSocket == null || rightGrip == null)
+            {
+                return;
+            }
+
+            Vector3 socketOffset = Vector3.Lerp(restRightGripSocketOffset, raisedRightGripSocketOffset, raised01);
+            Vector3 target = weaponSocket.TransformPoint(socketOffset);
+            Vector3 delta = target - rightGrip.position;
+            activeWeapon.transform.position += delta;
+        }
+
+        private void PrepareReferenceShotgunInstance()
+        {
+            if (!IsReferenceShotgunInstance())
+            {
+                return;
+            }
+
+            SampleReferenceShotgunPose();
+            SetReferenceShotgunRenderers();
+            CacheReferenceShotgunGrips();
+        }
+
+        private void SampleReferenceShotgunPose()
+        {
+#if UNITY_EDITOR
+            AnimationClip poseClip = LoadReferencePoseClip();
+            if (poseClip == null)
+            {
+                return;
+            }
+
+            float sampleTime = Mathf.Clamp01(referencePoseSampleTime01) * Mathf.Max(0.01f, poseClip.length);
+            poseClip.SampleAnimation(activeWeapon, sampleTime);
+#endif
+        }
+
+        private void SetReferenceShotgunRenderers()
+        {
+            Transform shotgun = FindDescendantByName(activeWeapon.transform, referenceShotgunMeshName);
+            Renderer[] renderers = activeWeapon.GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                Renderer renderer = renderers[i];
+                renderer.enabled = shotgun != null && (renderer.transform == shotgun || renderer.transform.IsChildOf(shotgun));
+            }
+        }
+
+        private void CacheReferenceShotgunGrips()
+        {
+            if (activeWeapon == null)
+            {
+                rightGrip = null;
+                leftGrip = null;
+                referenceWeaponAnchor = null;
+                return;
+            }
+
+            referenceWeaponAnchor = FindDescendantByName(activeWeapon.transform, referenceShotgunAnchorName);
+            if (UseShotgunPose3GripReplica())
+            {
+                EnsureShotgunPose3GripTargets();
+                return;
+            }
+
+            rightGrip = FindDescendantByName(activeWeapon.transform, referenceRightGripName);
+            leftGrip = FindDescendantByName(activeWeapon.transform, referenceLeftGripName);
+        }
+
+        private void EnsureShotgunPose3GripTargets()
+        {
+            if (weaponSocket == null)
+            {
+                rightGrip = null;
+                leftGrip = null;
+                return;
+            }
+
+            bool rightWasMissing = pose3RightGripTarget == null || pose3RightGripTarget.parent != weaponSocket;
+            bool leftWasMissing = pose3LeftGripTarget == null || pose3LeftGripTarget.parent != weaponSocket;
+            pose3RightGripTarget = EnsureSocketTarget(pose3RightGripTarget, Pose3RightGripTargetName);
+            pose3LeftGripTarget = EnsureSocketTarget(pose3LeftGripTarget, Pose3LeftGripTargetName);
+
+            if (rightWasMissing || !ShouldPreserveTunedGripTargets())
+            {
+                pose3RightGripTarget.localPosition = ResolvePose3RightGripSocketOffset();
+                pose3RightGripTarget.localRotation = Quaternion.Euler(shotgunPose3RightGripEulerAngles);
+            }
+
+            pose3RightGripTarget.localScale = Vector3.one;
+
+            if (leftWasMissing || !ShouldPreserveTunedGripTargets())
+            {
+                pose3LeftGripTarget.localPosition = ResolvePose3LeftGripSocketOffset();
+                pose3LeftGripTarget.localRotation = Quaternion.Euler(shotgunPose3LeftGripEulerAngles);
+            }
+
+            pose3LeftGripTarget.localScale = Vector3.one;
+
+            rightGrip = pose3RightGripTarget;
+            leftGrip = pose3LeftGripTarget;
+        }
+
+        private Transform EnsureSocketTarget(Transform current, string targetName)
+        {
+            if (current != null && current.parent == weaponSocket)
+            {
+                return current;
+            }
+
+            Transform existing = FindDirectChild(weaponSocket, targetName);
+            Transform target = existing != null ? existing : new GameObject(targetName).transform;
+            target.SetParent(weaponSocket, false);
+            EnsureTuningHandle(target.gameObject);
+            return target;
+        }
+
+        private void AlignReferenceShotgunToSocket()
+        {
+            if (activeWeapon == null || weaponSocket == null)
+            {
+                return;
+            }
+
+            if (referenceWeaponAnchor == null)
+            {
+                referenceWeaponAnchor = FindDescendantByName(activeWeapon.transform, referenceShotgunAnchorName);
+            }
+
+            if (referenceWeaponAnchor == null)
+            {
+                return;
+            }
+
+            Quaternion rotationDelta = weaponSocket.rotation * Quaternion.Inverse(referenceWeaponAnchor.rotation);
+            activeWeapon.transform.rotation = rotationDelta * activeWeapon.transform.rotation;
+            Vector3 socketOffset = UseShotgunPose3GripReplica()
+                ? ResolvePose3WeaponAnchorSocketOffset()
+                : Vector3.Lerp(restRightGripSocketOffset, raisedRightGripSocketOffset, raised01);
+            Vector3 target = weaponSocket.TransformPoint(socketOffset);
+            activeWeapon.transform.position += target - referenceWeaponAnchor.position;
+        }
+
+        private bool UseShotgunPose3GripReplica()
+        {
+            return useShotgunPose3GripReplica && activeWeapon != null;
+        }
+
+        private Vector3 ResolvePose3RightGripSocketOffset()
+        {
+            return Vector3.Lerp(restRightGripSocketOffset, raisedRightGripSocketOffset, raised01)
+                   + shotgunPose3RightGripTuningOffset;
+        }
+
+        private Vector3 ResolvePose3LeftGripSocketOffset()
+        {
+            Vector3 rightFromAnchor = MapPose3ReferenceOffset(Pose3ReferenceRightWristFromShotgunBone) * shotgunPose3Scale;
+            Vector3 leftFromAnchor = MapPose3ReferenceOffset(Pose3ReferenceLeftWristFromShotgunBone) * shotgunPose3Scale;
+            return ResolvePose3RightGripSocketOffset()
+                   + leftFromAnchor
+                   - rightFromAnchor
+                   + shotgunPose3LeftGripTuningOffset;
+        }
+
+        private Vector3 ResolvePose3WeaponAnchorSocketOffset()
+        {
+            Vector3 rightFromAnchor = MapPose3ReferenceOffset(Pose3ReferenceRightWristFromShotgunBone) * shotgunPose3Scale;
+            return ResolvePose3RightGripSocketOffset()
+                   - rightFromAnchor
+                   + shotgunPose3WeaponAnchorTuningOffset;
+        }
+
+        private static Vector3 MapPose3ReferenceOffset(Vector3 referenceOffset)
+        {
+            return new Vector3(-referenceOffset.x, referenceOffset.y, referenceOffset.z);
+        }
+
+        private bool ShouldPreserveTunedRailgunTransform()
+        {
+            return enableRailgunLiveTuning
+                   && preserveTunedRailgunTransform
+                   && activeWeapon != null
+                   && !IsReferenceShotgunInstance();
+        }
+
+        private bool ShouldPreserveTunedGripTargets()
+        {
+            return enableRailgunLiveTuning && preserveTunedGripTargets;
+        }
+
+        private void TickRailgunLiveTuningCapture()
+        {
+            if (!enableRailgunLiveTuning || activeWeapon == null || IsReferenceShotgunInstance())
+            {
+                return;
+            }
+
+            if (captureTuningEveryFrame)
+            {
+                CaptureCurrentRailgunTuningInternal(false);
+            }
+
+#if ENABLE_LEGACY_INPUT_MANAGER
+            if (captureTuningHotkey != KeyCode.None && Input.GetKeyDown(captureTuningHotkey))
+            {
+                CaptureCurrentRailgunTuningInternal(true);
+            }
+#endif
+        }
+
+        public void CaptureCurrentRailgunTuning()
+        {
+            CaptureCurrentRailgunTuningInternal(true);
+        }
+
+        public void CopyCurrentRailgunTuning()
+        {
+            CopyCurrentRailgunTuningToClipboard();
+        }
+
+        public void ApplySavedRailgunGripTargets()
+        {
+            if (activeWeapon == null)
+            {
+                return;
+            }
+
+            EnsureWeaponSocket();
+            bool oldPreserveTunedGripTargets = preserveTunedGripTargets;
+            preserveTunedGripTargets = false;
+            EnsureShotgunPose3GripTargets();
+            preserveTunedGripTargets = oldPreserveTunedGripTargets;
+        }
+
+        [ContextMenu("SCF/Capture Current Railgun Tuning")]
+        private void CaptureCurrentRailgunTuningFromContext()
+        {
+            CaptureCurrentRailgunTuning();
+        }
+
+        [ContextMenu("SCF/Copy Current Railgun Tuning")]
+        private void CopyCurrentRailgunTuningFromContext()
+        {
+            CopyCurrentRailgunTuning();
+        }
+
+        [ContextMenu("SCF/Apply Saved Railgun Grip Targets")]
+        private void ApplySavedRailgunGripTargetsFromContext()
+        {
+            ApplySavedRailgunGripTargets();
+        }
+
+        private void CaptureCurrentRailgunTuningInternal(bool announce)
+        {
+            if (activeWeapon == null)
+            {
+                return;
+            }
+
+            Vector3 currentWeaponLocalPosition = activeWeapon.transform.localPosition;
+            Vector3 currentWeaponLocalEulerAngles = NormalizeEuler(activeWeapon.transform.localEulerAngles);
+            Vector3 currentWeaponLocalScale = SanitizedScale(activeWeapon.transform.localScale);
+
+            if (pose3RightGripTarget != null)
+            {
+                shotgunPose3RightGripTuningOffset = pose3RightGripTarget.localPosition
+                                                    - Vector3.Lerp(restRightGripSocketOffset, raisedRightGripSocketOffset, raised01);
+                shotgunPose3RightGripEulerAngles = NormalizeEuler(pose3RightGripTarget.localEulerAngles);
+            }
+
+            if (pose3LeftGripTarget != null)
+            {
+                Vector3 rightFromAnchor = MapPose3ReferenceOffset(Pose3ReferenceRightWristFromShotgunBone) * shotgunPose3Scale;
+                Vector3 leftFromAnchor = MapPose3ReferenceOffset(Pose3ReferenceLeftWristFromShotgunBone) * shotgunPose3Scale;
+                Vector3 baseLeftGrip = ResolvePose3RightGripSocketOffset() + leftFromAnchor - rightFromAnchor;
+                shotgunPose3LeftGripTuningOffset = pose3LeftGripTarget.localPosition - baseLeftGrip;
+                shotgunPose3LeftGripEulerAngles = NormalizeEuler(pose3LeftGripTarget.localEulerAngles);
+            }
+
+            weaponLocalPosition = UseShotgunPose3GripReplica()
+                ? currentWeaponLocalPosition - ResolvePose3WeaponAnchorSocketOffset()
+                : currentWeaponLocalPosition;
+            weaponLocalEulerAngles = currentWeaponLocalEulerAngles;
+            weaponLocalScale = currentWeaponLocalScale;
+
+            if (announce && copyTuningOnCapture)
+            {
+                CopyCurrentRailgunTuningToClipboard();
+            }
+            else if (announce)
+            {
+                Debug.Log(BuildRailgunTuningProfileText());
+            }
+
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                EditorUtility.SetDirty(this);
+            }
+#endif
+        }
+
+        private void CopyCurrentRailgunTuningToClipboard()
+        {
+            string profile = BuildRailgunTuningProfileText();
+            GUIUtility.systemCopyBuffer = profile;
+            Debug.Log(profile);
+        }
+
+        private void EnsureTuningHandle(GameObject target)
+        {
+            if (target == null)
+            {
+                return;
+            }
+
+            SCFWeaponTuningHandle handle = target.GetComponent<SCFWeaponTuningHandle>();
+            if (handle == null)
+            {
+                handle = target.AddComponent<SCFWeaponTuningHandle>();
+            }
+
+            handle.Configure(this);
+        }
+
+        private string BuildRailgunTuningProfileText()
+        {
+            return "SCF railgun tuning captured\n"
+                   + "weaponLocalPosition = " + FormatVector(weaponLocalPosition) + "\n"
+                   + "weaponLocalEulerAngles = " + FormatVector(weaponLocalEulerAngles) + "\n"
+                   + "weaponLocalScale = " + FormatVector(weaponLocalScale) + "\n"
+                   + "shotgunPose3Scale = " + FormatFloat(shotgunPose3Scale) + "\n"
+                   + "shotgunPose3RightGripTuningOffset = " + FormatVector(shotgunPose3RightGripTuningOffset) + "\n"
+                   + "shotgunPose3RightGripEulerAngles = " + FormatVector(shotgunPose3RightGripEulerAngles) + "\n"
+                   + "shotgunPose3LeftGripTuningOffset = " + FormatVector(shotgunPose3LeftGripTuningOffset) + "\n"
+                   + "shotgunPose3LeftGripEulerAngles = " + FormatVector(shotgunPose3LeftGripEulerAngles) + "\n"
+                   + "shotgunPose3WeaponAnchorTuningOffset = " + FormatVector(shotgunPose3WeaponAnchorTuningOffset);
+        }
+
+        private static Vector3 NormalizeEuler(Vector3 eulerAngles)
+        {
+            return new Vector3(NormalizeEulerAxis(eulerAngles.x), NormalizeEulerAxis(eulerAngles.y), NormalizeEulerAxis(eulerAngles.z));
+        }
+
+        private static float NormalizeEulerAxis(float value)
+        {
+            value %= 360f;
+            if (value > 180f)
+            {
+                value -= 360f;
+            }
+            else if (value < -180f)
+            {
+                value += 360f;
+            }
+
+            return value;
+        }
+
+        private static string FormatVector(Vector3 value)
+        {
+            return "new Vector3(" + FormatFloat(value.x) + "f, " + FormatFloat(value.y) + "f, " + FormatFloat(value.z) + "f)";
+        }
+
+        private static string FormatFloat(float value)
+        {
+            return value.ToString("0.####", CultureInfo.InvariantCulture);
+        }
+
+        private bool IsReferenceShotgunInstance()
+        {
+            return activeWeapon != null && activeWeapon.name.StartsWith("SCF_Selected_ReferenceShotgun", StringComparison.Ordinal);
+        }
+
+#if UNITY_EDITOR
+        private AnimationClip LoadReferencePoseClip()
+        {
+            UnityEngine.Object[] assets = AssetDatabase.LoadAllAssetsAtPath(ReferenceShotgunPath);
+            AnimationClip fallback = null;
+            for (int i = 0; i < assets.Length; i++)
+            {
+                if (!(assets[i] is AnimationClip clip) || clip.name.StartsWith("__preview", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                if (fallback == null)
+                {
+                    fallback = clip;
+                }
+
+                if (string.Equals(clip.name, referencePoseClipName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return clip;
+                }
+            }
+
+            return fallback;
+        }
+#endif
+
+        private void UpdateRaisedBlend()
+        {
+            float target = input != null && input.AimHeld ? 1f : 0f;
+            float blend = 1f - Mathf.Exp(-raiseSharpness * Time.deltaTime);
+            raised01 = Mathf.Lerp(raised01, target, blend);
+        }
+
+        private void UpdateWeaponSocket()
+        {
+            if (weaponSocket == null)
+            {
+                return;
+            }
+
+            Transform socketParent = ResolveSocketParent();
+            if (socketParent != null && weaponSocket.parent != socketParent)
+            {
+                weaponSocket.SetParent(socketParent, false);
+            }
+
+            weaponSocket.localPosition = Vector3.Lerp(restSocketOffset, raisedSocketOffset, raised01);
+            Quaternion restRotation = Quaternion.Euler(restSocketEulerAngles);
+            Quaternion raisedRotation = Quaternion.Euler(raisedSocketEulerAngles);
+            weaponSocket.localRotation = Quaternion.Slerp(restRotation, raisedRotation, raised01);
+        }
+
+        private Transform ResolveSocketParent()
+        {
+            return FirstNonNull(chestAnchor, animator != null ? animator.transform : null, transform);
+        }
+
+        private bool CanApplyHandIk()
+        {
+            return enableHandIk
+                   && activeWeapon != null
+                   && rightGrip != null
+                   && leftGrip != null
+                   && (rightArm.Hand != null || leftArm.Hand != null);
+        }
+
+        private bool ShouldApplyBoneFallback()
+        {
+            return CanApplyHandIk()
+                   && genericBoneFallbackWeight > 0.001f
+                   && (animator == null || !animator.isHuman || applyBoneFallbackForHumanoids);
+        }
+
+        private static void ApplyHumanoidHandIk(Animator targetAnimator, AvatarIKGoal goal, Transform grip, float weight)
+        {
+            if (grip == null || weight <= 0.001f)
+            {
+                targetAnimator.SetIKPositionWeight(goal, 0f);
+                targetAnimator.SetIKRotationWeight(goal, 0f);
+                return;
+            }
+
+            targetAnimator.SetIKPositionWeight(goal, weight);
+            targetAnimator.SetIKRotationWeight(goal, weight);
+            targetAnimator.SetIKPosition(goal, grip.position);
+            targetAnimator.SetIKRotation(goal, grip.rotation);
+        }
+
+        private void ApplyGenericArmToGrip(ArmRig rig, Transform grip, float weight, float reachWeight)
+        {
+            if (rig.Hand == null || grip == null || weight <= 0.001f)
+            {
+                return;
+            }
+
+            float adjustedWeight = Mathf.Clamp01(weight * genericBoneFallbackWeight * reachWeight);
+            int iterations = Mathf.Clamp(genericSolveIterations, 1, 8);
+            for (int i = 0; i < iterations; i++)
+            {
+                float passWeight = adjustedWeight * (1f - i * 0.12f);
+                RotateBoneTowardTarget(rig.Shoulder, rig.Hand, grip.position, passWeight * 0.28f);
+                RotateBoneTowardTarget(rig.UpperArm, rig.Hand, grip.position, passWeight * 0.68f);
+                RotateBoneTowardTarget(rig.Forearm, rig.Hand, grip.position, passWeight);
+            }
+
+            rig.Hand.rotation = Quaternion.Slerp(rig.Hand.rotation, grip.rotation, adjustedWeight * 0.75f);
+            float finalPositionWeight = Mathf.Clamp01(adjustedWeight * finalGripPositionWeight);
+            float finalRotationWeight = Mathf.Clamp01(adjustedWeight * finalGripRotationWeight);
+            rig.Hand.position = Vector3.Lerp(rig.Hand.position, grip.position, finalPositionWeight);
+            rig.Hand.rotation = Quaternion.Slerp(rig.Hand.rotation, grip.rotation, finalRotationWeight);
+        }
+
+        private static void ClearAnimatorIkGoals(Animator targetAnimator)
+        {
+            targetAnimator.SetIKPositionWeight(AvatarIKGoal.RightHand, 0f);
+            targetAnimator.SetIKRotationWeight(AvatarIKGoal.RightHand, 0f);
+            targetAnimator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 0f);
+            targetAnimator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 0f);
+        }
+
+        private void ClearWeapon()
+        {
+            ClearWeaponInstanceOnly();
+            if (weaponSocket != null)
+            {
+                DestroyUnityObject(weaponSocket.gameObject);
+                weaponSocket = null;
+            }
+
+            rightGrip = null;
+            leftGrip = null;
+            raised01 = 0f;
+            currentRightHandWeight = 0f;
+            currentLeftHandWeight = 0f;
+        }
+
+        private void ClearWeaponInstanceOnly()
+        {
+            DestroyShotgunPose3GripTargets();
+
+            if (activeWeapon == null)
+            {
+                return;
+            }
+
+            DestroyUnityObject(activeWeapon);
+            activeWeapon = null;
+            rightGrip = null;
+            leftGrip = null;
+            referenceWeaponAnchor = null;
+        }
+
+        private void DestroyShotgunPose3GripTargets()
+        {
+            if (pose3RightGripTarget != null)
+            {
+                DestroyUnityObject(pose3RightGripTarget.gameObject);
+                pose3RightGripTarget = null;
+            }
+
+            if (pose3LeftGripTarget != null)
+            {
+                DestroyUnityObject(pose3LeftGripTarget.gameObject);
+                pose3LeftGripTarget = null;
+            }
+
+            if (rightGrip != null && string.Equals(rightGrip.name, Pose3RightGripTargetName, StringComparison.Ordinal))
+            {
+                rightGrip = null;
+            }
+
+            if (leftGrip != null && string.Equals(leftGrip.name, Pose3LeftGripTargetName, StringComparison.Ordinal))
+            {
+                leftGrip = null;
+            }
+        }
+
+        private static bool IsSoldierCharacter(string characterName)
+        {
+            return !string.IsNullOrWhiteSpace(characterName)
+                   && characterName.IndexOf("soldier", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private static bool NearlyEqual(Vector3 left, Vector3 right)
+        {
+            return (left - right).sqrMagnitude <= 0.0001f;
+        }
+
+        private static Vector3 SanitizedScale(Vector3 value)
+        {
+            return value == Vector3.zero ? Vector3.one : value;
+        }
+
+        private static Color WithAlpha(Color color, float alpha)
+        {
+            color.a = alpha;
+            return color;
+        }
+
+        private static void StripColliders(GameObject root)
+        {
+            Collider[] colliders = root.GetComponentsInChildren<Collider>(true);
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                DestroyUnityObject(colliders[i]);
+            }
+        }
+
+        private static void RotateBoneTowardTarget(Transform bone, Transform endEffector, Vector3 target, float weight)
+        {
+            if (bone == null || endEffector == null || weight <= 0.001f)
+            {
+                return;
+            }
+
+            Vector3 currentDirection = endEffector.position - bone.position;
+            Vector3 targetDirection = target - bone.position;
+            if (currentDirection.sqrMagnitude <= 0.0001f || targetDirection.sqrMagnitude <= 0.0001f)
+            {
+                return;
+            }
+
+            Quaternion delta = Quaternion.FromToRotation(currentDirection.normalized, targetDirection.normalized);
+            bone.rotation = Quaternion.Slerp(bone.rotation, delta * bone.rotation, Mathf.Clamp01(weight));
+        }
+
+        private static void DrawGripGizmo(Transform target, Color color, float radius)
+        {
+            if (target == null)
+            {
+                return;
+            }
+
+            Gizmos.color = color;
+            Gizmos.DrawWireSphere(target.position, radius);
+            Gizmos.DrawRay(target.position, target.forward * radius * 2f);
+        }
+
+        private static Transform FirstNonNull(params Transform[] transforms)
+        {
+            for (int i = 0; i < transforms.Length; i++)
+            {
+                if (transforms[i] != null)
+                {
+                    return transforms[i];
+                }
+            }
+
+            return null;
+        }
+
+        private static Transform FindDirectChild(Transform parent, string childName)
+        {
+            if (parent == null || string.IsNullOrWhiteSpace(childName))
+            {
+                return null;
+            }
+
+            for (int i = 0; i < parent.childCount; i++)
+            {
+                Transform child = parent.GetChild(i);
+                if (string.Equals(child.name, childName, StringComparison.Ordinal))
+                {
+                    return child;
+                }
+            }
+
+            return null;
+        }
+
+        private static Transform FindDescendantByName(Transform root, string childName)
+        {
+            if (root == null || string.IsNullOrWhiteSpace(childName))
+            {
+                return null;
+            }
+
+            Transform[] transforms = root.GetComponentsInChildren<Transform>(true);
+            for (int i = 0; i < transforms.Length; i++)
+            {
+                Transform candidate = transforms[i];
+                if (candidate != null && string.Equals(candidate.name, childName, StringComparison.Ordinal))
+                {
+                    return candidate;
+                }
+            }
+
+            return null;
+        }
+
+        private static void DestroyUnityObject(UnityEngine.Object target)
+        {
+            if (target == null)
+            {
+                return;
+            }
+
+            if (Application.isPlaying)
+            {
+                Destroy(target);
+            }
+            else
+            {
+                DestroyImmediate(target);
+            }
+        }
+
+        private static Transform FindFirstBone(Transform root, params string[] patterns)
+        {
+            if (root == null || patterns == null || patterns.Length == 0)
+            {
+                return null;
+            }
+
+            Transform best = null;
+            int bestScore = int.MaxValue;
+            FindFirstBoneRecursive(root, patterns, 0, ref best, ref bestScore);
+            return best;
+        }
+
+        private static void FindFirstBoneRecursive(Transform node, string[] patterns, int depth, ref Transform best, ref int bestScore)
+        {
+            string compactName = Compact(node.name);
+            for (int i = 0; i < patterns.Length; i++)
+            {
+                string pattern = Compact(patterns[i]);
+                if (!string.IsNullOrEmpty(pattern) && compactName.Contains(pattern))
+                {
+                    int score = depth * 10 + i;
+                    if (score < bestScore)
+                    {
+                        best = node;
+                        bestScore = score;
+                    }
+                }
+            }
+
+            for (int i = 0; i < node.childCount; i++)
+            {
+                FindFirstBoneRecursive(node.GetChild(i), patterns, depth + 1, ref best, ref bestScore);
+            }
+        }
+
+        private static string Compact(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return string.Empty;
+            }
+
+            return value.Replace("_", string.Empty)
+                .Replace("-", string.Empty)
+                .Replace(" ", string.Empty)
+                .Replace(":", string.Empty)
+                .ToLowerInvariant();
+        }
+    }
+}

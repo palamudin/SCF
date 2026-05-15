@@ -31,6 +31,8 @@ namespace SCF.Gameplay
         public AimInputMode AimMode { get; private set; }
         public bool SprintHeld { get; private set; }
         public bool AttackHeld { get; private set; }
+        public bool AttackPressedThisFrame { get; private set; }
+        public bool AimHeld { get; private set; }
         public bool SkillPressedThisFrame { get; private set; }
         public bool MobilityHeld { get; private set; }
         public bool MobilityPressedThisFrame { get; private set; }
@@ -59,6 +61,8 @@ namespace SCF.Gameplay
             AimMode = AimInputMode.None;
             SprintHeld = false;
             AttackHeld = false;
+            AttackPressedThisFrame = false;
+            AimHeld = false;
             SkillPressedThisFrame = false;
             MobilityHeld = false;
             MobilityPressedThisFrame = false;
@@ -71,6 +75,8 @@ namespace SCF.Gameplay
             Move = Vector2.ClampMagnitude(ReadMove(), 1f);
             SprintHeld = ReadButton(sprintAction) || ReadFallbackSprint();
             AttackHeld = ReadButton(attackAction) || ReadFallbackAttack();
+            AttackPressedThisFrame = ReadPressedThisFrame(attackAction) || ReadFallbackAttackPressed();
+            AimHeld = ReadFallbackAimHeld();
             MobilityHeld = ReadButton(skillAction) || ReadFallbackMobilityHeld();
             MobilityPressedThisFrame = ReadPressedThisFrame(skillAction) || ReadFallbackMobilityPressed();
             MobilityReleasedThisFrame = ReadReleasedThisFrame(skillAction) || ReadFallbackMobilityReleased();
@@ -202,6 +208,40 @@ namespace SCF.Gameplay
 
             Gamepad gamepad = Gamepad.current;
             return gamepad != null && gamepad.rightTrigger.ReadValue() > 0.5f;
+        }
+
+        private bool ReadFallbackAttackPressed()
+        {
+            if (!enableFallbackBindings)
+            {
+                return false;
+            }
+
+            Mouse mouse = Mouse.current;
+            if (mouse != null && mouse.leftButton.wasPressedThisFrame)
+            {
+                return true;
+            }
+
+            Gamepad gamepad = Gamepad.current;
+            return gamepad != null && gamepad.rightTrigger.wasPressedThisFrame;
+        }
+
+        private bool ReadFallbackAimHeld()
+        {
+            if (!enableFallbackBindings)
+            {
+                return false;
+            }
+
+            Mouse mouse = Mouse.current;
+            if (mouse != null && mouse.rightButton.isPressed)
+            {
+                return true;
+            }
+
+            Gamepad gamepad = Gamepad.current;
+            return gamepad != null && gamepad.leftTrigger.ReadValue() > 0.5f;
         }
 
         private bool ReadFallbackMobilityHeld()

@@ -741,6 +741,14 @@ namespace SCF.Gameplay
 
             climbHandIK.Configure(motor, activeAnimator, IsParkourCharacterActive());
 
+            SCFWeaponVisualSlot weaponSlot = GetComponent<SCFWeaponVisualSlot>();
+            if (weaponSlot == null)
+            {
+                weaponSlot = gameObject.AddComponent<SCFWeaponVisualSlot>();
+            }
+
+            weaponSlot.Configure(motor, activeAnimator, activeCharacterName);
+
             MotionMatchingSignalHub signalHub = GetComponent<MotionMatchingSignalHub>();
             if (signalHub != null)
             {
@@ -796,5 +804,6 @@ namespace SCF.Gameplay
             return activeCharacterName.IndexOf("Parkour", StringComparison.OrdinalIgnoreCase) >= 0
                    || activeCharacterName.IndexOf("Frank", StringComparison.OrdinalIgnoreCase) >= 0;
         }
+
     }
 }

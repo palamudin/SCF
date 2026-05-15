@@ -90,6 +90,7 @@ namespace SCF.EditorTools
             MovementAnimatorBridge animatorBridge = EnsureComponent<MovementAnimatorBridge>(player);
             SCFAimBodyDifferentiator bodyDifferentiator = EnsureComponent<SCFAimBodyDifferentiator>(player);
             SCFClimbHandContactIK climbHandIK = EnsureComponent<SCFClimbHandContactIK>(player);
+            SCFWeaponVisualSlot weaponSlot = EnsureComponent<SCFWeaponVisualSlot>(player);
             MotionMatchingSignalHub signalHub = EnsureComponent<MotionMatchingSignalHub>(player);
             SCFMotionSelector motionSelector = EnsureComponent<SCFMotionSelector>(player);
 
@@ -105,6 +106,7 @@ namespace SCF.EditorTools
             bodyDifferentiator.Configure(motor, animator);
             bodyDifferentiator.SetAimTorsoDuringWallRun(true);
             climbHandIK.Configure(motor, animator, true);
+            weaponSlot.Configure(motor, animator, "TPS Soldier");
             signalHub.Configure(animator);
             motionSelector.Configure(animator, SCFMotionDatabaseBaker.BuildBaseDatabase());
             SCFMotionSystemSetup.DisableLegacyMotionComponents(player);

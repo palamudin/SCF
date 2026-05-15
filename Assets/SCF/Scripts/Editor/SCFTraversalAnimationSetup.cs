@@ -438,6 +438,19 @@ namespace SCF.EditorTools
             climbHandIK.Configure(motor, animator, true);
             EditorUtility.SetDirty(climbHandIK);
 
+            SCFWeaponVisualSlot weaponSlot = player.GetComponent<SCFWeaponVisualSlot>();
+            if (weaponSlot == null)
+            {
+                weaponSlot = Undo.AddComponent<SCFWeaponVisualSlot>(player);
+            }
+
+            SCFCharacterVisualSlot visualSlot = player.GetComponent<SCFCharacterVisualSlot>();
+            string activeCharacterName = visualSlot != null && !string.IsNullOrWhiteSpace(visualSlot.ActiveCharacterName)
+                ? visualSlot.ActiveCharacterName
+                : player.name;
+            weaponSlot.Configure(motor, animator, activeCharacterName);
+            EditorUtility.SetDirty(weaponSlot);
+
             MotionMatchingSignalHub signalHub = player.GetComponent<MotionMatchingSignalHub>();
             if (signalHub != null)
             {

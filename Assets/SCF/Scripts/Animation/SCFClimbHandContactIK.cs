@@ -83,6 +83,11 @@ namespace SCF.Gameplay
 
         private void OnAnimatorIK(int layerIndex)
         {
+            if (animator == null || animator.gameObject != gameObject)
+            {
+                return;
+            }
+
             if (currentWeight <= 0.001f || animator == null || !animator.isHuman || motor == null)
             {
                 ClearIkWeights();

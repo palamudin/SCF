@@ -178,31 +178,33 @@ namespace SCF.EditorTools
             List<SCFMotionClipData> clips = new List<SCFMotionClipData>();
 
             AnimationClip idle = FindFirstClip(
+                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Idle/idle aiming.fbx",
+                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Idle/idle.fbx",
                 DynamicParkourAnimationFolder + "/Idle.fbx",
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Stand--Idle.anim.fbx",
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Idle/Idle.fbx",
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Idle/idle.fbx");
+                "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Idle/Idle.fbx");
             AnimationClip walk = FindFirstClip(
+                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Walk/walk.fbx",
                 DynamicParkourAnimationFolder + "/Walk.fbx",
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Locomotion--Walk_N.anim.fbx",
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Walk/walk.fbx",
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Walk/walk.fbx");
+                "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Walk/walk.fbx");
             AnimationClip run = FindFirstClip(
+                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Run/run.fbx",
                 DynamicParkourAnimationFolder + "/Run.fbx",
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Locomotion--Run_N.anim.fbx",
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Run/run.fbx",
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Run/run.fbx");
+                "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Run/run.fbx");
             AnimationClip runBack = FindFirstClip(
+                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Run/run.fbx",
                 DynamicParkourAnimationFolder + "/Run To Stop.fbx",
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Locomotion--Run_S.anim.fbx",
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Locomotion--Run_N.anim.fbx",
                 "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Run/run.fbx");
             AnimationClip jump = FindFirstClip(
+                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Jump/jump start.FBX",
                 DynamicParkourAnimationFolder + "/Jump.fbx",
                 DynamicParkourAnimationFolder + "/Big Jump.fbx",
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Jump--Jump.anim.fbx",
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Jump/jump.fbx",
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Jump/jump start.FBX");
+                "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Jump/jump.fbx");
             AnimationClip vault = FindFirstClip(
                 DynamicParkourAnimationFolder + "/VaultFence.fbx",
                 DynamicParkourAnimationFolder + "/Step Up.fbx",

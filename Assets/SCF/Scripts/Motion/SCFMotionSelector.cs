@@ -13,6 +13,7 @@ namespace SCF.Gameplay
         [SerializeField] private IsometricCharacterMotor motor;
         [SerializeField] private Animator animator;
         [SerializeField] private SCFMotionDatabase database;
+        [SerializeField] private SCFWeaponVisualSlot weaponVisualSlot;
 
         [Header("Selection")]
         [SerializeField, Min(0.01f)] private float searchInterval = 0.05f;
@@ -25,6 +26,21 @@ namespace SCF.Gameplay
         [SerializeField] private bool applyFootIK = true;
         [SerializeField] private bool syncActionsToMotorTime = true;
         [SerializeField] private bool drawDebugTrajectory = true;
+
+        [Header("Weapon Upper Body")]
+        [Tooltip("Only use with SCF-authored clips. Imported reference packs stay as reference data, not runtime cycles.")]
+        [SerializeField] private bool enableWeaponUpperBodyLayer;
+        [SerializeField] private AnimationClip weaponCarryPoseClip;
+        [SerializeField] private AnimationClip weaponAimPoseClip;
+        [SerializeField] private AnimationClip weaponMoveClip;
+        [SerializeField] private AnimationClip weaponUpperBodyClip;
+        [SerializeField, Range(0f, 1f)] private float weaponCarryUpperBodyWeight = 0.62f;
+        [SerializeField, Range(0f, 1f)] private float weaponAimUpperBodyWeight = 0.92f;
+        [SerializeField, Min(0.01f)] private float weaponUpperBodyPlaybackSpeed = 1f;
+        [SerializeField, Min(0.1f)] private float weaponUpperBodyBlendSharpness = 12f;
+        [SerializeField] private bool freezeWeaponUpperBodyWhenIdle = true;
+        [SerializeField, Range(0f, 1f)] private float weaponUpperBodyIdlePoseTime = 0.08f;
+        [SerializeField] private bool suppressWeaponLayerDuringTraversal = true;
 
         [Header("Transient Windows")]
         [SerializeField, Range(0f, 1f)] private float jumpClipStart = 0f;
@@ -42,11 +58,16 @@ namespace SCF.Gameplay
         [SerializeField] private int selectedMotionIndex = -1;
         [SerializeField] private string selectedMotionName;
         [SerializeField] private float lastSelectionCost;
+        [SerializeField, Range(0f, 1f)] private float currentWeaponUpperBodyWeight;
 
         private readonly Playable[] slotPlayables = new Playable[2];
         private readonly int[] slotMotionIndices = { -1, -1 };
         private PlayableGraph graph;
         private AnimationMixerPlayable mixer;
+        private AnimationLayerMixerPlayable layerMixer;
+        private AnimationClipPlayable weaponUpperBodyPlayable;
+        private AnimationClip activeWeaponUpperBodyClip;
+        private AvatarMask weaponUpperBodyMask;
         private int activeSlot = -1;
         private int fadingSlot = -1;
         private float fadeTime;
@@ -112,6 +133,7 @@ namespace SCF.Gameplay
 
             SyncActiveMotionSpeed();
             TickClipPlayback();
+            TickWeaponUpperBodyLayer(deltaTime);
             TickFade(deltaTime);
         }
 
@@ -151,6 +173,11 @@ namespace SCF.Gameplay
             {
                 animator = GetComponentInChildren<Animator>(true);
             }
+
+            if (weaponVisualSlot == null)
+            {
+                weaponVisualSlot = GetComponent<SCFWeaponVisualSlot>();
+            }
         }
 
         private bool EnsureGraph()
@@ -169,8 +196,14 @@ namespace SCF.Gameplay
             graph = PlayableGraph.Create("SCF Motion Selector");
             graph.SetTimeUpdateMode(DirectorUpdateMode.GameTime);
             mixer = AnimationMixerPlayable.Create(graph, 2);
+            layerMixer = AnimationLayerMixerPlayable.Create(graph, 2);
+            graph.Connect(mixer, 0, layerMixer, 0);
+            layerMixer.SetInputWeight(0, 1f);
+            layerMixer.SetInputWeight(1, 0f);
+            EnsureWeaponUpperBodyLayer();
+
             AnimationPlayableOutput output = AnimationPlayableOutput.Create(graph, "SCF Motion Output", animator);
-            output.SetSourcePlayable(mixer);
+            output.SetSourcePlayable(layerMixer);
             graph.Play();
 
             activeSlot = -1;
@@ -200,12 +233,224 @@ namespace SCF.Gameplay
 
             slotPlayables[0] = Playable.Null;
             slotPlayables[1] = Playable.Null;
+            layerMixer = default;
+            weaponUpperBodyPlayable = default;
+            activeWeaponUpperBodyClip = null;
             slotMotionIndices[0] = -1;
             slotMotionIndices[1] = -1;
             activeSlot = -1;
             fadingSlot = -1;
             selectedMotionIndex = -1;
             selectedMotionName = string.Empty;
+            currentWeaponUpperBodyWeight = 0f;
+        }
+
+        private void EnsureWeaponUpperBodyLayer(AnimationClip desiredClip = null)
+        {
+            if (!graph.IsValid() || !layerMixer.IsValid())
+            {
+                return;
+            }
+
+            desiredClip = desiredClip != null ? desiredClip : ResolveDesiredWeaponUpperBodyClip();
+            if (!enableWeaponUpperBodyLayer || desiredClip == null)
+            {
+                layerMixer.SetInputWeight(1, 0f);
+                return;
+            }
+
+            if (weaponUpperBodyPlayable.IsValid() && activeWeaponUpperBodyClip == desiredClip)
+            {
+                return;
+            }
+
+            ClearWeaponUpperBodyPlayable();
+
+            activeWeaponUpperBodyClip = desiredClip;
+            weaponUpperBodyPlayable = AnimationClipPlayable.Create(graph, activeWeaponUpperBodyClip);
+            weaponUpperBodyPlayable.SetApplyFootIK(false);
+            weaponUpperBodyPlayable.SetApplyPlayableIK(false);
+            weaponUpperBodyPlayable.SetTime(0d);
+            weaponUpperBodyPlayable.SetSpeed(0d);
+
+            graph.Connect(weaponUpperBodyPlayable, 0, layerMixer, 1);
+            layerMixer.SetLayerMaskFromAvatarMask(1u, ResolveWeaponUpperBodyMask());
+            layerMixer.SetLayerAdditive(1u, false);
+            layerMixer.SetInputWeight(1, 0f);
+        }
+
+        private void TickWeaponUpperBodyLayer(float deltaTime)
+        {
+            if (!layerMixer.IsValid())
+            {
+                return;
+            }
+
+            float targetWeight = ResolveWeaponUpperBodyTargetWeight();
+            AnimationClip desiredClip = targetWeight > 0.001f ? ResolveDesiredWeaponUpperBodyClip() : activeWeaponUpperBodyClip;
+            if (targetWeight > 0.001f && desiredClip != null)
+            {
+                EnsureWeaponUpperBodyLayer(desiredClip);
+            }
+
+            float blend = 1f - Mathf.Exp(-weaponUpperBodyBlendSharpness * deltaTime);
+            currentWeaponUpperBodyWeight = Mathf.Lerp(currentWeaponUpperBodyWeight, targetWeight, blend);
+
+            if (!weaponUpperBodyPlayable.IsValid() || activeWeaponUpperBodyClip == null)
+            {
+                currentWeaponUpperBodyWeight = 0f;
+                layerMixer.SetInputWeight(1, 0f);
+                return;
+            }
+
+            if (activeWeaponUpperBodyClip == weaponMoveClip
+                && currentWeaponUpperBodyWeight > 0.001f
+                && ShouldPlayWeaponUpperBodyMotion())
+            {
+                weaponUpperBodyPlayable.SetSpeed(weaponUpperBodyPlaybackSpeed);
+            }
+            else
+            {
+                weaponUpperBodyPlayable.SetSpeed(0d);
+                weaponUpperBodyPlayable.SetTime(Mathf.Clamp01(weaponUpperBodyIdlePoseTime) * Mathf.Max(0.01f, activeWeaponUpperBodyClip.length));
+            }
+
+            WrapWeaponUpperBodyClip();
+            layerMixer.SetInputWeight(0, 1f);
+            layerMixer.SetInputWeight(1, currentWeaponUpperBodyWeight);
+        }
+
+        private float ResolveWeaponUpperBodyTargetWeight()
+        {
+            if (!enableWeaponUpperBodyLayer
+                || !HasAnyWeaponUpperBodyClip()
+                || weaponVisualSlot == null
+                || !weaponVisualSlot.HasActiveWeapon
+                || animator == null
+                || animator.avatar == null
+                || !animator.avatar.isHuman
+                || !CanApplyWeaponUpperBodyLayer())
+            {
+                return 0f;
+            }
+
+            return Mathf.Lerp(weaponCarryUpperBodyWeight, weaponAimUpperBodyWeight, weaponVisualSlot.Raised01);
+        }
+
+        private AnimationClip ResolveDesiredWeaponUpperBodyClip()
+        {
+            bool moving = ShouldPlayWeaponUpperBodyMotion();
+            if (moving && weaponMoveClip != null)
+            {
+                return weaponMoveClip;
+            }
+
+            if (weaponVisualSlot != null && weaponVisualSlot.Raised01 > 0.35f && weaponAimPoseClip != null)
+            {
+                return weaponAimPoseClip;
+            }
+
+            return FirstAvailableClip(weaponCarryPoseClip, weaponAimPoseClip, weaponMoveClip, weaponUpperBodyClip);
+        }
+
+        private bool HasAnyWeaponUpperBodyClip()
+        {
+            return weaponCarryPoseClip != null
+                   || weaponAimPoseClip != null
+                   || weaponMoveClip != null
+                   || weaponUpperBodyClip != null;
+        }
+
+        private bool CanApplyWeaponUpperBodyLayer()
+        {
+            if (!suppressWeaponLayerDuringTraversal || motor == null)
+            {
+                return true;
+            }
+
+            return !motor.IsCombatRolling
+                   && !motor.IsVaulting
+                   && !motor.IsClimbing
+                   && !motor.IsWallRunning;
+        }
+
+        private bool ShouldPlayWeaponUpperBodyMotion()
+        {
+            if (!freezeWeaponUpperBodyWhenIdle || motor == null)
+            {
+                return true;
+            }
+
+            return motor.PlanarVelocity.magnitude > idleSpeedThreshold;
+        }
+
+        private void WrapWeaponUpperBodyClip()
+        {
+            double duration = Mathf.Max(0.01f, activeWeaponUpperBodyClip != null ? activeWeaponUpperBodyClip.length : 0.01f);
+            double time = weaponUpperBodyPlayable.GetTime();
+            if (time >= duration || time < 0d)
+            {
+                weaponUpperBodyPlayable.SetTime(time - System.Math.Floor(time / duration) * duration);
+            }
+        }
+
+        private void ClearWeaponUpperBodyPlayable()
+        {
+            if (layerMixer.IsValid())
+            {
+                Playable input = layerMixer.GetInput(1);
+                if (input.IsValid())
+                {
+                    layerMixer.DisconnectInput(1);
+                }
+
+                layerMixer.SetInputWeight(1, 0f);
+            }
+
+            if (weaponUpperBodyPlayable.IsValid())
+            {
+                weaponUpperBodyPlayable.Destroy();
+            }
+
+            weaponUpperBodyPlayable = default;
+            activeWeaponUpperBodyClip = null;
+        }
+
+        private AvatarMask ResolveWeaponUpperBodyMask()
+        {
+            if (weaponUpperBodyMask != null)
+            {
+                return weaponUpperBodyMask;
+            }
+
+            weaponUpperBodyMask = new AvatarMask();
+            for (int i = 0; i < (int)AvatarMaskBodyPart.LastBodyPart; i++)
+            {
+                weaponUpperBodyMask.SetHumanoidBodyPartActive((AvatarMaskBodyPart)i, false);
+            }
+
+            weaponUpperBodyMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.Body, true);
+            weaponUpperBodyMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.Head, true);
+            weaponUpperBodyMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.LeftArm, true);
+            weaponUpperBodyMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.RightArm, true);
+            weaponUpperBodyMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.LeftFingers, true);
+            weaponUpperBodyMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.RightFingers, true);
+            weaponUpperBodyMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.LeftHandIK, true);
+            weaponUpperBodyMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.RightHandIK, true);
+            return weaponUpperBodyMask;
+        }
+
+        private static AnimationClip FirstAvailableClip(params AnimationClip[] clips)
+        {
+            for (int i = 0; i < clips.Length; i++)
+            {
+                if (clips[i] != null)
+                {
+                    return clips[i];
+                }
+            }
+
+            return null;
         }
 
         private int ChooseDesiredMotion(out float cost)

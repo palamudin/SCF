@@ -66,6 +66,7 @@ namespace SCF.EditorTools
             MovementAnimatorBridge bridge = EnsureComponent<MovementAnimatorBridge>(player);
             SCFAimBodyDifferentiator bodyDifferentiator = EnsureComponent<SCFAimBodyDifferentiator>(player);
             SCFClimbHandContactIK climbHandIK = EnsureComponent<SCFClimbHandContactIK>(player);
+            SCFWeaponVisualSlot weaponSlot = EnsureComponent<SCFWeaponVisualSlot>(player);
             MotionMatchingSignalHub signalHub = EnsureComponent<MotionMatchingSignalHub>(player);
             SCFMotionSelector motionSelector = EnsureComponent<SCFMotionSelector>(player);
             SCFCharacterVisualSlot visualSlot = EnsureComponent<SCFCharacterVisualSlot>(player);
@@ -86,10 +87,11 @@ namespace SCF.EditorTools
             bodyDifferentiator.Configure(motor, animator);
             bodyDifferentiator.SetAimTorsoDuringWallRun(true);
             climbHandIK.Configure(motor, animator, true);
+            weaponSlot.Configure(motor, animator, visualSlot.ActiveCharacterName);
             signalHub.Configure(animator);
             motionSelector.Configure(animator, motionDatabase);
 
-            MarkDirty(player, characterController, input, motor, bridge, bodyDifferentiator, climbHandIK, signalHub, motionSelector, visualSlot, panel);
+            MarkDirty(player, characterController, input, motor, bridge, bodyDifferentiator, climbHandIK, weaponSlot, signalHub, motionSelector, visualSlot, panel);
         }
 
         private static void ConfigureVisualSlotDefaults(SCFCharacterVisualSlot visualSlot)
@@ -219,12 +221,12 @@ namespace SCF.EditorTools
             stateMachine.defaultState = locomotion;
 
             AnimatorState jump = AddClipState(stateMachine, "Jump", FindFirstClip(
+                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Jump/jump start.FBX",
                 ParkourPlayerAnimationFolder + "/Jump.anim",
                 ParkourPlayerAnimationFolder + "/HopUp.anim",
                 "Assets/SCF/Animation/Jump.anim",
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Jump--Jump.anim.fbx",
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Jump/jump.fbx",
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Jump/jump start.FBX"), new Vector3(520f, -80f, 0f));
+                "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Jump/jump.fbx"), new Vector3(520f, -80f, 0f));
 
             AnimatorState roll = AddClipState(stateMachine, "Combat Roll", FindFirstClip(
                 ParkourPlayerAnimationFolder + "/Roll.anim",
@@ -272,20 +274,21 @@ namespace SCF.EditorTools
 
             AssetDatabase.AddObjectToAsset(tree, controller);
             AddBlendChild(tree, FindFirstClip(
+                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Idle/idle aiming.fbx",
+                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Idle/idle.fbx",
                 ParkourPlayerAnimationFolder + "/Idle.anim",
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Stand--Idle.anim.fbx",
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Idle/Idle.fbx",
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Idle/idle.fbx"), 0f);
+                "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Idle/Idle.fbx"), 0f);
             AddBlendChild(tree, FindFirstClip(
+                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Walk/walk.fbx",
                 ParkourPlayerAnimationFolder + "/Run.anim",
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Locomotion--Walk_N.anim.fbx",
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Walk/walk.fbx",
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Walk/walk.fbx"), 2.6f);
+                "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Walk/walk.fbx"), 2.6f);
             AddBlendChild(tree, FindFirstClip(
+                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Run/run.fbx",
                 ParkourPlayerAnimationFolder + "/Run.anim",
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Locomotion--Run_N.anim.fbx",
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Run/run.fbx",
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Run/run.fbx"), 5.8f);
+                "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Run/run.fbx"), 5.8f);
             return tree;
         }
 
