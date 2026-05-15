@@ -2,6 +2,10 @@ using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace SCF.Gameplay
 {
     [DisallowMultipleComponent]
@@ -9,6 +13,9 @@ namespace SCF.Gameplay
     [RequireComponent(typeof(IsometricCharacterMotor))]
     public sealed class SCFMotionSelector : MonoBehaviour
     {
+        private const string TpsEquippedWalkPath = "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Walk/walk.fbx";
+        private const string TpsEquippedWalkForwardClipName = "walk_fwd";
+
         [Header("References")]
         [SerializeField] private IsometricCharacterMotor motor;
         [SerializeField] private Animator animator;
@@ -19,6 +26,7 @@ namespace SCF.Gameplay
         [SerializeField, Min(0.01f)] private float searchInterval = 0.05f;
         [SerializeField, Min(0f)] private float idleSpeedThreshold = 0.15f;
         [SerializeField, Min(0f)] private float currentClipBias = 0.08f;
+        [SerializeField] private bool preferDirectionalLocomotionWhileAiming = true;
 
         [Header("Blending")]
         [SerializeField, Min(0.01f)] private float locomotionBlendTime = 0.18f;
@@ -29,7 +37,8 @@ namespace SCF.Gameplay
 
         [Header("Weapon Upper Body")]
         [Tooltip("Only use with SCF-authored clips. Imported reference packs stay as reference data, not runtime cycles.")]
-        [SerializeField] private bool enableWeaponUpperBodyLayer;
+        [SerializeField] private bool enableWeaponUpperBodyLayer = true;
+        [SerializeField] private bool autoLoadTpsArmedForwardUpperBody = true;
         [SerializeField] private AnimationClip weaponCarryPoseClip;
         [SerializeField] private AnimationClip weaponAimPoseClip;
         [SerializeField] private AnimationClip weaponMoveClip;
@@ -178,7 +187,65 @@ namespace SCF.Gameplay
             {
                 weaponVisualSlot = GetComponent<SCFWeaponVisualSlot>();
             }
+
+#if UNITY_EDITOR
+            ResolveDefaultWeaponUpperBodyClips();
+#endif
         }
+
+#if UNITY_EDITOR
+        private void ResolveDefaultWeaponUpperBodyClips()
+        {
+            if (!autoLoadTpsArmedForwardUpperBody || HasAnyWeaponUpperBodyClip())
+            {
+                return;
+            }
+
+            AnimationClip forwardArmedWalk = FindClipInAsset(TpsEquippedWalkPath, TpsEquippedWalkForwardClipName);
+            if (forwardArmedWalk == null)
+            {
+                return;
+            }
+
+            weaponCarryPoseClip = forwardArmedWalk;
+            weaponAimPoseClip = forwardArmedWalk;
+            weaponMoveClip = forwardArmedWalk;
+            weaponUpperBodyClip = forwardArmedWalk;
+            enableWeaponUpperBodyLayer = true;
+        }
+
+        private static AnimationClip FindClipInAsset(string assetPath, string clipName)
+        {
+            Object[] assets = AssetDatabase.LoadAllAssetsAtPath(assetPath);
+            for (int i = 0; i < assets.Length; i++)
+            {
+                if (assets[i] is AnimationClip clip
+                    && !clip.name.StartsWith("__preview", System.StringComparison.OrdinalIgnoreCase)
+                    && ClipNameMatches(clip.name, clipName))
+                {
+                    return clip;
+                }
+            }
+
+            return null;
+        }
+
+        private static bool ClipNameMatches(string actualName, string requestedName)
+        {
+            if (string.Equals(actualName, requestedName, System.StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            int pipeIndex = actualName.LastIndexOf('|');
+            if (pipeIndex >= 0 && pipeIndex < actualName.Length - 1)
+            {
+                return string.Equals(actualName.Substring(pipeIndex + 1), requestedName, System.StringComparison.OrdinalIgnoreCase);
+            }
+
+            return false;
+        }
+#endif
 
         private bool EnsureGraph()
         {
@@ -498,7 +565,17 @@ namespace SCF.Gameplay
                     }
                 }
 
-                return database.FindBestLocomotion(ResolveLocalMotionDirection(), speed, selectedMotionIndex, currentClipBias, out cost);
+                Vector2 localMotionDirection = ResolveLocalMotionDirection();
+                if (preferDirectionalLocomotionWhileAiming && motor.AimHeld)
+                {
+                    int directionalMotion = database.FindBestByType(SCFMotionType.Locomotion, localMotionDirection, selectedMotionIndex, currentClipBias, out cost);
+                    if (directionalMotion >= 0)
+                    {
+                        return directionalMotion;
+                    }
+                }
+
+                return database.FindBestLocomotion(localMotionDirection, speed, selectedMotionIndex, currentClipBias, out cost);
             }
 
             return database.FindFirst(SCFMotionType.Idle);

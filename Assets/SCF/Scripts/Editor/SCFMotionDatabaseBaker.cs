@@ -14,6 +14,8 @@ namespace SCF.EditorTools
         public const string HumanoidDatabasePath = DatabaseFolder + "/SCF_HumanoidMotionDatabase.asset";
         private const string ParkourPlayerAnimationFolder = "Assets/RedNotRed/3D Adaptive Parkour System/Animations/Player";
         private const string DynamicParkourAnimationFolder = "Assets/SCF/ThirdParty/DynamicParkour/Animations";
+        private const string TpsEquippedWalkPath = "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Walk/walk.fbx";
+        private const string TpsEquippedWalkForwardClipName = "walk_fwd";
 
         private const float PoseInterval = 0.1f;
         private static readonly float[] TrajectoryTimes = { 0f, 0.33f, 0.66f, 1f };
@@ -183,7 +185,7 @@ namespace SCF.EditorTools
                 DynamicParkourAnimationFolder + "/Idle.fbx",
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Stand--Idle.anim.fbx",
                 "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Idle/Idle.fbx");
-            AnimationClip walk = FindFirstClip(
+            AnimationClip walk = FindClipInAsset(TpsEquippedWalkPath, TpsEquippedWalkForwardClipName) ?? FindFirstClip(
                 "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Walk/walk.fbx",
                 DynamicParkourAnimationFolder + "/Walk.fbx",
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Locomotion--Walk_N.anim.fbx",
@@ -226,14 +228,16 @@ namespace SCF.EditorTools
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Jump--InAir.anim.fbx",
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Jump--Jump.anim.fbx");
             AnimationClip rollFallback = slide != null ? slide : crouchForward;
+            AnimationClip walkLeft = FindClipInAsset(TpsEquippedWalkPath, "walk_left");
+            AnimationClip walkRight = FindClipInAsset(TpsEquippedWalkPath, "walk_right");
 
             AddMotion(clips, "Humanoid Idle", idle, SCFMotionType.Idle, SCFMotionTags.Grounded | SCFMotionTags.Loop, true, 0f, Vector2.zero);
             AddMotion(clips, "Humanoid Walk", walk, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 2.6f, Vector2.up);
             AddMotion(clips, "Humanoid Run", run, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.8f, Vector2.up);
             AddMotion(clips, "Humanoid Run Forward Left", run, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.8f, new Vector2(-1f, 1f));
             AddMotion(clips, "Humanoid Run Forward Right", run, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.8f, new Vector2(1f, 1f));
-            AddMotion(clips, "Humanoid Run Left", run, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.4f, Vector2.left);
-            AddMotion(clips, "Humanoid Run Right", run, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.4f, Vector2.right);
+            AddMotion(clips, "Humanoid Run Left", walkLeft != null ? walkLeft : run, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.2f, Vector2.left, true);
+            AddMotion(clips, "Humanoid Run Right", walkRight != null ? walkRight : run, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.2f, Vector2.right, true);
             AddMotion(clips, "Humanoid Run Backward", runBack, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.2f, Vector2.down);
             AddMotion(clips, "Humanoid Run Backward Left", runBack, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.2f, new Vector2(-1f, -1f));
             AddMotion(clips, "Humanoid Run Backward Right", runBack, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.2f, new Vector2(1f, -1f));
@@ -264,7 +268,8 @@ namespace SCF.EditorTools
             SCFMotionTags tags,
             bool looping,
             float fallbackPlanarSpeed,
-            Vector2 movementDirection)
+            Vector2 movementDirection,
+            bool forceFallbackVelocity = false)
         {
             if (clip == null)
             {
@@ -279,7 +284,7 @@ namespace SCF.EditorTools
             Vector3 averageVelocity = clip.averageSpeed;
             averageVelocity.y = 0f;
             float averagePlanarSpeed = averageVelocity.magnitude;
-            if (averagePlanarSpeed <= 0.05f)
+            if (forceFallbackVelocity || averagePlanarSpeed <= 0.05f)
             {
                 averagePlanarSpeed = Mathf.Max(0f, fallbackPlanarSpeed);
                 Vector2 direction = movementDirection.sqrMagnitude > 0.0001f ? movementDirection.normalized : Vector2.up;
@@ -372,6 +377,44 @@ namespace SCF.EditorTools
             }
 
             return null;
+        }
+
+        private static AnimationClip FindClipInAsset(string assetPath, string clipName)
+        {
+            if (string.IsNullOrEmpty(assetPath) || string.IsNullOrEmpty(clipName))
+            {
+                return null;
+            }
+
+            Object[] assets = AssetDatabase.LoadAllAssetsAtPath(assetPath);
+            for (int i = 0; i < assets.Length; i++)
+            {
+                if (assets[i] is AnimationClip clip
+                    && !clip.name.StartsWith("__preview", System.StringComparison.OrdinalIgnoreCase)
+                    && ClipNameMatches(clip.name, clipName))
+                {
+                    return clip;
+                }
+            }
+
+            return null;
+        }
+
+        private static bool ClipNameMatches(string actualName, string requestedName)
+        {
+            if (string.Equals(actualName, requestedName, System.StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            int pipeIndex = actualName.LastIndexOf('|');
+            if (pipeIndex >= 0 && pipeIndex < actualName.Length - 1)
+            {
+                string strippedName = actualName.Substring(pipeIndex + 1);
+                return string.Equals(strippedName, requestedName, System.StringComparison.OrdinalIgnoreCase);
+            }
+
+            return false;
         }
 
         private static void EnsureFolder(string folderPath)

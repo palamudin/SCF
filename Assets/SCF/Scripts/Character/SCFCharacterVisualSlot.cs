@@ -724,6 +724,14 @@ namespace SCF.Gameplay
                 bridge.Configure(activeAnimator);
             }
 
+            ParkourAnimationPreviewPanel animationPanel = GetComponent<ParkourAnimationPreviewPanel>();
+            if (animationPanel == null)
+            {
+                animationPanel = gameObject.AddComponent<ParkourAnimationPreviewPanel>();
+            }
+
+            animationPanel.SetPreviewAnimator(activeAnimator);
+
             SCFAimBodyDifferentiator bodyDifferentiator = GetComponent<SCFAimBodyDifferentiator>();
             if (bodyDifferentiator == null)
             {

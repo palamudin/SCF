@@ -2170,6 +2170,13 @@ namespace SCF.Gameplay
 
             if (separateAimFromLocomotion)
             {
+                if (AimHeld && facingMode != CharacterFacingMode.MovementOnly && HasAimDirection)
+                {
+                    facingDirection = AimDirection;
+                    sharpness = aimRotationSharpness;
+                    return true;
+                }
+
                 if (hasMovementFacing)
                 {
                     facingDirection = planarMove.normalized;

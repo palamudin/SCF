@@ -13,19 +13,31 @@ namespace SCF.Gameplay
     [DisallowMultipleComponent]
     public sealed class ParkourAnimationPreviewPanel : MonoBehaviour
     {
-        private const string DefaultClipFolder = "Assets/SCF/Animation";
+        private static readonly string[] DefaultClipFolders =
+        {
+            "Assets/SCF/Animation",
+            "Assets/SCF/MovementAni",
+            "Assets/SCF/ThirdParty/DynamicParkour/Animations",
+            "Assets/RedNotRed/3D Adaptive Parkour System/Animations/Player",
+            "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations",
+            "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations"
+        };
 
         [SerializeField] private Animator previewAnimator;
         [SerializeField] private List<AnimationClip> clips = new List<AnimationClip>();
-        [SerializeField] private bool showPanel = true;
-        [SerializeField] private KeyCode toggleKey = KeyCode.F8;
+        [SerializeField] private bool showPanel;
+        [SerializeField] private KeyCode toggleKey = KeyCode.F7;
         [SerializeField] private bool loopPreview = true;
         [SerializeField] private float playbackSpeed = 1f;
-        [SerializeField] private Rect windowRect = new Rect(16f, 16f, 360f, 620f);
+        [SerializeField] private bool pauseScfMotionWhilePreview = true;
+        [SerializeField] private Rect windowRect = new Rect(286f, 78f, 380f, 620f);
+        [SerializeField] private Rect collapsedRect = new Rect(286f, 78f, 108f, 30f);
 
         private PlayableGraph graph;
         private AnimationClipPlayable clipPlayable;
         private AnimationClip currentClip;
+        private Behaviour[] pausedAnimationDrivers = Array.Empty<Behaviour>();
+        private bool[] pausedAnimationDriverStates = Array.Empty<bool>();
         private Vector2 scrollPosition;
         private string searchText = string.Empty;
         private static int nextWindowId = 32000;
@@ -51,7 +63,7 @@ namespace SCF.Gameplay
 #if UNITY_EDITOR
             if (clips.Count == 0)
             {
-                LoadParkourClipsFromProject();
+                LoadCandidateClipsFromProject();
             }
 #endif
         }
@@ -94,11 +106,27 @@ namespace SCF.Gameplay
         {
             if (!showPanel)
             {
+                if (GUI.Button(collapsedRect, "Animations"))
+                {
+                    showPanel = true;
+                }
+
                 return;
             }
 
             ClampWindowToScreen();
-            windowRect = GUILayout.Window(windowId, windowRect, DrawWindow, "Parkour Animation Browser");
+            windowRect = GUILayout.Window(windowId, windowRect, DrawWindow, "SCF Animation Browser");
+        }
+
+        public void SetPreviewAnimator(Animator animator)
+        {
+            if (previewAnimator == animator)
+            {
+                return;
+            }
+
+            StopPreview();
+            previewAnimator = animator;
         }
 
         public void Configure(Animator animator, IEnumerable<AnimationClip> animationClips)
@@ -121,29 +149,48 @@ namespace SCF.Gameplay
         }
 
 #if UNITY_EDITOR
-        [ContextMenu("Load Parkour Clips From Project")]
-        public void LoadParkourClipsFromProject()
+        [ContextMenu("Load Candidate Clips From Project")]
+        public void LoadCandidateClipsFromProject()
         {
             clips.Clear();
 
-            string[] clipGuids = AssetDatabase.FindAssets("t:AnimationClip", new[] { DefaultClipFolder });
+            string[] clipGuids = AssetDatabase.FindAssets("t:AnimationClip", DefaultClipFolders);
             for (int i = 0; i < clipGuids.Length; i++)
             {
                 string path = AssetDatabase.GUIDToAssetPath(clipGuids[i]);
-                AnimationClip clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(path);
-                if (clip != null)
+                AddClipsFromAsset(path);
+            }
+
+            SortClips();
+        }
+
+        private void AddClipsFromAsset(string path)
+        {
+            UnityEngine.Object[] assets = AssetDatabase.LoadAllAssetsAtPath(path);
+            for (int i = 0; i < assets.Length; i++)
+            {
+                if (assets[i] is AnimationClip clip
+                    && !clip.name.StartsWith("__preview", StringComparison.OrdinalIgnoreCase)
+                    && !clips.Contains(clip))
                 {
                     clips.Add(clip);
                 }
             }
-
-            SortClips();
         }
 #endif
 
         private void DrawWindow(int windowId)
         {
-            GUILayout.Label(previewAnimator != null ? "Target: " + previewAnimator.name : "Target: none");
+            using (new GUILayout.HorizontalScope())
+            {
+                GUILayout.Label(previewAnimator != null ? "Target: " + previewAnimator.name : "Target: none");
+                GUILayout.FlexibleSpace();
+                if (GUILayout.Button("Hide", GUILayout.Width(52f), GUILayout.Height(22f)))
+                {
+                    showPanel = false;
+                }
+            }
+
             GUILayout.Label(currentClip != null ? "Playing: " + currentClip.name : "Playing: none");
 
             using (new GUILayout.HorizontalScope())
@@ -164,7 +211,7 @@ namespace SCF.Gameplay
                 if (GUILayout.Button("Reload Clips", GUILayout.Height(26f)))
                 {
 #if UNITY_EDITOR
-                    LoadParkourClipsFromProject();
+                    LoadCandidateClipsFromProject();
 #endif
                 }
             }
@@ -212,6 +259,7 @@ namespace SCF.Gameplay
                 return;
             }
 
+            PauseAnimationDrivers();
             StopGraphOnly();
 
             currentClip = clip;
@@ -232,6 +280,7 @@ namespace SCF.Gameplay
         {
             StopGraphOnly();
             currentClip = null;
+            RestoreAnimationDrivers();
 
             if (previewAnimator != null && previewAnimator.isActiveAndEnabled)
             {
@@ -248,6 +297,48 @@ namespace SCF.Gameplay
             }
 
             clipPlayable = default;
+        }
+
+        private void PauseAnimationDrivers()
+        {
+            if (!pauseScfMotionWhilePreview || pausedAnimationDrivers.Length > 0)
+            {
+                return;
+            }
+
+            pausedAnimationDrivers = new Behaviour[]
+            {
+                GetComponent<SCFMotionSelector>(),
+                GetComponent<MovementAnimatorBridge>(),
+                GetComponent<MotionMatchingSignalHub>()
+            };
+            pausedAnimationDriverStates = new bool[pausedAnimationDrivers.Length];
+
+            for (int i = 0; i < pausedAnimationDrivers.Length; i++)
+            {
+                Behaviour behaviour = pausedAnimationDrivers[i];
+                if (behaviour != null)
+                {
+                    pausedAnimationDriverStates[i] = behaviour.enabled;
+                    behaviour.enabled = false;
+                }
+            }
+        }
+
+        private void RestoreAnimationDrivers()
+        {
+            for (int i = 0; i < pausedAnimationDrivers.Length; i++)
+            {
+                Behaviour behaviour = pausedAnimationDrivers[i];
+                if (behaviour != null)
+                {
+                    bool wasEnabled = i < pausedAnimationDriverStates.Length && pausedAnimationDriverStates[i];
+                    behaviour.enabled = wasEnabled;
+                }
+            }
+
+            pausedAnimationDrivers = Array.Empty<Behaviour>();
+            pausedAnimationDriverStates = Array.Empty<bool>();
         }
 
         private void SortClips()

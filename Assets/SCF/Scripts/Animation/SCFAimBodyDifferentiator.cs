@@ -17,8 +17,14 @@ namespace SCF.Gameplay
         [SerializeField] private bool useGenericBoneNameFallback = true;
         [SerializeField] private bool aimTorsoDuringWallRun = true;
         [SerializeField, Range(0f, 1f)] private float torsoAimWeight = 0.75f;
-        [SerializeField, Range(0f, 90f)] private float maxTorsoYaw = 65f;
+        [SerializeField, Range(0f, 180f)] private float maxTorsoYaw = 65f;
         [SerializeField, Min(0.1f)] private float torsoRotationSharpness = 18f;
+
+        [Header("Held Aim")]
+        [Tooltip("Right mouse can give the upper body extra authority while the motor facing frame points at the cursor.")]
+        [SerializeField] private bool boostTorsoOnAimHeld = true;
+        [SerializeField, Range(0f, 1.5f)] private float heldAimTorsoWeight = 1f;
+        [SerializeField, Range(0f, 180f)] private float heldAimMaxTorsoYaw = 180f;
 
         [Header("Bone Weights")]
         [SerializeField, Range(0f, 1f)] private float headWeight = 0.42f;
@@ -59,6 +65,8 @@ namespace SCF.Gameplay
         {
             torsoAimWeight = Mathf.Clamp01(torsoAimWeight);
             maxTorsoYaw = Mathf.Max(0f, maxTorsoYaw);
+            heldAimTorsoWeight = Mathf.Max(0f, heldAimTorsoWeight);
+            heldAimMaxTorsoYaw = Mathf.Max(0f, heldAimMaxTorsoYaw);
             torsoRotationSharpness = Mathf.Max(0.1f, torsoRotationSharpness);
         }
 
@@ -96,7 +104,7 @@ namespace SCF.Gameplay
             targetTorsoYaw = ResolveTargetYaw();
             float blend = 1f - Mathf.Exp(-torsoRotationSharpness * Time.deltaTime);
             currentTorsoYaw = Mathf.LerpAngle(currentTorsoYaw, targetTorsoYaw, blend);
-            ApplyTorsoYaw(currentTorsoYaw * torsoAimWeight);
+            ApplyTorsoYaw(currentTorsoYaw * ResolveCurrentAimWeight());
         }
 
         private void ResolveReferences()
@@ -173,7 +181,28 @@ namespace SCF.Gameplay
             }
 
             float yaw = SignedAngleAroundAxis(bodyForward.normalized, aimForward.normalized, Vector3.up);
-            return Mathf.Clamp(yaw, -maxTorsoYaw, maxTorsoYaw);
+            float yawLimit = ResolveCurrentYawLimit();
+            return Mathf.Clamp(yaw, -yawLimit, yawLimit);
+        }
+
+        private float ResolveCurrentAimWeight()
+        {
+            if (boostTorsoOnAimHeld && motor != null && motor.AimHeld)
+            {
+                return heldAimTorsoWeight;
+            }
+
+            return torsoAimWeight;
+        }
+
+        private float ResolveCurrentYawLimit()
+        {
+            if (boostTorsoOnAimHeld && motor != null && motor.AimHeld)
+            {
+                return Mathf.Max(0f, heldAimMaxTorsoYaw);
+            }
+
+            return Mathf.Max(0f, maxTorsoYaw);
         }
 
         private void ApplyTorsoYaw(float yaw)
