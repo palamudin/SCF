@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ba7dac940cab748f289db1623b68d92e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Models/Helicopter/Materials/tail_rotorMat.mat
+  uploadId: 428190

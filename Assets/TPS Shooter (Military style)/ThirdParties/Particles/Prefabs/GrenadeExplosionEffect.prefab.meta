@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ecdd96beb7f93494880c052dfccf9dc1
+timeCreated: 1473254700
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/ThirdParties/Particles/Prefabs/GrenadeExplosionEffect.prefab
+  uploadId: 428190

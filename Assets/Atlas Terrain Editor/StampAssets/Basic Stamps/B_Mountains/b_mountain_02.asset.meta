@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8083eee48b379d848a503dd6a2ea9a76
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/StampAssets/Basic Stamps/B_Mountains/b_mountain_02.asset
+  uploadId: 596268

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 574f09a24da29b64d83d6f6366a2adc8
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Stamps/Basic Stamps/BS_Ridges/BS_Ridge_02.prefab
+  uploadId: 596268

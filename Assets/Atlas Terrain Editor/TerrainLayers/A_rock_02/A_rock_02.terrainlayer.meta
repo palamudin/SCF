@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 097c4a1fcde05f242bc53e05a44dcda6
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 8574412962073106934
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/TerrainLayers/A_rock_02/A_rock_02.terrainlayer
+  uploadId: 596268

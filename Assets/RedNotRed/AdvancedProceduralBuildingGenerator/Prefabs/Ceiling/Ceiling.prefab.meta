@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 38ca2e44c566c8d40a81b5ef8231f13b
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Prefabs/Ceiling/Ceiling.prefab
+  uploadId: 685977

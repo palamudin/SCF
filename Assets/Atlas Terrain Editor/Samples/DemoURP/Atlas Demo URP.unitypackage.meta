@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 812d4a47a08684f45af92d30e7681276
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Samples/DemoURP/Atlas Demo URP.unitypackage
+  uploadId: 596268

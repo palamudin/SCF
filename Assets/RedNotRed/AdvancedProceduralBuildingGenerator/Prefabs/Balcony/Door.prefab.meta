@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 015c601ff7522764d9d1f041175b1aa6
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Prefabs/Balcony/Door.prefab
+  uploadId: 685977

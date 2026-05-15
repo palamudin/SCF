@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: eecede8011da4ea48bf54a65d120be3f
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Scripts/Additional/ChangeRoom.cs
+  uploadId: 685977

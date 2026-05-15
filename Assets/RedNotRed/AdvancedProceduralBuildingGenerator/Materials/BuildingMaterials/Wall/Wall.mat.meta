@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 89bd666510e82df4e9969ed776adce70
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Materials/BuildingMaterials/Wall/Wall.mat
+  uploadId: 685977

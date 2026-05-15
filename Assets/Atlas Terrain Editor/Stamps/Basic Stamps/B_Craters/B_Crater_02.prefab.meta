@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 16c689c0c9393b040aa369d71ab07ead
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Stamps/Basic Stamps/B_Craters/B_Crater_02.prefab
+  uploadId: 596268

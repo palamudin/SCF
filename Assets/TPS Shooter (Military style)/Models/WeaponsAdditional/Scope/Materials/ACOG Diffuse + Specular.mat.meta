@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: f352af8a57c684a7bad906d3a209af4d
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Models/WeaponsAdditional/Scope/Materials/ACOG
+    Diffuse + Specular.mat
+  uploadId: 428190

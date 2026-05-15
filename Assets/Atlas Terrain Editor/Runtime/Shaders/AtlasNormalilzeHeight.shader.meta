@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: a23c4ad115bdb374191d0366186f24cf
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Runtime/Shaders/AtlasNormalilzeHeight.shader
+  uploadId: 596268

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: ae702c63aa697d24c98162f825bd975a
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Stamps/Basic Stamps/BS_Cliffs/BS_Cliff_01.prefab
+  uploadId: 596268

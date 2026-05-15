@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: b1d787610a33ed04ab4e5e3a673c9f13
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Scripts/Additional/CameraScript.cs
+  uploadId: 685977

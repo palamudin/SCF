@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: e18d8126d00c247ddb3fb6fae079a681
+timeCreated: 1538844093
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Prefabs/Entities/Enemeis/SoldierRagdoll.prefab
+  uploadId: 428190

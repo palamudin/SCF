@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a0c03b671f4ef49a4b0661ce41464755
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 23800000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Scenes/Advanced/NavMesh.asset
+  uploadId: 428190

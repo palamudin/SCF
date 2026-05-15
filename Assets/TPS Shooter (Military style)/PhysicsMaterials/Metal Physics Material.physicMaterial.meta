@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: e8d933d3f95224cda8df4bf2e98ab6d7
+timeCreated: 1572534052
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 13400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/PhysicsMaterials/Metal Physics Material.physicMaterial
+  uploadId: 428190

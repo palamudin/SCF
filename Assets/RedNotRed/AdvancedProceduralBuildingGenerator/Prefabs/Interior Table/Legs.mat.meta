@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 8bf5a85efed9bda46af44d363be15efd
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Prefabs/Interior
+    Table/Legs.mat
+  uploadId: 685977

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 1ba1e8ddc7b6a6f46b32a3b8ec2d53b4
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 4300000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Runtime/Prefabs/AtlasScaleReferenceMannequinModel.asset
+  uploadId: 596268

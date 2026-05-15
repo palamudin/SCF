@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: b8a2a6a5dfb7aa74b86b078210ebcc67
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Stamps/Basic Stamps/B_Dunes/B_Dune_01.prefab
+  uploadId: 596268

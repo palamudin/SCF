@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 0b999dfd4bef14e4db3803c5d41918df
+timeCreated: 1544811189
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Materials/WeaponsAdditional/Scope/ScopeCameraMaterial.mat
+  uploadId: 428190

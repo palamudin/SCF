@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 2d922dfe4019fb7789e22f45bb24fa62
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Scripts/CSG/pb_CSG-master/CSG/Classes/Node.cs
+  uploadId: 685977

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: db3dbd57d164ef84f8a84ebb4f45b4d9
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Editor/ScatterRuleAssetEditor.cs
+  uploadId: 596268

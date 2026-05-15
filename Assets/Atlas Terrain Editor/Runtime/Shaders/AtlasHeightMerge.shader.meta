@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: c213141c6496c5045bba7ca54c89734b
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Runtime/Shaders/AtlasHeightMerge.shader
+  uploadId: 596268

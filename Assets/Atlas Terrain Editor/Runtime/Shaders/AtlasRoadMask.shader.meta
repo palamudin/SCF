@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 8f1155e7e15c42f4cb67d9c78cb1645a
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  preprocessorOverride: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Runtime/Shaders/AtlasRoadMask.shader
+  uploadId: 596268

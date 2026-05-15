@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: c562e24f382ed164ba5dcf6f0cf76bd1
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Prefabs/Stairs/Stairs.prefab
+  uploadId: 685977

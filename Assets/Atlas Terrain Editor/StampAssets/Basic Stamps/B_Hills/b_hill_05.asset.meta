@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c1b01146ae5cf444986f36eef7410449
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/StampAssets/Basic Stamps/B_Hills/b_hill_05.asset
+  uploadId: 596268

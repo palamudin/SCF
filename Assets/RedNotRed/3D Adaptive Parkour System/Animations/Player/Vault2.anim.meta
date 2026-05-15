@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 401cb80d6ad38d84aa4ea644c4496b14
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 248636
+  packageName: 3D Adaptive Parkour System
+  packageVersion: 1.3
+  assetPath: Assets/RedNotRed/3D Adaptive Parkour System/Animations/Player/Vault2.anim
+  uploadId: 592193

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8bea289ef5d264f45aec96b117f840fc
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Materials/HelthKit/HealthKit.mat
+  uploadId: 428190

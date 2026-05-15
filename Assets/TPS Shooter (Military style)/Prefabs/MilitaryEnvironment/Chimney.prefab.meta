@@ -1,0 +1,26 @@
+fileFormatVersion: 2
+guid: 82f94a9916ae98b4389a7b311030c878
+labels:
+- environment
+- industrial
+- military
+- urban
+- modular
+- building
+- pack
+- art
+- profi
+- developers
+timeCreated: 18446744011573954816
+NativeFormatImporter:
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Prefabs/MilitaryEnvironment/Chimney.prefab
+  uploadId: 428190

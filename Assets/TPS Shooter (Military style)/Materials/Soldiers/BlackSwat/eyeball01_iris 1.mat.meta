@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: f33c80383b55546f5af2858c9a1e7b4f
+timeCreated: 1503838689
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Materials/Soldiers/BlackSwat/eyeball01_iris
+    1.mat
+  uploadId: 428190

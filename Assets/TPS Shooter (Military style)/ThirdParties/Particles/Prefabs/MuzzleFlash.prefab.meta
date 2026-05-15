@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 7be730e27f3ec77448ba676606455fc0
+NativeFormatImporter:
+  mainObjectFileID: -1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/ThirdParties/Particles/Prefabs/MuzzleFlash.prefab
+  uploadId: 428190

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e31de2af022621041a07619413c108d7
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Prefabs/Sofa/Metal.mat
+  uploadId: 685977

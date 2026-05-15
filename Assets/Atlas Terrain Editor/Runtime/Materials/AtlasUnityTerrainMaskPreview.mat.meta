@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 5141fb64ea23139479114ac566d24bf3
+labels:
+- AtlasUnityTerrainMaskPreview
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Runtime/Materials/AtlasUnityTerrainMaskPreview.mat
+  uploadId: 596268

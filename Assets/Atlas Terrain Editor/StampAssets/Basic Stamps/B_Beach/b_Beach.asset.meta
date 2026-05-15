@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6f0bc51a41c4ccd42a2f2ce4ce6600d0
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/StampAssets/Basic Stamps/B_Beach/b_Beach.asset
+  uploadId: 596268

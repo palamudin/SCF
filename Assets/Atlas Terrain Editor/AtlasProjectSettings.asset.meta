@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: fbc8b7fd32cb48243b1afd445d85065e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/AtlasProjectSettings.asset
+  uploadId: 596268

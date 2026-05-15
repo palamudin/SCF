@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 0392bdb6443bc44ab9fd8de513abba12
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Prefabs/Entities/PickUps/AmmoPickUp.prefab
+  uploadId: 428190

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 3f306f57d3e3149c2b3ddacd175443aa
+timeCreated: 1532005608
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Materials/WeaponsAdditional/RedDot/RedDot/red_dot_d.mat
+  uploadId: 428190

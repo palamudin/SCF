@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8ff3de4e9640f32468b755239366e39c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 248636
+  packageName: 3D Adaptive Parkour System
+  packageVersion: 1.3
+  assetPath: Assets/RedNotRed/3D Adaptive Parkour System/Animations/Player/RunRight.anim
+  uploadId: 592193

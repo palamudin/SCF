@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 5f70ef63a0593e64ea71f4ee74073c5a
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Prefabs/Window/FakeWindow.mat
+  uploadId: 685977

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b67b3e33ec69f2541a66c2c8ac26ce89
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/StampAssets/Basic Stamps/B_Craters/b_crater_03.asset
+  uploadId: 596268

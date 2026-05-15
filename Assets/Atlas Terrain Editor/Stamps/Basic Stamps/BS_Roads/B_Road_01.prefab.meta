@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 707ec7e33c30df745b831708ad216a4a
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Stamps/Basic Stamps/BS_Roads/B_Road_01.prefab
+  uploadId: 596268

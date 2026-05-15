@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 2148c2e2de5cf4459945effdcdac90df
+timeCreated: 1531209033
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 31900000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/AvatarMasks/Leg Avatar Mask.mask
+  uploadId: 428190

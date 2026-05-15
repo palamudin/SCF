@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: b06d45979a1054a15a8411c32c2ef910
+timeCreated: 1544106503
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Materials/Hands/Hands.mat
+  uploadId: 428190

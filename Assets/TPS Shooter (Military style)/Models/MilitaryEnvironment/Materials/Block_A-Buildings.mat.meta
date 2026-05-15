@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 4f82747d64b43433b95568e91e1543c9
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Models/MilitaryEnvironment/Materials/Block_A-Buildings.mat
+  uploadId: 428190

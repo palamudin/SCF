@@ -1,0 +1,12 @@
+The basic stamp package is built on a specific terrain layer order.
+
+Grass1
+Grass2
+Soil1
+Soil2
+Rock1
+Rock2
+Sand
+Snow
+
+Follow this order if you want the basic stamp package to work correctly out of the box.

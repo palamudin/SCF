@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 06760b54bf31e407388aae31291536cc
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Prefabs/UI/Player/PlayerCanvas.prefab
+  uploadId: 428190

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 3c39e7996afd64835b40c8139d7ddf86
+timeCreated: 1531317725
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Prefabs/Entities/Vehicle/UAZ.prefab
+  uploadId: 428190

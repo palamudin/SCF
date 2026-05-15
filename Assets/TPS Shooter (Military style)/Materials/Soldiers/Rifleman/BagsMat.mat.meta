@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 793d575a2757a954ba25d8c36c4a7e87
+timeCreated: 18446744011573954816
+NativeFormatImporter:
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Materials/Soldiers/Rifleman/BagsMat.mat
+  uploadId: 428190

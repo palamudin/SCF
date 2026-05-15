@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: a52d2018ee8204d4bbc4f80a2213b1f7
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Runtime/Shaders/AtlasHeight.shader
+  uploadId: 596268

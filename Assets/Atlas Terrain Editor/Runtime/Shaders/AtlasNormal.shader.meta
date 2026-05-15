@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: d15307adf93658a4b9a7e5a6108a0272
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Runtime/Shaders/AtlasNormal.shader
+  uploadId: 596268

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 67d753d447bd42742acb834e799b74c3
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Materials/Screen/Screen.mat
+  uploadId: 685977

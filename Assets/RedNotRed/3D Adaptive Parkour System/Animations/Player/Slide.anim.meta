@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b68b7ac5ff53e0e41a8576d42c7a09f0
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 248636
+  packageName: 3D Adaptive Parkour System
+  packageVersion: 1.3
+  assetPath: Assets/RedNotRed/3D Adaptive Parkour System/Animations/Player/Slide.anim
+  uploadId: 592193

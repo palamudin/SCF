@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 77b3acbf9933ee340a693889385aed53
+labels:
+- AtlasScaleReferenceHouse
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Runtime/Prefabs/AtlasScaleReferenceHouse.prefab
+  uploadId: 596268

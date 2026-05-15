@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8e722f12cf69f453dab843e2bc787359
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Models/Grenade/Materials/None.mat
+  uploadId: 428190

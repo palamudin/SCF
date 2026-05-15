@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 704a2397159c2eb44bc7dc16892fd9de
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Runtime/Shaders/AtlasRotateTexture.shader
+  uploadId: 596268

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 4398c47a749af4db19ef743b64f73a73
+timeCreated: 1532941226
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Materials/Vehicle/UAZ_wire_086086086_color.mat
+  uploadId: 428190

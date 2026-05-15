@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 748ef1560b4f5074e960f5e11e7441bf
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Stamps/Basic Stamps/B_Shapes/B_Shape_Sphere_01
+    .prefab
+  uploadId: 596268

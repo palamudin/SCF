@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 14bfbe1409d824899960c10f1dd55be5
+timeCreated: 1569506950
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Animations/WeaponPickUp/WeaponPickUp.anim
+  uploadId: 428190

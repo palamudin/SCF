@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c9f60d71520ce467c8b05cb48e704616
+timeCreated: 1459426568
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Prefabs/Entities/Bullets/EnemyBullet.prefab
+  uploadId: 428190

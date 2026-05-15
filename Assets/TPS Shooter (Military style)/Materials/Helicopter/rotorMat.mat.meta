@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 2b4e6d37540864b069776719e6cb7076
+timeCreated: 1547627537
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Materials/Helicopter/rotorMat.mat
+  uploadId: 428190

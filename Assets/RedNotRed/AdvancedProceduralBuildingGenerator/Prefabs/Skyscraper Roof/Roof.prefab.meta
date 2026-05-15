@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: cc71d0bcafa270e4bbfa2e531273d5b8
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Prefabs/Skyscraper
+    Roof/Roof.prefab
+  uploadId: 685977

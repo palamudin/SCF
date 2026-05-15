@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 97f94dac1ec9a00498ae1796d864a7cb
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Prefabs/Elevator/Stainless_Steel.mat
+  uploadId: 685977

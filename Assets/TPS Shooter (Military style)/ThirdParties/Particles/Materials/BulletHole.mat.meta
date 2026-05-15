@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 791210fdb8ebc4b8bafa0cd545a7c6ac
+timeCreated: 1532201073
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/ThirdParties/Particles/Materials/BulletHole.mat
+  uploadId: 428190

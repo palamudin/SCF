@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 0efc3450eba6ea94090b40e0acd4d159
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 248636
+  packageName: 3D Adaptive Parkour System
+  packageVersion: 1.3
+  assetPath: Assets/RedNotRed/3D Adaptive Parkour System/Animations/Player/ClimbingIdle.anim
+  uploadId: 592193

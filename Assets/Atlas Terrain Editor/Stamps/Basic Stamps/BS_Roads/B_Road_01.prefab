@@ -1,0 +1,259 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4440823622949684500
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4440823622949684502}
+  - component: {fileID: 4440823622949684503}
+  m_Layer: 0
+  m_Name: B_Road_01
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4440823622949684502
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4440823622949684500}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4440823622949684503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4440823622949684500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfb48a9f575b2464fa7c04deba8020d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stamp: {fileID: 11400000, guid: 4c51d7aaafd629b40b28f9b2ead896b5, type: 2}
+  maskOverride: {fileID: 0}
+  maskMap:
+    mapType: 2
+    input: 3
+    target: 0
+    modifier:
+      modifierType: 2
+      blendMode: 0
+      blendRatio: 1
+      edgeBlend: 1
+      opacity: 1
+      power: 1
+      edgeErase: 0
+      offset: 0
+      multiplier: 1
+      cutoffMin: 0
+      cutoffMax: 1
+      invert: 0
+      brightness: 5
+      contrast: 3
+      saturation: 1
+      hue: 0
+    inspectorInitialized: 1
+    selfIndex: 0
+  heightMap:
+    mapType: 0
+    input: 1
+    target: 1
+    modifier:
+      modifierType: 0
+      blendMode: 0
+      blendRatio: 1
+      edgeBlend: 1
+      opacity: 1
+      power: 1
+      edgeErase: 0
+      offset: 0
+      multiplier: 1
+      cutoffMin: 0
+      cutoffMax: 1
+      invert: 0
+      brightness: 5
+      contrast: 3
+      saturation: 1
+      hue: 0
+    inspectorInitialized: 1
+    selfIndex: 0
+  colorMap:
+    mapType: 1
+    input: 2
+    target: 2
+    modifier:
+      modifierType: 1
+      blendMode: 0
+      blendRatio: 1
+      edgeBlend: 1
+      opacity: 1
+      power: 1
+      edgeErase: 0
+      offset: 0
+      multiplier: 1
+      cutoffMin: 0
+      cutoffMax: 1
+      invert: 0
+      brightness: 0.6
+      contrast: 1
+      saturation: 0.7
+      hue: 0
+    inspectorInitialized: 1
+    selfIndex: 0
+  roadMaskMap:
+    mapType: 4
+    input: 12
+    target: 0
+    modifier:
+      modifierType: 2
+      blendMode: 0
+      blendRatio: 1
+      edgeBlend: 1
+      opacity: 1
+      power: 1
+      edgeErase: 0
+      offset: 0
+      multiplier: 1
+      cutoffMin: 0
+      cutoffMax: 1
+      invert: 0
+      brightness: 1
+      contrast: 1
+      saturation: 1
+      hue: 0
+    inspectorInitialized: 0
+    selfIndex: 0
+  stampMaps:
+  - mapType: 3
+    input: 0
+    target: 6
+    modifier:
+      modifierType: 0
+      blendMode: 0
+      blendRatio: 1
+      edgeBlend: 1
+      opacity: 1
+      power: 1
+      edgeErase: 0
+      offset: 0
+      multiplier: 1
+      cutoffMin: 0
+      cutoffMax: 1
+      invert: 0
+      brightness: 5
+      contrast: 3
+      saturation: 1
+      hue: 0
+    inspectorInitialized: 1
+    selfIndex: 0
+  - mapType: 3
+    input: 5
+    target: 4
+    modifier:
+      modifierType: 0
+      blendMode: 0
+      blendRatio: 1
+      edgeBlend: 1
+      opacity: 1
+      power: 1
+      edgeErase: 0
+      offset: 0.05
+      multiplier: 1
+      cutoffMin: 0
+      cutoffMax: 1
+      invert: 0
+      brightness: 5
+      contrast: 3
+      saturation: 1
+      hue: 0
+    inspectorInitialized: 1
+    selfIndex: 1
+  - mapType: 3
+    input: 6
+    target: 6
+    modifier:
+      modifierType: 0
+      blendMode: 0
+      blendRatio: 1
+      edgeBlend: 1
+      opacity: 1
+      power: 1
+      edgeErase: 0
+      offset: -0.46
+      multiplier: 1
+      cutoffMin: 0
+      cutoffMax: 1
+      invert: 0
+      brightness: 5
+      contrast: 3
+      saturation: 1
+      hue: 0
+    inspectorInitialized: 1
+    selfIndex: 2
+  - mapType: 3
+    input: 7
+    target: 5
+    modifier:
+      modifierType: 0
+      blendMode: 0
+      blendRatio: 1
+      edgeBlend: 1
+      opacity: 1
+      power: 1
+      edgeErase: 0
+      offset: -0.23
+      multiplier: 1
+      cutoffMin: 0
+      cutoffMax: 1
+      invert: 0
+      brightness: 5
+      contrast: 3
+      saturation: 1
+      hue: 0
+    inspectorInitialized: 1
+    selfIndex: 3
+  center: {x: 0, y: 0, z: 0}
+  size: {x: 0, y: 1, z: 100}
+  roadBlending: 1
+  width: 20
+  tiling: 3
+  fadeStart: 0.1
+  fadeEnd: 0.9
+  closed: 0
+  quality: 0
+  qualitySettings:
+    maxLength: 5
+    maxDistanceBetweenPoints: 100
+    widthSegments: 5
+  meshExportSettings:
+    width: 7
+    maxDistanceBetweenPoints: 1
+    maxPoints: 10000
+    widthSegments: 5
+    tiling: 100
+    fadeStart: 0.1
+    fadeEnd: 0.9
+    edgePushDown: 0.2
+    midPushUp: 0.015
+    material: {fileID: 0}
+  editMode: 0
+  points:
+  - point: {x: 0, y: 0, z: 50}
+    scale: 1
+  - point: {x: 0, y: 0, z: -50}
+    scale: 1

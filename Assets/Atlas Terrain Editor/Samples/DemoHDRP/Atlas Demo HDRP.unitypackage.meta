@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 1365cc23fac96a242aca38ce489afca9
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Samples/DemoHDRP/Atlas Demo HDRP.unitypackage
+  uploadId: 596268

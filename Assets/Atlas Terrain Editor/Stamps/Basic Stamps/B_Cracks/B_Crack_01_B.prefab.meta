@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 984c786c46f2ca54c82a8878c8475d4f
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Stamps/Basic Stamps/B_Cracks/B_Crack_01_B.prefab
+  uploadId: 596268

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 1f65f0df13f0d48558ab90197af910c8
+timeCreated: 1543161698
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Materials/Misc/BulletTrail.mat
+  uploadId: 428190

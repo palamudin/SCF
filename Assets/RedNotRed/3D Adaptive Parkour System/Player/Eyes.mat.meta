@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 779f59df414a47649af7edb893d7e385
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 248636
+  packageName: 3D Adaptive Parkour System
+  packageVersion: 1.3
+  assetPath: Assets/RedNotRed/3D Adaptive Parkour System/Player/Eyes.mat
+  uploadId: 592193

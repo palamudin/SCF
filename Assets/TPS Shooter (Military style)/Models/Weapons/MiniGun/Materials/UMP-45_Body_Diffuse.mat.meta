@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 78fa4208d2abc43258fce48ee4b8ec94
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Models/Weapons/MiniGun/Materials/UMP-45_Body_Diffuse.mat
+  uploadId: 428190

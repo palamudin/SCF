@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 1d109df74fa45461ebf4f91a0bb0c345
+timeCreated: 1547627531
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Materials/Soldiers/Player/Soldier-Casual_Male_Lod_0.mat
+  uploadId: 428190

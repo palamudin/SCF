@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 939175a441371724c9965f133fe8a0bc
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Materials/BuildingMaterials/Windows/Window
+    1.mat
+  uploadId: 685977

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 082049223336d614492df8e21226f939
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/StampAssets/Basic Stamps/B_Shapes/b_pyramde_01.asset
+  uploadId: 596268

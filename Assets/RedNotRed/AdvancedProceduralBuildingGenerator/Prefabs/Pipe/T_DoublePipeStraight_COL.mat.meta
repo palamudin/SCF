@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 408138c4479f4ff4d9383a163ecbe6de
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Prefabs/Pipe/T_DoublePipeStraight_COL.mat
+  uploadId: 685977

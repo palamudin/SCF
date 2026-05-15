@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f88239865da4c79468e051ceb78c0317
+timeCreated: 1472113426
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/ThirdParties/Particles/Materials/ShockWaveParticle.mat
+  uploadId: 428190

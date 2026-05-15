@@ -1,0 +1,26 @@
+fileFormatVersion: 2
+guid: dbb9aed0f73c48a47941a223eb6dc60f
+labels:
+- environment
+- industrial
+- military
+- urban
+- modular
+- building
+- pack
+- art
+- profi
+- developers
+timeCreated: 18446744011573954816
+NativeFormatImporter:
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Prefabs/MilitaryEnvironment/_WoodCrates/WoodCrate_F_Prefab.prefab
+  uploadId: 428190

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 5fef73f66187c48acb1ff1b7853511f0
+timeCreated: 1547627533
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Materials/Weapons/MachineGun/Tex_0009_1.mat
+  uploadId: 428190

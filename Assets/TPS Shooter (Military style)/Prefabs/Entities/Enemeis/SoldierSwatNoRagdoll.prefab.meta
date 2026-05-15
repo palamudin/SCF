@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: bcf89d183c6ab4bf9a9e4ea599a64dfd
+timeCreated: 1538828177
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Prefabs/Entities/Enemeis/SoldierSwatNoRagdoll.prefab
+  uploadId: 428190

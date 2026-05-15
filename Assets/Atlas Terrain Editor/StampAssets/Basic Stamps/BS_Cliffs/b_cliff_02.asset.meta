@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 46a718d7462e7734eb999218c255566c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/StampAssets/Basic Stamps/BS_Cliffs/b_cliff_02.asset
+  uploadId: 596268

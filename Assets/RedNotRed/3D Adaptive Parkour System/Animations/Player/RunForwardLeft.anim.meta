@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2b470dc5219b4744eaa70078c157d45d
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 248636
+  packageName: 3D Adaptive Parkour System
+  packageVersion: 1.3
+  assetPath: Assets/RedNotRed/3D Adaptive Parkour System/Animations/Player/RunForwardLeft.anim
+  uploadId: 592193

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 843c04bec8b774067a784d306fdef20f
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Prefabs/Entities/PickUps/HealthKitPickUp.prefab
+  uploadId: 428190

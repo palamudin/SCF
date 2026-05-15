@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: cc40462f9b0dc4eb0a44f8e7ac9e2d24
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Models/Helicopter/Materials/wheelsMat.mat
+  uploadId: 428190

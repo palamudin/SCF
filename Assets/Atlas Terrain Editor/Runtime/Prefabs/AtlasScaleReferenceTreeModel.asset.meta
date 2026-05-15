@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ddd6523ebfece49409b83d1f99d88199
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 4300000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Runtime/Prefabs/AtlasScaleReferenceTreeModel.asset
+  uploadId: 596268

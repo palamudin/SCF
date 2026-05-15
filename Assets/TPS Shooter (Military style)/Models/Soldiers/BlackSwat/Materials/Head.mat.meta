@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 324d591c321ca43c389ab34b99c68e5c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Models/Soldiers/BlackSwat/Materials/Head.mat
+  uploadId: 428190

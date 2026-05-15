@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 63b4aad1b35ef4db496a49bfb41b3a14
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Models/MilitaryEnvironment/WoodCrates/Materials/WoodCrate_A-WoodCrates.mat
+  uploadId: 428190

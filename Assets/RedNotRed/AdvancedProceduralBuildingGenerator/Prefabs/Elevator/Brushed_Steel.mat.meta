@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 67503d70de63d5f40a58daa65d507c7e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Prefabs/Elevator/Brushed_Steel.mat
+  uploadId: 685977

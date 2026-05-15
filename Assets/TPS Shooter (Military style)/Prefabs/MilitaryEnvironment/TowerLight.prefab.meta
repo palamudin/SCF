@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 0e26a3eb1c5f64cfd9f39465acad79fa
+timeCreated: 1503592621
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Prefabs/MilitaryEnvironment/TowerLight.prefab
+  uploadId: 428190

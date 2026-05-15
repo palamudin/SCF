@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 74d5a7d7ca5d34560a3f19852d2a7da5
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Models/MilitaryEnvironment/Materials/OilTank-Buildings.mat
+  uploadId: 428190

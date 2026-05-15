@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 441d0063f3ccf3643a1a46bae6d276a3
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Runtime/Materials/AtlasScaleReferenceMaterial.mat
+  uploadId: 596268

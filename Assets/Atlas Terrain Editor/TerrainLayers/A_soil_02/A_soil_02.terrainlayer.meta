@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ddf27294bf9ccf44cb186f9c51e637fe
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 8574412962073106934
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/TerrainLayers/A_soil_02/A_soil_02.terrainlayer
+  uploadId: 596268

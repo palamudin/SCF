@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 967269f686ce16b4eb25c625d283774a
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Prefabs/Balcony/Balcony.prefab
+  uploadId: 685977

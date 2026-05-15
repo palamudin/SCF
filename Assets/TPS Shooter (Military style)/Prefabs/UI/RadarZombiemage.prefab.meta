@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 474d6b3fda5b54657ad446ba6364a7d8
+timeCreated: 1529006945
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Prefabs/UI/RadarZombiemage.prefab
+  uploadId: 428190

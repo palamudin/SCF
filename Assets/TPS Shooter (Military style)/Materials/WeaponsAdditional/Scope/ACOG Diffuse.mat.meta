@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c7fed8bb170036941930072ba5061f4d
+NativeFormatImporter:
+  mainObjectFileID: -1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Materials/WeaponsAdditional/Scope/ACOG
+    Diffuse.mat
+  uploadId: 428190

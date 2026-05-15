@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: c6d4fbfc8014d4248a92fec4bb8e45e9
+timeCreated: 1509871103
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Prefabs/Input/DesktopInput.prefab
+  uploadId: 428190

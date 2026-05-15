@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ed2c81bf620ab4c59b9ed941516d0fb4
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Models/MilitaryEnvironment/Materials/ConcreteShalter-Buildings.mat
+  uploadId: 428190

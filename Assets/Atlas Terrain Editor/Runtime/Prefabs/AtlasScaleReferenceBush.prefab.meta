@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 18b8f57488d22d74785e26374340a0ac
+labels:
+- AtlasScaleReferenceBush
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Runtime/Prefabs/AtlasScaleReferenceBush.prefab
+  uploadId: 596268

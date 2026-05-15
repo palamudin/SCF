@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 000bf6698965c1d4398124ddf85c3b94
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/TerrainLayers/TerrainLayers_order.txt
+  uploadId: 596268

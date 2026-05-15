@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7f31375ebcdb69545a96ba8e56f85d88
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/StampAssets/Basic Stamps/BS_Ridges/b_ridge_01.asset
+  uploadId: 596268

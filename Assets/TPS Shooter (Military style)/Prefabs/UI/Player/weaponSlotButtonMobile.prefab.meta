@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ba94fae48c18343c9a5217684eca3151
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Prefabs/UI/Player/weaponSlotButtonMobile.prefab
+  uploadId: 428190

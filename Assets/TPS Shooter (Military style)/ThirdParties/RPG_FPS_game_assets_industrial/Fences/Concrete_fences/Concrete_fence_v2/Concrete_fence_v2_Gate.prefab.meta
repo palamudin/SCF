@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 60cf315f432990a41b67cef3d41a92f4
+timeCreated: 1490453877
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/ThirdParties/RPG_FPS_game_assets_industrial/Fences/Concrete_fences/Concrete_fence_v2/Concrete_fence_v2_Gate.prefab
+  uploadId: 428190

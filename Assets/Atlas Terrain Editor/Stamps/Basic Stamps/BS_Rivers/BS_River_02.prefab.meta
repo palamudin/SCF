@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 238acb4d263ccea4da433d869e956858
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Stamps/Basic Stamps/BS_Rivers/BS_River_02.prefab
+  uploadId: 596268

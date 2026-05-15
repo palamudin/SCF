@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 6823990c4c62d43488d78dbb7748198e
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Prefabs/Column/Column.prefab
+  uploadId: 685977

@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: 903939ec9d8955847a87dab182fac9b0
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - stamp: {instanceID: 0}
+  - icon: {fileID: 2800000, guid: 24e14bb0e10ca304cafd4b2758c807e3, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Runtime/StampBase.cs
+  uploadId: 596268

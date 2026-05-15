@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 68a5ba50b3148e1428fd48196fc8b4c1
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Stamps/Basic Stamps/B_Shapes/B_Shape_Pyramide_01.prefab
+  uploadId: 596268

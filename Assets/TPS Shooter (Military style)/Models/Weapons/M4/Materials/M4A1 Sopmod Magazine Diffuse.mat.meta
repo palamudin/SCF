@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 0fb371babcce74c91a73195e00aec817
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Models/Weapons/M4/Materials/M4A1
+    Sopmod Magazine Diffuse.mat
+  uploadId: 428190

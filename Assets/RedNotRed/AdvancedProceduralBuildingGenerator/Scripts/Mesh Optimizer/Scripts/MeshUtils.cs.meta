@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 5d73a73206296364385b0a41cf06eb95
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Scripts/Mesh Optimizer/Scripts/MeshUtils.cs
+  uploadId: 685977

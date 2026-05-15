@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b7caf30e537ad8441b94d19ed94c5099
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 248636
+  packageName: 3D Adaptive Parkour System
+  packageVersion: 1.3
+  assetPath: Assets/RedNotRed/3D Adaptive Parkour System/Animations/Player/StandingUp.anim
+  uploadId: 592193

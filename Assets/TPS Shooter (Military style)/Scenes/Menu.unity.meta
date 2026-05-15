@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 1c38ac4f028db42ddb06fb323bbfe6b5
+timeCreated: 1510332537
+licenseType: Store
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Scenes/Menu.unity
+  uploadId: 428190

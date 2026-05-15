@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d771645f9ac10d241b18277409d02a55
+timeCreated: 1473942081
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/ThirdParties/Particles/Materials/BulletFleshDecal.mat
+  uploadId: 428190

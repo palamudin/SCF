@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: acc363f9a089f4f7d9eb0b55337fb0b2
+timeCreated: 1569840166
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Animations/WeaponPickUp/Val Pick
+    Up.anim
+  uploadId: 428190

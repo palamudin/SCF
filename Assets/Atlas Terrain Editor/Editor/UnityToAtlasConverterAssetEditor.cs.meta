@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: e793dbe58a976c24eaa15f37d1c6cebf
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Editor/UnityToAtlasConverterAssetEditor.cs
+  uploadId: 596268

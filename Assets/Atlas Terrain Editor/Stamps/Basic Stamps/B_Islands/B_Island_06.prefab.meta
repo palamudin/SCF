@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: cd25e5987cd6cbd4d9b93ed7f139a7bf
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Stamps/Basic Stamps/B_Islands/B_Island_06.prefab
+  uploadId: 596268

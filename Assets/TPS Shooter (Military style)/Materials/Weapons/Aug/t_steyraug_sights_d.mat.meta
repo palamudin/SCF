@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 3672e995f7e9b424c80226e1e2b2f109
+timeCreated: 1501807025
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Materials/Weapons/Aug/t_steyraug_sights_d.mat
+  uploadId: 428190

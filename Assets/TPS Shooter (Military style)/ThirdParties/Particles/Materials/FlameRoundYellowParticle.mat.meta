@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d7f098ed9997e714193be5e86df013f4
+timeCreated: 1472825013
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/ThirdParties/Particles/Materials/FlameRoundYellowParticle.mat
+  uploadId: 428190

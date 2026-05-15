@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 9365ae95f850b2946bbf9456bcfded30
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Stamps/Basic Stamps/B_Beach/B_Beach.prefab
+  uploadId: 596268

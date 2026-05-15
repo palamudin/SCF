@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: ac1456731649d224a9c7b328af0ee9f1
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Stamps/Basic Stamps/B_Mountains/B_Mountain_04.prefab
+  uploadId: 596268

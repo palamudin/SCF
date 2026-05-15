@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8ffb7e977f26040b5a59167eadd74e0e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Models/MilitaryEnvironment/Hedges/Materials/WoodOverpassStairs-WoodHedge.mat
+  uploadId: 428190

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: acf39d9f4addf294d93fa56fa373961b
+timeCreated: 1473157503
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/ThirdParties/Particles/Prefabs/BigExplosionEffect.prefab
+  uploadId: 428190

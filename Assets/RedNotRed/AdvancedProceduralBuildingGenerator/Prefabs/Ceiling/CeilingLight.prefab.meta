@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 535cc592c0fc7e848a5e2620729220e6
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Prefabs/Ceiling/CeilingLight.prefab
+  uploadId: 685977

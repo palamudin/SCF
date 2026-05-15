@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: b4cf757be2d8f47ee9aa77f4b7102527
+timeCreated: 1572534052
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 13400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/PhysicsMaterials/Wood Concrete Phycics
+    Material.physicMaterial
+  uploadId: 428190

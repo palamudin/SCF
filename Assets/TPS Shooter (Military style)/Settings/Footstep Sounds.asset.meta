@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: f0aaa0210bcfb448bb03203b0212feec
+timeCreated: 1571471634
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Settings/Footstep Sounds.asset
+  uploadId: 428190

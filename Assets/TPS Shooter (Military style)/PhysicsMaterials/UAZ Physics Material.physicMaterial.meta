@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 1054088257e82492eb6cf343fe3b49f6
+timeCreated: 1531398559
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 13400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/PhysicsMaterials/UAZ Physics Material.physicMaterial
+  uploadId: 428190

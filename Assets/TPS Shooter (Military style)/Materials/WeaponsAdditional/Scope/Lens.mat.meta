@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: e1cb5f7a61f364e5abc5735af17a87cc
+timeCreated: 1544351394
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Materials/WeaponsAdditional/Scope/Lens.mat
+  uploadId: 428190

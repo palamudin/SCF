@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: db59655dd5578d94dbab9bddd0b66504
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Stamps/Basic Stamps/B_Lakes/B_Lake_01.prefab
+  uploadId: 596268

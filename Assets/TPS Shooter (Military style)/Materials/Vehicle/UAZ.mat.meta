@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 138caf32684184e408f743c92e9d10ed
+timeCreated: 1530894100
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Materials/Vehicle/UAZ.mat
+  uploadId: 428190

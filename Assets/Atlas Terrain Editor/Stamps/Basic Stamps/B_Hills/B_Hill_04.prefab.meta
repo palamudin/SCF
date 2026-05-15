@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 71202f2fe0947fd4b9c10df50812616f
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Stamps/Basic Stamps/B_Hills/B_Hill_04.prefab
+  uploadId: 596268

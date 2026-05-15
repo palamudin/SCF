@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d287aeda38b9e7a459e150761a0e7039
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Prefabs/Plant/Flower_pot_.mat
+  uploadId: 685977

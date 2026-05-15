@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 4372d2e4a0fc23947abf1213e7f47531
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Scripts/DataSaving/InteriorTest.asset
+  uploadId: 685977

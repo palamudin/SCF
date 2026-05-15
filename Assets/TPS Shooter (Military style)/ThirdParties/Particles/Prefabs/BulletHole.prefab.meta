@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 02df0411d7aa04f1d8f44fd8589d79b0
+timeCreated: 1532201206
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/ThirdParties/Particles/Prefabs/BulletHole.prefab
+  uploadId: 428190

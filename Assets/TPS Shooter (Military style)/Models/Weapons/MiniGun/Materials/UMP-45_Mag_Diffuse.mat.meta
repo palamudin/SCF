@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 9ee3cf5e22711413c9942432021cbee7
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Models/Weapons/MiniGun/Materials/UMP-45_Mag_Diffuse.mat
+  uploadId: 428190

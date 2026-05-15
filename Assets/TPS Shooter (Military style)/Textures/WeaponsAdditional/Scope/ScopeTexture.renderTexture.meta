@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 68fab80c37e3248f1bff676e563d33ec
+timeCreated: 1544341687
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 8400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Textures/WeaponsAdditional/Scope/ScopeTexture.renderTexture
+  uploadId: 428190

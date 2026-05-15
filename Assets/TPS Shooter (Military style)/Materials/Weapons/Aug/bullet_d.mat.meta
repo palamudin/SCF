@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 110615ae5642049c6ad2899af9005a64
+timeCreated: 1547627539
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Materials/Weapons/Aug/bullet_d.mat
+  uploadId: 428190

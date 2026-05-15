@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 3fe3b0d11800617459d3cc6b46f87157
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Runtime/Shaders/AtlasBrushPreview.shader
+  uploadId: 596268

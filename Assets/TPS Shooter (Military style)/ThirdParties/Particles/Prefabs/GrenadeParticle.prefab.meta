@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 128e6e92fce67ab47befc31304a97709
+NativeFormatImporter:
+  mainObjectFileID: -1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/ThirdParties/Particles/Prefabs/GrenadeParticle.prefab
+  uploadId: 428190

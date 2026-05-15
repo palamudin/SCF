@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 75344d9c7d0e519459a323de88d9606b
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Prefabs/Roof Mods/Ventilation1/Ventilation.mat
+  uploadId: 685977

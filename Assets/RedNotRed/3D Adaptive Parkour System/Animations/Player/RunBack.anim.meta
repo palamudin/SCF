@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 67e985638e0c7e042a9e8b1631ecc660
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 248636
+  packageName: 3D Adaptive Parkour System
+  packageVersion: 1.3
+  assetPath: Assets/RedNotRed/3D Adaptive Parkour System/Animations/Player/RunBack.anim
+  uploadId: 592193

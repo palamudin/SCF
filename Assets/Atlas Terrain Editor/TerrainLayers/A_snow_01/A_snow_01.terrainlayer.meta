@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 9f1f2694a2778ee43b54ad573f82e616
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 8574412962073106934
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/TerrainLayers/A_snow_01/A_snow_01.terrainlayer
+  uploadId: 596268

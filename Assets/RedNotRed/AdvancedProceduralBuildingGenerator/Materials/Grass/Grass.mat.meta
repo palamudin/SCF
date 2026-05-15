@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: dfa7bee9ff9b75948abb38b6c3d3adf2
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Materials/Grass/Grass.mat
+  uploadId: 685977

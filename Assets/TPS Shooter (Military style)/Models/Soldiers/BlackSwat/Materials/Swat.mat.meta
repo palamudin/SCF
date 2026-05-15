@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 631b85cdf51f14660aeab15fff202a88
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Models/Soldiers/BlackSwat/Materials/Swat.mat
+  uploadId: 428190

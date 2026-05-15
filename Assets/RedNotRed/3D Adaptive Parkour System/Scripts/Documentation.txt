@@ -1,0 +1,47 @@
+Hello, thanks for installing the package, it can help you create a character controller for a parkour game.
+You can use it in any rendering pipeline, just change the materials to rp materials.
+The script lets your player run on a wall, use ladders, hang, roll, slide, jump and do flips.
+Simply place the objects in the right position, and the script will automatically perform the desired movement.
+
+-Control
+1. Roll - Hold down the Roll Button before landing.
+2. Slide - When you've landed, hold down the Slide Button.
+3. Hang - When you are close to an object smaller than yourself, press the Jump Button.
+4. Wallrun - When you're close to a wall, press the Wall Run Button.
+5. Lader - When you're near a lader (to make an object a lader, name it "Lader"), press the Jump Button.
+6. To jump from one object to another while still suspended, double-click on the awsd buttons.
+7. If you want to stop suspending yourself, then if you hold the Jump Button for a little while, you'll simply jump; if you hold it longer, you'll climb the object.
+
+-Steps
+--Manual
+  1. After installation, please change the character scale to 10 as shown here (10,10,10).
+  2. Place the camera inside the empty object and assign it as camera in the player script.
+  3. Add to the player script, assign RB to the player's hard body.
+  4. Assign Head and Spine to the character's head and spine.
+  5. Place player's collider in player's script.
+  6. Add an animator (Anim) to the player's script, this is the player's animator.
+  7. Place the particle system in the player's model and designate it as dust.
+  8. In the animator, assign a Boolean value to all animations, e.g. create a walk animation and assign it to any state, and select Run as the condition.
+  9. Create an animator for the main camera and assign it the main camera controller. 
+  10. Assign buttons to each action (jump button, wall run button, roll button, slide button, flip button).
+  11. If you want to have a walking sound, add an item to the list of material sounds, then assign the material in which you want to make the sound as material and the sound you want to play as sound.
+  12. Assign the time the player must wait to stand up in the Time To Stand Up field.
+  13. Create a rag doll for the player.
+  14. Assign all rag doll body parts to Ragdoll Parts.
+  15. Select the Shake Feeling Type
+  16. If Shake Feeling Type is Manual, then, choose the Shake Amount in the bottom of the inspector
+  17. Choose the time the player should wait before jumping onto another object in the Time To Hop (direction) field.
+  18. Create an inverse kinematics rig
+  19. Create 4 components for the IK list.
+  TIP: Component 0 = RHand | Component 1 = LFoot | Component 2 = RFoot | Component 3 = LFoot
+  20. Assign the rig target as IK target.
+  21. Assign the rig as Rig.
+  22. Assign the body part following the IK target as Body Part.
+  23. Choose your Grab Offset and Ladder Offset.
+  24. Create an climbing animation and add the StopClimbingUp animation event that will stop the climbing.
+
+--Auto
+  1. Press the 3 vertical dots on the Player component and click on Assign Propreties.
+  2. If you need to add properties, repeat the manual steps.
+
+Better version to come :)

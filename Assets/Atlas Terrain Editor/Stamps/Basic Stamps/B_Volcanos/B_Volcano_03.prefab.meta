@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 119daa34a4ab1074889832341a2e56fc
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Stamps/Basic Stamps/B_Volcanos/B_Volcano_03.prefab
+  uploadId: 596268

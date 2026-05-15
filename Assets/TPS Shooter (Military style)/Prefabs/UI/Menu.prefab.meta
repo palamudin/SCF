@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 5bb84a6abcefe4128855a1ef10eb1b9f
+timeCreated: 1534754073
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: -1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Prefabs/UI/Menu.prefab
+  uploadId: 428190

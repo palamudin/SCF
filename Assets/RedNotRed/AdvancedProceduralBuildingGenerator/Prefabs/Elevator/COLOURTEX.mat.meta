@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 65105ed7c9d58d04ca8ffff10981c3ac
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Prefabs/Elevator/COLOURTEX.mat
+  uploadId: 685977

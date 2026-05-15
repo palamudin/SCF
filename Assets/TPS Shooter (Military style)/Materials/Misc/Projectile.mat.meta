@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 48c8518f11a584ddb9b13d5c6488b220
+timeCreated: 1543161698
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Materials/Misc/Projectile.mat
+  uploadId: 428190

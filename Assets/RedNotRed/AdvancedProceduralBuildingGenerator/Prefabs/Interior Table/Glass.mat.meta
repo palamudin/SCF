@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 5d0fc047c26feea448f33d1abc429057
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Prefabs/Interior
+    Table/Glass.mat
+  uploadId: 685977

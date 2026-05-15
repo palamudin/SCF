@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 26462248cbb024ac4a9db863926b06c5
+timeCreated: 1547627533
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Materials/Weapons/MiniGun/Material_001.mat
+  uploadId: 428190

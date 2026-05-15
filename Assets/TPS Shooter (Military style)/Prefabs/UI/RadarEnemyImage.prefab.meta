@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: c51fa2489e2c74f6fb81ec1af9281531
+timeCreated: 1529006945
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Prefabs/UI/RadarEnemyImage.prefab
+  uploadId: 428190

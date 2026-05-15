@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: a55a3fdb9cb014bc18839e75bb3dadfa
+timeCreated: 1549572806
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/materials/Dummy.mat
+  uploadId: 428190

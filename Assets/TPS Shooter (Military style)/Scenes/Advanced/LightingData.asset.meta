@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 724e9b59b99ba44ac92afef7714adfd1
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 112000000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Scenes/Advanced/LightingData.asset
+  uploadId: 428190

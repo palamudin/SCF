@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 64861c718ec4e4ca0870e1fcf67b3870
+timeCreated: 1540636337
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Prefabs/UI/Player/HitMarker.prefab
+  uploadId: 428190

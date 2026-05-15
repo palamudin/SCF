@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 1d39d47f82c5c4b9bb1031041d69ba10
+timeCreated: 1531209033
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 31900000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/AvatarMasks/Body Avatar Mask.mask
+  uploadId: 428190

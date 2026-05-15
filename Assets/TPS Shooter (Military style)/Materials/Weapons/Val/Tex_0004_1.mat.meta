@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 7fd0b1063faf94e71ac347140f72a3ab
+timeCreated: 1547627531
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Materials/Weapons/Val/Tex_0004_1.mat
+  uploadId: 428190

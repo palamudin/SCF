@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 1e3e6c90208ef0340b4d2c1509d4f0b9
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Licenses.txt
+  uploadId: 685977

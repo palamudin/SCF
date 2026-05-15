@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f53f1a24bb4ef8f4d879ea7b3a5197e5
+timeCreated: 1473078356
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/ThirdParties/Particles/Materials/IgnitionFlameParticle.mat
+  uploadId: 428190

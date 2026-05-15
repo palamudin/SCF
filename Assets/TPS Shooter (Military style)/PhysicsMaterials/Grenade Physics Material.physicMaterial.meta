@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: ab4ca406ea2ef4ec797b8495b535420c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 13400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/PhysicsMaterials/Grenade Physics
+    Material.physicMaterial
+  uploadId: 428190

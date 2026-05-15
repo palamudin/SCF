@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 063f1a01b82fe4d968a26528e39df1b7
+timeCreated: 1459426568
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Prefabs/Entities/Bullets/PlayerBulletM4.prefab
+  uploadId: 428190

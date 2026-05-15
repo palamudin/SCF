@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 6b7ce5ef6adb74cb8a4e5d4a63993deb
+timeCreated: 1531317396
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Materials/Tyre/Tyre.mat
+  uploadId: 428190

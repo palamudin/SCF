@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 97d69a2ef1dd24732a46061f3d60a5ff
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Models/Weapons/M4/Materials/M4A1
+    Sopmod Iron Sight Diffuse.mat
+  uploadId: 428190

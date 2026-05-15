@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 54e1e9b10eb7e435982f67f5bd6fbf98
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Models/MilitaryEnvironment/Materials/LightTower-Buildings.mat
+  uploadId: 428190

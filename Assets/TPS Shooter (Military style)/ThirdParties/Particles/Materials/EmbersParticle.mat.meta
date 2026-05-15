@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 776677ab3818fb249adaca05f4e04545
+timeCreated: 1471532950
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/ThirdParties/Particles/Materials/EmbersParticle.mat
+  uploadId: 428190

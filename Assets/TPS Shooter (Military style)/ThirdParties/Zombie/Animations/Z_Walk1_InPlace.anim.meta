@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a0389bcc17a6335409898ddb374c1570
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/ThirdParties/Zombie/Animations/Z_Walk1_InPlace.anim
+  uploadId: 428190

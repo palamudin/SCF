@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 9a3f30b9c5f6f1a4d8ac042fd661cafc
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Runtime/Shaders/AtlasHighlight.shader
+  uploadId: 596268

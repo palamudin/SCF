@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: d04f796051b420248acea5c907c022fe
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/Stamps/Basic Stamps/B_Landscapes/B_Landscape_03.prefab
+  uploadId: 596268

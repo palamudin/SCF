@@ -1,0 +1,209 @@
+-----Installation-----
+
+-------Way 1
+   
+         Go to the top of your screen and click on Constructor, then click on Create Module. A module will be created.
+
+-------Way 2
+       
+         Create an object and add the GenerateBuilding script.
+
+-----Usage-----
+
+-------Floors
+         
+         1. Go to the list of floors and click on plus (+) . This will create a new floor.
+         
+         --Tip: The floors can have default values.
+
+         2. The first 3 variables define the floor's dimentions.
+         
+         3. The variables Windows X, Y and Z define the number of windows on each axis.
+
+         4. The variable Windows Offset define the offset of the windows from the surface of the walls of the building. Higher the value deeper the walls are. The defualt value is 0.
+
+         5. The variable Window Width, Height and Lenght define the windows dimensions.
+
+         --Tip: The windows can scale automatically by enabling the Auto Size in the Windows section (not floors).
+
+         6. The variables Nord Window, South Window, East Column, West Column, etc define if there will be a window or a column on each side.
+
+         7. The list Window Materials defines the materials of the windows on this floor.
+
+         --Tip: The list Window Materials won't be used if it's null, it will use the list Rooms (see below).
+         
+         8. The variable Deform enables the floor's deformation. The windows that are deep in it will make holes in it and it will enable to create the interior on this floor.
+
+         --Tip: The variable Deform disables when the total number of windows on the floor is higher than 100 to avoid crashes.
+
+         9. The list Doors sets doors on each floor. The Model is the model of the door, the Direction is the side on which the door is placed and the Position is the offset from the center of the building.
+
+         10. The list Wall Mods sets mods on the outside walls. The Model is the model of the mod, the Direction is the side on which the mod is placed, the Position is the offset from the center of the building and the Obstacle defines if the mod can be an obstacle for other mods, windows, etc.
+
+         11. The list Extenctions creates additional parts of the floor which can be used as you want, for example to create tunnels, etc. Their settings are very similar to those of a normal floor.
+
+         --Tip: The variable Position in an Extenction defines it's relative position to the center of the floor. To place it one the side of the wall set the value to 1 on the axis you want.
+
+-------Building
+         
+         1. The variable Name is the name of the building.
+
+         2. The variable Info is the information about the building.
+
+         ----Info
+               
+               ---Assignement
+                  
+                    1. Go to the project files and click on create.
+                    
+                    2. Click on ConstructorScriptableObjects.
+
+                    3. This will create a file which contains all the information about the building.
+
+                    4. Drag this file into the Info field to save the information about your building.
+
+                    5. The file's boolean READY will become true.
+
+               ---Usage
+
+                    Files with the boolean READY enabled will change the constructor settings when assigned to the Info variable.
+
+               --Tip: Once the Info file is assigned the file can be removed from the field.
+
+-------Interior
+    
+         1. When the variable Interior is enabled it will create an interior for every floor that has Deform enabled.
+
+         2. The Minimal Scale defines the minimal x and z scale of the room.
+
+         3. The Maximal Height defines the height of the room.
+
+         4. The Wall, Ceiling and Floor Material defines the material of each of these components.
+
+         5. The variable Interior Door defines the door that will be placed in the interior.
+
+         6. When the variable Place Ceiling Lights is enabled and the Ceiling Lights are assigned, it will place the lights on the ceiling.
+
+         7. When the variable Place Furniture is enabled, it will place the furnitures from the list Furnitures.
+
+         ---Furniture
+              
+              1. To add a furniture to the list Furnitures click on the plus (+).
+
+              2. The variable object in the furniture defines the furniture that will be placed.
+
+              3. The variable Room To Be Placed In defines the room the object can be placed in.
+
+              4. The variable Max Number Per Room defines how many times the object can be placed in a room.
+
+              5. The variable Placement Type defines where the object going to be placed in a room.
+
+              --Tip: The Placement Type <<Away From Wall>> puts the object away from the wall. The Placement Type <<Near Wall>> puts the object on the ground near the wall. The Placement Type <<On Wall>> puts the object on the wall.
+
+        8. The variable Stair Way defines the stairway's object.
+
+        --Tip: The stairway must forward and back to work correctly (sorry).
+
+        9. When the variable Stair Way Walls is enabled, it will create the walls around the stairway.
+
+        10. The variable Elevator defines the elevator' object.
+
+        ---Elevator
+           
+             1. The elevator must have the Left Door and the Right Door (with the same names).
+
+-------Visualization
+
+         The variable Visualization defines the visualization type. The name of the current visualization type defines what you will see highlighted in the building.
+
+-------Optimization
+
+         1. The variable Quality defines the force of the simplification of the objects when the Simplify button is pressed.
+
+         2. The variable Create LOD creates LOD of the building.
+
+         --Tip: It's recommended to use Partial LOD, because full LOD creates lags when the building is selected.
+
+-------Windows
+
+         1. The variable Window Model defines the window's object.
+
+         2. The variable Auto Size automatically sets the size of the windows when enabled.
+
+-------Roof
+
+         1. The variable Roof defines the roof's object.
+
+         -When the roof is null-
+         
+         2. The list Roof Mods contains object that are going to be placed on the roof.
+         
+         3. The variable Roof Bordure defines the roof bordure's object.
+
+-------Column
+
+         1. The variable Column defines the columns that are going to be placed in the corners.
+
+         2. The variable Central Column defines the columns that are going to be placed between windows.
+
+-------Bordure Between Floors
+
+         1. The variable Bordure Between Floors defines the bordure between each floor.
+
+         -Once assigned-
+
+         2. The variable FloorBordureScale defines the width and the height of the bordure.
+         
+-------Balcony
+
+         1. The variable Balcony defines the balcony.
+
+         -Once assigned-
+
+         2. The variable WindowsPerBalcony defines how often the balcony will be placed.
+
+         3. The variable Door defines the door that going to be the entrance on the balcony.
+
+-------Materials
+
+         1. The variable Building Material defines the material of the outside walls of the building.
+
+         2. The list Rooms has the materials of the windows.
+
+         3. The windows and the doors of the balcony must have the script Change Room and a mesh renderer.
+
+-------Random Generation
+
+         1. The variable Random Windows Offset defines the offset of the windows when randomly generated.
+
+         2. The variable Door Gen defines the outside doors of the building when randomly generated.
+
+-------Info
+
+         1. The variable Building is automatically assigned by the script and shouldn't be changed when generating. It can then be changed to modify an existing building, for example to simplify it.
+
+         2. The variable Transparent Material must be just a transparent material.
+
+         3. The button Generate generates a building basing on the settings.
+
+         4. The button Random randomly generates a building.
+         
+         --Tip: The random generation can only generate simple buildings (sorry).
+
+-------Tools
+         
+         1. The variable Object To Deform defines the object that going to be deformed.
+
+         2. The variable Deforming Shape defines the object that will deform the Object To Deform.
+
+         3. The variable Deform Type defines the type of deformation (Subtract, Unify, Intersection).
+
+         4. The button Deform deforms the Object To Deform with the Deforming Shape.
+
+-----Additions-----
+
+  Many additional scripts that can, for instance, place objects on balconies, create elevator movement, place objects on a table and more, can be found in RedNotRed/AdvancedProceduralBuildingGenerator/Scripts/Additional
+
+-----Help-----
+
+  For more help click on the question mark at the top of the Generate Building script (not in packages).

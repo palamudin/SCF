@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 19a513c4117e549eb9e0b3e62e74cfe3
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Models/Weapons/M4/Materials/M4A1_Sopmod_Body.mat
+  uploadId: 428190

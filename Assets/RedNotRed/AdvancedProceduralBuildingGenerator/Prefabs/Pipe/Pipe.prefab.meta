@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: fc736f2c1372a784d96deebcf34369d8
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Prefabs/Pipe/Pipe.prefab
+  uploadId: 685977

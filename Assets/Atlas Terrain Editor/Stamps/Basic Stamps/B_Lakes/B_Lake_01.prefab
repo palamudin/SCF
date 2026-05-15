@@ -1,0 +1,298 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6944242485620793314
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6944242485620793316}
+  - component: {fileID: 6944242485620793315}
+  m_Layer: 0
+  m_Name: B_Lake_01
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6944242485620793316
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6944242485620793314}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6944242485620793315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6944242485620793314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9795eda8381a191479e8ca56eae4ee90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stamp: {fileID: 11400000, guid: 61372de0a77ba9240bad4c2000b6b6ac, type: 2}
+  maskOverride: {fileID: 0}
+  maskMap:
+    mapType: 2
+    input: 3
+    target: 0
+    modifier:
+      modifierType: 2
+      blendMode: 0
+      blendRatio: 1
+      edgeBlend: 1
+      opacity: 1
+      power: 1
+      edgeErase: 0
+      offset: 0
+      multiplier: 1
+      cutoffMin: 0
+      cutoffMax: 1
+      invert: 0
+      brightness: 5
+      contrast: 3
+      saturation: 1
+      hue: 0
+    inspectorInitialized: 1
+    selfIndex: 0
+  heightMap:
+    mapType: 0
+    input: 1
+    target: 1
+    modifier:
+      modifierType: 0
+      blendMode: 0
+      blendRatio: 1
+      edgeBlend: 1
+      opacity: 1
+      power: 1
+      edgeErase: 0
+      offset: 0
+      multiplier: 1
+      cutoffMin: 0
+      cutoffMax: 1
+      invert: 0
+      brightness: 5
+      contrast: 3
+      saturation: 1
+      hue: 0
+    inspectorInitialized: 1
+    selfIndex: 0
+  colorMap:
+    mapType: 1
+    input: 2
+    target: 2
+    modifier:
+      modifierType: 1
+      blendMode: 0
+      blendRatio: 1
+      edgeBlend: 1
+      opacity: 1
+      power: 1
+      edgeErase: 0
+      offset: 0
+      multiplier: 1
+      cutoffMin: 0
+      cutoffMax: 1
+      invert: 0
+      brightness: 0.6
+      contrast: 1
+      saturation: 0.7
+      hue: 0
+    inspectorInitialized: 1
+    selfIndex: 0
+  roadMaskMap:
+    mapType: 4
+    input: 12
+    target: 0
+    modifier:
+      modifierType: 2
+      blendMode: 0
+      blendRatio: 1
+      edgeBlend: 1
+      opacity: 1
+      power: 1
+      edgeErase: 0
+      offset: 0
+      multiplier: 1
+      cutoffMin: 0
+      cutoffMax: 1
+      invert: 0
+      brightness: 1
+      contrast: 1
+      saturation: 1
+      hue: 0
+    inspectorInitialized: 0
+    selfIndex: 0
+  stampMaps:
+  - mapType: 3
+    input: 0
+    target: 5
+    modifier:
+      modifierType: 3
+      blendMode: 0
+      blendRatio: 1
+      edgeBlend: 1
+      opacity: 1
+      power: 1
+      edgeErase: 0
+      offset: 0
+      multiplier: 1
+      cutoffMin: 0
+      cutoffMax: 1
+      invert: 0
+      brightness: 5
+      contrast: 3
+      saturation: 1
+      hue: 0
+    inspectorInitialized: 1
+    selfIndex: 0
+  - mapType: 3
+    input: 7
+    target: 4
+    modifier:
+      modifierType: 3
+      blendMode: 0
+      blendRatio: 1
+      edgeBlend: 1
+      opacity: 1
+      power: 0.29
+      edgeErase: 0
+      offset: -0.44
+      multiplier: 2.74
+      cutoffMin: 0
+      cutoffMax: 1
+      invert: 1
+      brightness: 5
+      contrast: 3
+      saturation: 1
+      hue: 0
+    inspectorInitialized: 1
+    selfIndex: 1
+  - mapType: 3
+    input: 6
+    target: 6
+    modifier:
+      modifierType: 3
+      blendMode: 0
+      blendRatio: 1
+      edgeBlend: 1
+      opacity: 1
+      power: 0.73
+      edgeErase: 0
+      offset: -0.31
+      multiplier: 2.87
+      cutoffMin: 0
+      cutoffMax: 1
+      invert: 1
+      brightness: 5
+      contrast: 3
+      saturation: 1
+      hue: 0
+    inspectorInitialized: 1
+    selfIndex: 2
+  - mapType: 3
+    input: 6
+    target: 6
+    modifier:
+      modifierType: 3
+      blendMode: 0
+      blendRatio: 1
+      edgeBlend: 1
+      opacity: 1
+      power: 1.41
+      edgeErase: 0
+      offset: -0.6
+      multiplier: 2.31
+      cutoffMin: 0
+      cutoffMax: 1
+      invert: 0
+      brightness: 5
+      contrast: 3
+      saturation: 1
+      hue: 0
+    inspectorInitialized: 1
+    selfIndex: 3
+  - mapType: 3
+    input: 7
+    target: 6
+    modifier:
+      modifierType: 3
+      blendMode: 0
+      blendRatio: 1
+      edgeBlend: 1
+      opacity: 1
+      power: 0.73
+      edgeErase: 0
+      offset: -0.74
+      multiplier: 2.31
+      cutoffMin: 0
+      cutoffMax: 1
+      invert: 0
+      brightness: 5
+      contrast: 3
+      saturation: 1
+      hue: 0
+    inspectorInitialized: 1
+    selfIndex: 4
+  - mapType: 3
+    input: 5
+    target: 7
+    modifier:
+      modifierType: 3
+      blendMode: 0
+      blendRatio: 1
+      edgeBlend: 1
+      opacity: 1
+      power: 0.73
+      edgeErase: 0
+      offset: -0.4
+      multiplier: 2.16
+      cutoffMin: 0
+      cutoffMax: 1
+      invert: 0
+      brightness: 5
+      contrast: 3
+      saturation: 1
+      hue: 0
+    inspectorInitialized: 1
+    selfIndex: 5
+  - mapType: 3
+    input: 4
+    target: 8
+    modifier:
+      modifierType: 3
+      blendMode: 0
+      blendRatio: 1
+      edgeBlend: 1
+      opacity: 1
+      power: 0.73
+      edgeErase: 0
+      offset: -0.84
+      multiplier: 2.16
+      cutoffMin: 0
+      cutoffMax: 1
+      invert: 0
+      brightness: 5
+      contrast: 3
+      saturation: 1
+      hue: 0
+    inspectorInitialized: 1
+    selfIndex: 6
+  center: {x: 0, y: 0, z: 0}
+  size: {x: 512, y: 32, z: 512}
+  roadBlending: 0

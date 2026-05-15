@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f06455b167e1b0b428c9af62d7aa6832
+timeCreated: 1472824610
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/ThirdParties/Particles/Materials/SmokeLightParticle.mat
+  uploadId: 428190

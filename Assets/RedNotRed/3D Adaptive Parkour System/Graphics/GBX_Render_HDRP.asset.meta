@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7f182870d038d5d40a64a3b8b94e5901
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 248636
+  packageName: 3D Adaptive Parkour System
+  packageVersion: 1.3
+  assetPath: Assets/RedNotRed/3D Adaptive Parkour System/Graphics/GBX_Render_HDRP.asset
+  uploadId: 592193

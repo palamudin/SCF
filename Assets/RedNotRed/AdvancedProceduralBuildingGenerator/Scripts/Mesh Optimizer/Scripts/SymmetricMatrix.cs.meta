@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: a4da4423534ab144096a0208046bbc73
+timeCreated: 1516802649
+licenseType: Store
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Scripts/Mesh Optimizer/Scripts/SymmetricMatrix.cs
+  uploadId: 685977

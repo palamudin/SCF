@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 8479e20313270704cb862943641cc143
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207568
+  packageName: Atlas - terrain editor
+  packageVersion: 1.0.4
+  assetPath: Assets/Atlas Terrain Editor/AtlasDocumentation/docs.html
+  uploadId: 596268

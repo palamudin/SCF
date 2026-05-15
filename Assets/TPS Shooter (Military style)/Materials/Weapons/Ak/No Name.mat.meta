@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 04cd33ded27654e3ebade0e8b4aae27c
+timeCreated: 1547627539
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Materials/Weapons/Ak/No Name.mat
+  uploadId: 428190

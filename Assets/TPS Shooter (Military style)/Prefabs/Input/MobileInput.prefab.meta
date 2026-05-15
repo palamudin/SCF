@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 453c653102e324834930f3da96b5d5b2
+timeCreated: 1509895335
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 99065
+  packageName: TPS Shooter (Military Style)
+  packageVersion: 8.0
+  assetPath: Assets/TPS Shooter (Military style)/Prefabs/Input/MobileInput.prefab
+  uploadId: 428190

@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: f17b1b60c5de73d4ba23d82f9f0918ea
+timeCreated: 1516802341
+licenseType: Store
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Scripts/Mesh Optimizer/Scripts/ResizableArray.cs
+  uploadId: 685977

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 3aca972f9e93f0545964bc32193a2564
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 275075
+  packageName: Advanced Procedural Building Generator
+  packageVersion: 1.0
+  assetPath: Assets/RedNotRed/AdvancedProceduralBuildingGenerator/Scripts/DataSaving/EmpireStateBuilding.asset
+  uploadId: 685977
