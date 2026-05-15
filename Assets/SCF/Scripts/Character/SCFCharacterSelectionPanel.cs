@@ -12,6 +12,7 @@ namespace SCF.Gameplay
         [SerializeField] private Key toggleKey = Key.F8;
         [SerializeField] private Vector2 panelPosition = new Vector2(16f, 78f);
         [SerializeField] private Vector2 panelSize = new Vector2(260f, 420f);
+        [SerializeField] private Vector2 collapsedButtonSize = new Vector2(92f, 30f);
 
         private Vector2 scroll;
         private int selectedIndex = -1;
@@ -43,12 +44,26 @@ namespace SCF.Gameplay
         {
             if (!visible)
             {
+                Rect openRect = new Rect(panelPosition, collapsedButtonSize);
+                if (GUI.Button(openRect, "Chars"))
+                {
+                    visible = true;
+                }
+
                 return;
             }
 
             Rect panelRect = new Rect(panelPosition, panelSize);
             GUILayout.BeginArea(panelRect, GUI.skin.window);
-            GUILayout.Label("Char Selection");
+            using (new GUILayout.HorizontalScope())
+            {
+                GUILayout.Label("Char Selection");
+                GUILayout.FlexibleSpace();
+                if (GUILayout.Button("Slide", GUILayout.Width(58f), GUILayout.Height(22f)))
+                {
+                    visible = false;
+                }
+            }
 
             string activeName = visualSlot != null && !string.IsNullOrWhiteSpace(visualSlot.ActiveCharacterName)
                 ? visualSlot.ActiveCharacterName

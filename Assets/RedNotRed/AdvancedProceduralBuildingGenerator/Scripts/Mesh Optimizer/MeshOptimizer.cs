@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 public class MeshOptimizer : MonoBehaviour
 {
+#if UNITY_EDITOR
     [Range(0.0f, 1.0f)]
     [SerializeField] float _quality = 0.5f;
     MeshFilter _renderer;
@@ -31,6 +34,7 @@ public class MeshOptimizer : MonoBehaviour
             MeshSaverEditor.SaveMesh(_renderer.sharedMesh, "Optimized__" + gameObject.name, false, true);
         }
     }
+
     [CustomEditor(typeof(MeshOptimizer))]
     public class OptimizeEditor : Editor
     {
@@ -50,4 +54,5 @@ public class MeshOptimizer : MonoBehaviour
             }
         }
     }
+#endif
 }

@@ -8,6 +8,24 @@ using UnityEditor;
 
 namespace SCF.Gameplay
 {
+    public readonly struct SCFRailgunShot
+    {
+        public readonly Vector3 Muzzle;
+        public readonly Vector3 Direction;
+        public readonly Vector3 Impact;
+        public readonly Collider HitCollider;
+        public readonly Vector3 HitNormal;
+
+        public SCFRailgunShot(Vector3 muzzle, Vector3 direction, Vector3 impact, Collider hitCollider, Vector3 hitNormal)
+        {
+            Muzzle = muzzle;
+            Direction = direction;
+            Impact = impact;
+            HitCollider = hitCollider;
+            HitNormal = hitNormal;
+        }
+    }
+
     [DisallowMultipleComponent]
     [RequireComponent(typeof(IsometricCharacterMotor))]
     [DefaultExecutionOrder(95)]
@@ -17,6 +35,7 @@ namespace SCF.Gameplay
         private const string PrototypeRailgunPath = "Assets/SCF/2.8 rail-gun prototype_Texture_Packed.blend";
         private const string RailgunFireClipPath = "Assets/SCF/Audio/kalsstockmedia-a-large-explosive-laser-gun-shot-scifi-410622.mp3";
         private const string ReferenceShotgunPath = "Assets/SCF/MovementAni/NVoperatorsoldier.glb";
+        private const string RuntimeWeaponCatalogPath = "SCF/SCFWeaponRuntimeCatalog";
         private const string Pose3RightGripTargetName = "SCF_Pose3RightGripTarget";
         private const string Pose3LeftGripTargetName = "SCF_Pose3LeftGripTarget";
         private const string RailgunMuzzleTargetName = "SCF_RailgunMuzzleTarget";
@@ -38,6 +57,7 @@ namespace SCF.Gameplay
         [SerializeField] private Animator animator;
 
         [Header("Railgun Profile")]
+        [SerializeField] private SCFWeaponRuntimeCatalog runtimeWeaponCatalog;
         [SerializeField] private GameObject railgunPrototype;
         [SerializeField] private GameObject referenceShotgunPrototype;
         [SerializeField] private bool equipRailgunOnSoldier = true;
@@ -160,6 +180,8 @@ namespace SCF.Gameplay
         private ArmRig rightArm;
         private ArmRig leftArm;
         private float nextRailgunFireTime;
+
+        public event Action<SCFRailgunShot> RailgunFired;
         private Material railgunBeamMaterial;
         private Material railgunParticleMaterial;
 
@@ -555,7 +577,7 @@ namespace SCF.Gameplay
         {
             return equipRailgunOnSoldier
                    && animator != null
-                   && IsSoldierCharacter(activeCharacterName)
+                   && HasSoldierVisualIdentity()
                    && ResolveWeaponPrototype() != null;
         }
 
@@ -614,6 +636,13 @@ namespace SCF.Gameplay
                 return railgunPrototype;
             }
 
+            SCFWeaponRuntimeCatalog catalog = ResolveRuntimeWeaponCatalog();
+            if (catalog != null && catalog.RailgunPrototype != null)
+            {
+                railgunPrototype = catalog.RailgunPrototype;
+                return railgunPrototype;
+            }
+
 #if UNITY_EDITOR
             railgunPrototype = AssetDatabase.LoadAssetAtPath<GameObject>(PrototypeRailgunPath);
 #endif
@@ -640,10 +669,28 @@ namespace SCF.Gameplay
                 return railgunFireClip;
             }
 
+            SCFWeaponRuntimeCatalog catalog = ResolveRuntimeWeaponCatalog();
+            if (catalog != null && catalog.RailgunFireClip != null)
+            {
+                railgunFireClip = catalog.RailgunFireClip;
+                return railgunFireClip;
+            }
+
 #if UNITY_EDITOR
             railgunFireClip = AssetDatabase.LoadAssetAtPath<AudioClip>(RailgunFireClipPath);
 #endif
             return railgunFireClip;
+        }
+
+        private SCFWeaponRuntimeCatalog ResolveRuntimeWeaponCatalog()
+        {
+            if (runtimeWeaponCatalog != null)
+            {
+                return runtimeWeaponCatalog;
+            }
+
+            runtimeWeaponCatalog = Resources.Load<SCFWeaponRuntimeCatalog>(RuntimeWeaponCatalogPath);
+            return runtimeWeaponCatalog;
         }
 
         private void TickRailgunFire()
@@ -683,6 +730,7 @@ namespace SCF.Gameplay
             }
 
             PlayRailgunFireSound(muzzle);
+            RailgunFired?.Invoke(new SCFRailgunShot(muzzle, direction, impact, hit.collider, hit.normal));
         }
 
         private Vector3 ResolveRailgunFireDirection()
@@ -1909,6 +1957,27 @@ namespace SCF.Gameplay
         {
             return !string.IsNullOrWhiteSpace(characterName)
                    && characterName.IndexOf("soldier", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private bool HasSoldierVisualIdentity()
+        {
+            if (IsSoldierCharacter(activeCharacterName))
+            {
+                return true;
+            }
+
+            Transform current = animator != null ? animator.transform : null;
+            while (current != null && current != transform)
+            {
+                if (IsSoldierCharacter(current.name))
+                {
+                    return true;
+                }
+
+                current = current.parent;
+            }
+
+            return false;
         }
 
         private static bool NearlyEqual(Vector3 left, Vector3 right)

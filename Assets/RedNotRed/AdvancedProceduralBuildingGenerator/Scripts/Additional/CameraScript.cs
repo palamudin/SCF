@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.EditorCoroutines.Editor;
-using UnityEditor;
 using UnityEngine;
 
 namespace Builder
@@ -15,7 +13,6 @@ namespace Builder
         private Quaternion rot;
         private Vector3 InitialPos;
         private Quaternion InitialRot;
-        [CustomEditor(typeof(CameraScript))]
         private void Start()
         {
             InitialPos = transform.position;

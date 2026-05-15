@@ -2,11 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+#if UNITY_EDITOR
 using UnityEditor;
+using Unity.EditorCoroutines.Editor;
+#endif
 using UnityEngine;
 using Parabox.CSG;
 using static Builder.GenerateBuilding;
-using Unity.EditorCoroutines.Editor;
 
 namespace Builder
 {
@@ -232,6 +234,7 @@ namespace Builder
         [HideInInspector] public DeformingType DeformType;
         private Vector3 FirstFloorPosition;
         private bool FirstFloorPositionAssigned;
+#if UNITY_EDITOR
         [MenuItem("Window/Constructor/Create Module")]
         static void CreateModule()
         {
@@ -596,7 +599,7 @@ namespace Builder
                 if (GUILayout.Button("Generate"))
                 {
                     InitialClass.StopAllCoroutines();
-                    EditorCoroutineUtility.StartCoroutine(InitialClass.CreateBuilding(InitialClass.transform.position), this);
+                    InitialClass.StartGeneratorCoroutine(InitialClass.CreateBuilding(InitialClass.transform.position));
                 }
                 if (GUILayout.Button("Random"))
                 {
@@ -616,6 +619,24 @@ namespace Builder
                 }
                 serializedObject.ApplyModifiedProperties();
             }
+        }
+#endif
+        private void StartGeneratorCoroutine(IEnumerator routine)
+        {
+            if (routine == null)
+            {
+                return;
+            }
+
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                EditorCoroutineUtility.StartCoroutine(routine, this);
+                return;
+            }
+#endif
+
+            StartCoroutine(routine);
         }
         void Fuse()
         {
@@ -749,6 +770,7 @@ namespace Builder
                 }
             }
         }
+#if UNITY_EDITOR
         void Simplify()
         {
             Transform[] parts = Building.GetComponentsInChildren<Transform>();
@@ -767,6 +789,7 @@ namespace Builder
                 }
             }
         }
+#endif
         void Deform()
         {
             if (ObjectToDeform != null && DeformingShape != null)
@@ -916,7 +939,7 @@ namespace Builder
                     WindowsPerBalcony = (width + lenght) / 6;
                 }
             }
-            EditorCoroutineUtility.StartCoroutine(CreateBuilding(transform.position), this);
+            StartGeneratorCoroutine(CreateBuilding(transform.position));
         }
         bool ClassEquals(Floor ost, Floor tst)
         {
@@ -1383,9 +1406,9 @@ namespace Builder
                     bordure.transform.parent = model.Model;
                 }
                 //Doors----------------------------------------------------------------------------------------------------
-                EditorCoroutineUtility.StartCoroutine(PlaceDoors(model), this);
+                StartGeneratorCoroutine(PlaceDoors(model));
                 //Wall Mods------------------------------------------------------------------------------------------------
-                EditorCoroutineUtility.StartCoroutine(PlaceMods(model), this);
+                StartGeneratorCoroutine(PlaceMods(model));
                 //Extenctions----------------------------------------------------------------------------------------------
                 foreach (Extenction x in exts)
                 {
@@ -1690,8 +1713,8 @@ namespace Builder
                             }
                         }
                     }
-                    EditorCoroutineUtility.StartCoroutine(PlaceDoorsExtention(x), this);
-                    EditorCoroutineUtility.StartCoroutine(PlaceModsExtenction(x), this);
+                    StartGeneratorCoroutine(PlaceDoorsExtention(x));
+                    StartGeneratorCoroutine(PlaceModsExtenction(x));
                 }
             }
             Debug.Log("More details generated on floors!");
@@ -2036,7 +2059,7 @@ namespace Builder
                 }
             }
             yield return new WaitForSeconds(1f);
-            EditorCoroutineUtility.StartCoroutine(DeformBuilding(FloorModels.ToArray()), this);
+            StartGeneratorCoroutine(DeformBuilding(FloorModels.ToArray()));
             yield return new WaitForSeconds(1f);
             //Static---------------------------------------------------------------------------------------------------
             Transform[] Parts2 = Construction.transform.GetComponentsInChildren<Transform>();
@@ -2762,7 +2785,7 @@ namespace Builder
             }
             if (Interior)
             {
-                EditorCoroutineUtility.StartCoroutine(CreateRooms(), this);
+                StartGeneratorCoroutine(CreateRooms());
             }
             Console.Clear();
         }
@@ -2787,12 +2810,12 @@ namespace Builder
                     Rooms.Add(block.transform);
                     if (fl.Model != null)
                     {
-                        EditorCoroutineUtility.StartCoroutine(SplitRooms(Rooms, fl.Model, fl.Position, fl.Scale), this);
+                        StartGeneratorCoroutine(SplitRooms(Rooms, fl.Model, fl.Position, fl.Scale));
                     }
                 }
             }
             yield return new WaitForSecondsRealtime(5);
-            EditorCoroutineUtility.StartCoroutine(CreateStairWayAndShaft(), this);
+            StartGeneratorCoroutine(CreateStairWayAndShaft());
         }
         float CalculateStairWayAndElevatorShaftHeight(bool InMiddle)
         {
@@ -4283,7 +4306,7 @@ namespace Builder
                 if (PlaceFurniture)
                 {
                     yield return new WaitForSecondsRealtime(10);
-                    EditorCoroutineUtility.StartCoroutine(PutFurniture(), this);
+                    StartGeneratorCoroutine(PutFurniture());
                 }
             }
         }

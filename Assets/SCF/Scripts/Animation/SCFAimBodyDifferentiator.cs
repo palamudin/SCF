@@ -24,6 +24,7 @@ namespace SCF.Gameplay
         [SerializeField, Range(0f, 1f)] private float headWeight = 0.42f;
         [SerializeField, Range(0f, 1f)] private float neckWeight = 0.2f;
         [SerializeField, Range(0f, 1f)] private float shoulderWeight = 0.16f;
+        [SerializeField] private bool includeHipsInAim;
         [SerializeField, Range(0f, 1f)] private float hipsWeight = 0.08f;
         [SerializeField, Range(0f, 1f)] private float spineWeight = 0.14f;
         [SerializeField, Range(0f, 1f)] private float chestWeight = 0.28f;
@@ -182,7 +183,11 @@ namespace SCF.Gameplay
                 return;
             }
 
-            ApplyBoneYaw(hips, yaw * hipsWeight);
+            if (includeHipsInAim)
+            {
+                ApplyBoneYaw(hips, yaw * hipsWeight);
+            }
+
             ApplyBoneYaw(spine, yaw * spineWeight);
             ApplyBoneYaw(chest, yaw * chestWeight);
             ApplyBoneYaw(upperChest, yaw * upperChestWeight);

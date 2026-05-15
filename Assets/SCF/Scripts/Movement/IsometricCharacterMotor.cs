@@ -2164,13 +2164,6 @@ namespace SCF.Gameplay
                 return true;
             }
 
-            if (AimHeld && facingMode != CharacterFacingMode.MovementOnly && HasAimDirection && AimDirection.sqrMagnitude > 0.0001f)
-            {
-                facingDirection = AimDirection;
-                sharpness = aimRotationSharpness;
-                return true;
-            }
-
             Vector3 planarMove = Vector3.ProjectOnPlane(PlanarVelocity, Vector3.up);
             bool hasMovementFacing = facingMode != CharacterFacingMode.AimOnly
                                      && planarMove.sqrMagnitude > lowerBodyMoveThreshold * lowerBodyMoveThreshold;
