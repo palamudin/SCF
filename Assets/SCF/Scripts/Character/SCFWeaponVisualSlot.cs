@@ -34,7 +34,7 @@ namespace SCF.Gameplay
     [DefaultExecutionOrder(95)]
     public sealed class SCFWeaponVisualSlot : MonoBehaviour
     {
-        private const int CurrentRailgunProfileRevision = 13;
+        private const int CurrentRailgunProfileRevision = 14;
         private const string PrototypeRailgunPath = "Assets/SCF/2.8 rail-gun prototype_Texture_Packed.blend";
         private const string RailgunFireClipPath = "Assets/SCF/Audio/kalsstockmedia-a-large-explosive-laser-gun-shot-scifi-410622.mp3";
         private const string ReferenceShotgunPath = "Assets/SCF/MovementAni/NVoperatorsoldier.glb";
@@ -62,16 +62,18 @@ namespace SCF.Gameplay
         private static readonly Vector3 Pose3ReferenceLeftWristFromShotgunBone = new Vector3(0.1325f, -0.2297f, 0.3901f);
         private static readonly Vector3 DefaultRailgunSocketLocalPosition = new Vector3(0.09301f, 0.063495f, 0.288997f);
         private static readonly Vector3 DefaultRailgunSocketLocalEulerAngles = new Vector3(-3.624756f, 0f, 0f);
-        private static readonly Vector3 DefaultRailgunWeaponLocalPosition = new Vector3(-0.058564f, 0.051804f, 0.081334f);
-        private static readonly Vector3 DefaultRailgunWeaponLocalEulerAngles = new Vector3(-23.89532f, -122.972f, 3.329829f);
+        private static readonly Vector3 DefaultRailgunWeaponLocalPosition = new Vector3(0.046814f, 0.008097f, -0.121653f);
+        private static readonly Vector3 DefaultRailgunWeaponLocalEulerAngles = new Vector3(-23.89532f, -108.727f, 8.349475f);
         private static readonly Vector3 DefaultRailgunWeaponLocalScale = new Vector3(0.8f, 0.8f, 0.8f);
         private static readonly Vector3 DefaultRailgunModelLocalPosition = new Vector3(0.04f, 0.03f, 0f);
-        private static readonly Vector3 DefaultRailgunRightGripLocalPosition = new Vector3(-0.15f, 0.03f, -0.01f);
-        private static readonly Vector3 DefaultRailgunRightGripLocalEulerAngles = new Vector3(-32.43002f, 86.09999f, -81.39999f);
-        private static readonly Vector3 DefaultRailgunLeftGripLocalPosition = new Vector3(0.57f, -0.04f, -0.01f);
-        private static readonly Vector3 DefaultRailgunLeftGripLocalEulerAngles = new Vector3(0f, 115.46f, 147.62f);
-        private static readonly Vector3 DefaultRailgunRightElbowHintLocalPosition = new Vector3(-2.93f, -1.6f, -0.42355f);
-        private static readonly Vector3 DefaultRailgunLeftElbowHintLocalPosition = new Vector3(0.37f, -0.23f, 0.17f);
+        private static readonly Vector3 DefaultRailgunRightGripLocalPosition = new Vector3(-0.1f, -0.03f, -0.01f);
+        private static readonly Vector3 DefaultRailgunRightGripLocalEulerAngles = new Vector3(-30.5f, 95.7f, -77.81f);
+        private static readonly Vector3 DefaultRailgunLeftGripLocalPosition = new Vector3(0.86f, -0.07f, -0.2f);
+        private static readonly Vector3 DefaultRailgunLeftGripLocalEulerAngles = new Vector3(-17.67001f, 124.98f, -132.4f);
+        private static readonly Vector3 DefaultRailgunRightElbowHintLocalPosition = new Vector3(-3.03f, 0.74f, -0.76f);
+        private static readonly Vector3 DefaultRailgunRightElbowHintLocalEulerAngles = new Vector3(37.30001f, 0f, 0f);
+        private static readonly Vector3 DefaultRailgunLeftElbowHintLocalPosition = new Vector3(0.39f, -0.23f, 0.17f);
+        private static readonly Vector3 DefaultRailgunLeftElbowHintLocalEulerAngles = Vector3.zero;
         private static readonly Vector3 DefaultRailgunMuzzleLocalPosition = new Vector3(0.96f, 0.12f, 0f);
         private static readonly Vector3 DefaultRailgunMuzzleLocalEulerAngles = new Vector3(0f, 90f, 0f);
 
@@ -2056,8 +2058,8 @@ namespace SCF.Gameplay
             ApplyDefaultRailgunAnchorTransform(rightGripName, DefaultRailgunRightGripLocalPosition, DefaultRailgunRightGripLocalEulerAngles);
             ApplyDefaultRailgunAnchorTransform(leftGripName, DefaultRailgunLeftGripLocalPosition, DefaultRailgunLeftGripLocalEulerAngles);
             ApplyDefaultRailgunAnchorTransform(railgunMuzzleTransformName, DefaultRailgunMuzzleLocalPosition, DefaultRailgunMuzzleLocalEulerAngles);
-            ApplyDefaultRailgunAnchorTransform(rightElbowHintName, DefaultRailgunRightElbowHintLocalPosition, Vector3.zero);
-            ApplyDefaultRailgunAnchorTransform(leftElbowHintName, DefaultRailgunLeftElbowHintLocalPosition, Vector3.zero);
+            ApplyDefaultRailgunAnchorTransform(rightElbowHintName, DefaultRailgunRightElbowHintLocalPosition, DefaultRailgunRightElbowHintLocalEulerAngles);
+            ApplyDefaultRailgunAnchorTransform(leftElbowHintName, DefaultRailgunLeftElbowHintLocalPosition, DefaultRailgunLeftElbowHintLocalEulerAngles);
         }
 
         private void ApplyDefaultRailgunAnchorTransform(string anchorName, Vector3 localPosition, Vector3 localEulerAngles)

@@ -72,19 +72,19 @@ namespace SCF.Gameplay.Editor
             {
                 EnsureModelChild(prefabRoot.transform, railgunSource);
                 EnsureAnchor(prefabRoot.transform, "SCF_RightPistolGrip",
-                    new Vector3(-0.15f, 0.03f, -0.01f),
-                    Quaternion.Euler(-32.43002f, 86.09999f, -81.39999f));
+                    new Vector3(-0.1f, -0.03f, -0.01f),
+                    Quaternion.Euler(-30.5f, 95.7f, -77.81f));
                 EnsureAnchor(prefabRoot.transform, "SCF_LeftUnderbarrelGrip",
-                    new Vector3(0.57f, -0.04f, -0.01f),
-                    Quaternion.Euler(0f, 115.46f, 147.62f));
+                    new Vector3(0.86f, -0.07f, -0.2f),
+                    Quaternion.Euler(-17.67001f, 124.98f, -132.4f));
                 EnsureAnchor(prefabRoot.transform, "SCF_RailgunMuzzleTarget",
                     new Vector3(0.96f, 0.12f, 0f),
                     Quaternion.Euler(0f, 90f, 0f));
                 EnsureAnchor(prefabRoot.transform, "SCF_RightElbowHint",
-                    new Vector3(-2.93f, -1.6f, -0.42355f),
-                    Quaternion.identity);
+                    new Vector3(-3.03f, 0.74f, -0.76f),
+                    Quaternion.Euler(37.30001f, 0f, 0f));
                 EnsureAnchor(prefabRoot.transform, "SCF_LeftElbowHint",
-                    new Vector3(0.37f, -0.23f, 0.17f),
+                    new Vector3(0.39f, -0.23f, 0.17f),
                     Quaternion.identity);
 
                 PrefabUtility.SaveAsPrefabAsset(prefabRoot, RailgunPrefabPath);
@@ -177,7 +177,7 @@ namespace SCF.Gameplay.Editor
             Vector3 rightGripSocket = new Vector3(0f, -0.08f, -0.14f);
             Vector3 rightFromAnchor = new Vector3(0.0332f, -0.2147f, -0.8692f) * 0.27f;
             Vector3 weaponAnchorSocket = rightGripSocket - rightFromAnchor;
-            return new Vector3(-0.058564f, 0.051804f, 0.081334f) - weaponAnchorSocket;
+            return new Vector3(0.046814f, 0.008097f, -0.121653f) - weaponAnchorSocket;
         }
     }
 }

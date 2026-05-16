@@ -42,7 +42,8 @@ namespace SCF.Gameplay
         [SerializeField] private Transform facingRoot;
 
         [Header("Movement")]
-        [SerializeField, Min(0f)] private float walkSpeed = 5.2f;
+        [SerializeField, Min(0f)] private float walkSpeed = 2.6f;
+        [SerializeField, Min(0f)] private float runSpeed = 5.2f;
         [SerializeField, Min(0f)] private float sprintSpeed = 7.4f;
         [SerializeField, Min(0.1f)] private float acceleration = 38f;
         [SerializeField, Min(0.1f)] private float deceleration = 46f;
@@ -173,7 +174,11 @@ namespace SCF.Gameplay
         public bool HasAimWorldPoint { get; private set; }
         public bool IsGrounded => IsControllerSupported(0.03f);
         public bool AimHeld => input != null && input.AimHeld;
-        public bool SprintHeld => input != null && input.SprintHeld && !AimHeld;
+        public bool WalkToggled => input != null && input.WalkToggled;
+        public bool SprintInputHeld => input != null && input.SprintHeld;
+        public bool SprintHeld => SprintInputHeld && !AimHeld;
+        public bool RunHeld => AimHeld ? SprintInputHeld : !WalkToggled && !SprintInputHeld;
+        public bool WalkHeld => AimHeld ? !SprintInputHeld : WalkToggled && !SprintInputHeld;
         public float CurrentMaxSpeed => ResolveCurrentMaxSpeed();
         public CharacterMobilityState MobilityState { get; private set; } = CharacterMobilityState.Locomotion;
         public float MobilityStateNormalizedTime { get; private set; }
@@ -270,6 +275,8 @@ namespace SCF.Gameplay
 
         private void Awake()
         {
+            NormalizeMovementSpeeds();
+
             if (characterController == null)
             {
                 characterController = GetComponent<CharacterController>();
@@ -286,6 +293,11 @@ namespace SCF.Gameplay
             }
 
             CacheStandingControllerPose();
+        }
+
+        private void OnValidate()
+        {
+            NormalizeMovementSpeeds();
         }
 
         private void Update()
@@ -309,6 +321,28 @@ namespace SCF.Gameplay
         public void SetCarriedLoad(float load01)
         {
             carriedLoad01 = Mathf.Clamp01(load01);
+        }
+
+        private void NormalizeMovementSpeeds()
+        {
+            runSpeed = Mathf.Max(0f, runSpeed);
+
+            if (runSpeed <= 0.001f && walkSpeed > 0.001f)
+            {
+                runSpeed = walkSpeed;
+            }
+
+            if (walkSpeed <= 0.001f && runSpeed > 0.001f)
+            {
+                walkSpeed = runSpeed * 0.5f;
+            }
+
+            if (runSpeed > 0.001f && walkSpeed >= runSpeed - 0.001f)
+            {
+                walkSpeed = runSpeed * 0.5f;
+            }
+
+            sprintSpeed = Mathf.Max(sprintSpeed, runSpeed);
         }
 
         public void Tick(float deltaTime)
@@ -354,12 +388,12 @@ namespace SCF.Gameplay
 
             if (MobilityState == CharacterMobilityState.JumpCharge)
             {
-                return ScaleMetric(SprintHeld ? sprintSpeed : walkSpeed);
+                return ScaleMetric(ResolveGroundLocomotionSpeed());
             }
 
             if (MobilityState == CharacterMobilityState.Falling)
             {
-                return ScaleMetric(SprintHeld ? sprintSpeed : walkSpeed) * airborneMoveMultiplier;
+                return ScaleMetric(ResolveGroundLocomotionSpeed()) * airborneMoveMultiplier;
             }
 
             if (MobilityState == CharacterMobilityState.WallRun)
@@ -372,7 +406,27 @@ namespace SCF.Gameplay
                 return 0f;
             }
 
-            return ScaleMetric(SprintHeld ? sprintSpeed : walkSpeed);
+            return ScaleMetric(ResolveGroundLocomotionSpeed());
+        }
+
+        private float ResolveGroundLocomotionSpeed()
+        {
+            if (AimHeld)
+            {
+                return SprintInputHeld ? runSpeed : walkSpeed;
+            }
+
+            if (SprintInputHeld)
+            {
+                return sprintSpeed;
+            }
+
+            if (WalkToggled)
+            {
+                return walkSpeed;
+            }
+
+            return runSpeed;
         }
 
         private float ResolveDesiredSpeed()

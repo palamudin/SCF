@@ -33,6 +33,7 @@ namespace SCF.Gameplay
         public bool AttackHeld { get; private set; }
         public bool AttackPressedThisFrame { get; private set; }
         public bool AimHeld { get; private set; }
+        public bool WalkToggled { get; private set; }
         public bool SkillPressedThisFrame { get; private set; }
         public bool MobilityHeld { get; private set; }
         public bool MobilityPressedThisFrame { get; private set; }
@@ -63,6 +64,7 @@ namespace SCF.Gameplay
             AttackHeld = false;
             AttackPressedThisFrame = false;
             AimHeld = false;
+            WalkToggled = false;
             SkillPressedThisFrame = false;
             MobilityHeld = false;
             MobilityPressedThisFrame = false;
@@ -77,6 +79,11 @@ namespace SCF.Gameplay
             AttackHeld = ReadButton(attackAction) || ReadFallbackAttack();
             AttackPressedThisFrame = ReadPressedThisFrame(attackAction) || ReadFallbackAttackPressed();
             AimHeld = ReadFallbackAimHeld();
+            if (ReadFallbackWalkTogglePressed())
+            {
+                WalkToggled = !WalkToggled;
+            }
+
             MobilityHeld = ReadButton(skillAction) || ReadFallbackMobilityHeld();
             MobilityPressedThisFrame = ReadPressedThisFrame(skillAction) || ReadFallbackMobilityPressed();
             MobilityReleasedThisFrame = ReadReleasedThisFrame(skillAction) || ReadFallbackMobilityReleased();
@@ -242,6 +249,18 @@ namespace SCF.Gameplay
 
             Gamepad gamepad = Gamepad.current;
             return gamepad != null && gamepad.leftTrigger.ReadValue() > 0.5f;
+        }
+
+        private bool ReadFallbackWalkTogglePressed()
+        {
+            if (!enableFallbackBindings)
+            {
+                return false;
+            }
+
+            Keyboard keyboard = Keyboard.current;
+            return keyboard != null
+                   && (keyboard.leftAltKey.wasPressedThisFrame || keyboard.rightAltKey.wasPressedThisFrame);
         }
 
         private bool ReadFallbackMobilityHeld()
