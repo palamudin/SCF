@@ -34,7 +34,7 @@ namespace SCF.Gameplay
     [DefaultExecutionOrder(95)]
     public sealed class SCFWeaponVisualSlot : MonoBehaviour
     {
-        private const int CurrentRailgunProfileRevision = 14;
+        private const int CurrentRailgunProfileRevision = 15;
         private const string PrototypeRailgunPath = "Assets/SCF/2.8 rail-gun prototype_Texture_Packed.blend";
         private const string RailgunFireClipPath = "Assets/SCF/Audio/kalsstockmedia-a-large-explosive-laser-gun-shot-scifi-410622.mp3";
         private const string ReferenceShotgunPath = "Assets/SCF/MovementAni/NVoperatorsoldier.glb";
@@ -70,7 +70,7 @@ namespace SCF.Gameplay
         private static readonly Vector3 DefaultRailgunRightGripLocalEulerAngles = new Vector3(-30.5f, 95.7f, -77.81f);
         private static readonly Vector3 DefaultRailgunLeftGripLocalPosition = new Vector3(0.86f, -0.07f, -0.2f);
         private static readonly Vector3 DefaultRailgunLeftGripLocalEulerAngles = new Vector3(-17.67001f, 124.98f, -132.4f);
-        private static readonly Vector3 DefaultRailgunRightElbowHintLocalPosition = new Vector3(-3.03f, 0.74f, -0.76f);
+        private static readonly Vector3 DefaultRailgunRightElbowHintLocalPosition = new Vector3(-3.03f, -0.9211f, -0.76f);
         private static readonly Vector3 DefaultRailgunRightElbowHintLocalEulerAngles = new Vector3(37.30001f, 0f, 0f);
         private static readonly Vector3 DefaultRailgunLeftElbowHintLocalPosition = new Vector3(0.39f, -0.23f, 0.17f);
         private static readonly Vector3 DefaultRailgunLeftElbowHintLocalEulerAngles = Vector3.zero;
@@ -190,7 +190,7 @@ namespace SCF.Gameplay
 
         [Header("Weapon Local X Clamp")]
         [SerializeField] private bool clampSelectedWeaponLocalX = true;
-        [SerializeField] private float selectedWeaponNeutralLocalX = -23.89532f;
+        [SerializeField] private float selectedWeaponNeutralLocalX;
         [SerializeField, Range(0f, 15f)] private float selectedWeaponMovingLocalXLimit = 3f;
         [SerializeField, Min(0f)] private float selectedWeaponXMovingThreshold = 0.2f;
 
@@ -590,7 +590,7 @@ namespace SCF.Gameplay
             weaponLocalScale = DefaultRailgunWeaponLocalScale;
             railgunMuzzleLocalPosition = DefaultRailgunMuzzleLocalPosition;
             railgunMuzzleLocalEulerAngles = DefaultRailgunMuzzleLocalEulerAngles;
-            selectedWeaponNeutralLocalX = DefaultRailgunWeaponLocalEulerAngles.x;
+            selectedWeaponNeutralLocalX = 0f;
         }
 
         private void ApplyRailgunAnatomyDefaults()
@@ -2985,7 +2985,7 @@ namespace SCF.Gameplay
 
         private bool ShouldHoldSelectedWeaponXNeutral()
         {
-            if (motor == null || motor.AimHeld)
+            if (motor == null || motor.AimHeld || !motor.RunHeld)
             {
                 return true;
             }

@@ -81,7 +81,7 @@ namespace SCF.Gameplay.Editor
                     new Vector3(0.96f, 0.12f, 0f),
                     Quaternion.Euler(0f, 90f, 0f));
                 EnsureAnchor(prefabRoot.transform, "SCF_RightElbowHint",
-                    new Vector3(-3.03f, 0.74f, -0.76f),
+                    new Vector3(-3.03f, -0.9211f, -0.76f),
                     Quaternion.Euler(37.30001f, 0f, 0f));
                 EnsureAnchor(prefabRoot.transform, "SCF_LeftElbowHint",
                     new Vector3(0.39f, -0.23f, 0.17f),

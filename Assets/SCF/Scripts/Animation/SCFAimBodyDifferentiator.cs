@@ -24,7 +24,8 @@ namespace SCF.Gameplay
         [Tooltip("Right mouse can give the upper body extra authority while the motor facing frame points at the cursor.")]
         [SerializeField] private bool boostTorsoOnAimHeld = true;
         [SerializeField, Range(0f, 1.5f)] private float heldAimTorsoWeight = 1f;
-        [SerializeField, Range(0f, 180f)] private float heldAimMaxTorsoYaw = 180f;
+        [SerializeField, Range(0f, 180f)] private float heldAimMaxTorsoYaw = 65f;
+        [SerializeField] private bool clampHeldAimToLowerBodyFollowLimit = true;
 
         [Header("Bone Weights")]
         [SerializeField, Range(0f, 1f)] private float headWeight = 0.42f;
@@ -199,7 +200,10 @@ namespace SCF.Gameplay
         {
             if (boostTorsoOnAimHeld && motor != null && motor.AimHeld)
             {
-                return Mathf.Max(0f, heldAimMaxTorsoYaw);
+                float yawLimit = Mathf.Max(0f, heldAimMaxTorsoYaw);
+                return clampHeldAimToLowerBodyFollowLimit
+                    ? Mathf.Min(yawLimit, motor.AimLowerBodyFollowYawLimit)
+                    : yawLimit;
             }
 
             return Mathf.Max(0f, maxTorsoYaw);

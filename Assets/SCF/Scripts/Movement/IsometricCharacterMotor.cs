@@ -159,6 +159,8 @@ namespace SCF.Gameplay
         [SerializeField] private bool separateAimFromLocomotion = true;
         [SerializeField] private bool lowerBodyAimsWhenIdle;
         [SerializeField, Min(0f)] private float lowerBodyMoveThreshold = 0.2f;
+        [SerializeField] private bool lowerBodyFollowsAimPastYawLimit = true;
+        [SerializeField, Range(0f, 180f)] private float aimLowerBodyFollowYawLimit = 65f;
 
         [Header("Aiming")]
         [SerializeField] private LayerMask aimSurfaceMask = ~0;
@@ -198,6 +200,7 @@ namespace SCF.Gameplay
         public SCFTraversalProfile TraversalProfile => traversalProfile;
         public float CarriedLoad01 => carriedLoad01;
         public bool SeparateAimFromLocomotion => separateAimFromLocomotion;
+        public float AimLowerBodyFollowYawLimit => aimLowerBodyFollowYawLimit;
         public Vector3 BodyFacingDirection { get; private set; } = Vector3.forward;
         public Vector3 WallNormal => wallNormal;
         public Vector3 WallSurfacePoint => wallRunSurfacePoint;
@@ -2237,21 +2240,31 @@ namespace SCF.Gameplay
 
             if (separateAimFromLocomotion)
             {
-                if (AimHeld && facingMode != CharacterFacingMode.MovementOnly && HasAimDirection)
+                if (hasMovementFacing)
                 {
-                    facingDirection = AimDirection;
+                    Vector3 movementFacing = planarMove.normalized;
+                    if (TryResolveLowerBodyAimFollowDirection(movementFacing, out facingDirection))
+                    {
+                        sharpness = aimRotationSharpness;
+                    }
+                    else
+                    {
+                        facingDirection = movementFacing;
+                        sharpness = movementRotationSharpness;
+                    }
+
+                    return true;
+                }
+
+                Transform root = facingRoot != null ? facingRoot : transform;
+                Vector3 currentFacing = Vector3.ProjectOnPlane(root.forward, Vector3.up);
+                if (TryResolveLowerBodyAimFollowDirection(currentFacing, out facingDirection))
+                {
                     sharpness = aimRotationSharpness;
                     return true;
                 }
 
-                if (hasMovementFacing)
-                {
-                    facingDirection = planarMove.normalized;
-                    sharpness = movementRotationSharpness;
-                    return true;
-                }
-
-                if (lowerBodyAimsWhenIdle && facingMode != CharacterFacingMode.MovementOnly && HasAimDirection)
+                if (!AimHeld && lowerBodyAimsWhenIdle && facingMode != CharacterFacingMode.MovementOnly && HasAimDirection)
                 {
                     facingDirection = AimDirection;
                     sharpness = aimRotationSharpness;
@@ -2280,6 +2293,50 @@ namespace SCF.Gameplay
             }
 
             return false;
+        }
+
+        private bool TryResolveLowerBodyAimFollowDirection(Vector3 baseDirection, out Vector3 lowerBodyDirection)
+        {
+            lowerBodyDirection = Vector3.zero;
+            if (!lowerBodyFollowsAimPastYawLimit
+                || !AimHeld
+                || facingMode == CharacterFacingMode.MovementOnly
+                || !HasAimDirection)
+            {
+                return false;
+            }
+
+            Vector3 basePlanar = Vector3.ProjectOnPlane(baseDirection, Vector3.up);
+            Vector3 aimPlanar = Vector3.ProjectOnPlane(AimDirection, Vector3.up);
+            if (basePlanar.sqrMagnitude <= 0.0001f || aimPlanar.sqrMagnitude <= 0.0001f)
+            {
+                return false;
+            }
+
+            float yaw = SignedAngleAroundAxis(basePlanar.normalized, aimPlanar.normalized, Vector3.up);
+            float yawLimit = Mathf.Max(0f, aimLowerBodyFollowYawLimit);
+            float excessYaw = Mathf.Abs(yaw) - yawLimit;
+            if (excessYaw <= 0.001f)
+            {
+                return false;
+            }
+
+            float lowerBodyYaw = yaw - Mathf.Sign(yaw) * yawLimit;
+            lowerBodyDirection = Quaternion.AngleAxis(lowerBodyYaw, Vector3.up) * basePlanar.normalized;
+            return lowerBodyDirection.sqrMagnitude > 0.0001f;
+        }
+
+        private static float SignedAngleAroundAxis(Vector3 from, Vector3 to, Vector3 axis)
+        {
+            from -= Vector3.Project(from, axis);
+            to -= Vector3.Project(to, axis);
+            if (from.sqrMagnitude <= 0.0001f || to.sqrMagnitude <= 0.0001f)
+            {
+                return 0f;
+            }
+
+            float angle = Vector3.Angle(from, to);
+            return angle * (Vector3.Dot(axis, Vector3.Cross(from, to)) < 0f ? -1f : 1f);
         }
 
         private Quaternion ResolveWallRunVisualRotation(Vector3 fallbackDirection)
