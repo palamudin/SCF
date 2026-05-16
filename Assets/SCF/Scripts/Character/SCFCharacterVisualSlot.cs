@@ -757,6 +757,14 @@ namespace SCF.Gameplay
 
             weaponSlot.Configure(motor, activeAnimator, activeCharacterName);
 
+            SCFWeaponSelectionPanel weaponPanel = GetComponent<SCFWeaponSelectionPanel>();
+            if (weaponPanel == null)
+            {
+                weaponPanel = gameObject.AddComponent<SCFWeaponSelectionPanel>();
+            }
+
+            weaponPanel.Configure(weaponSlot);
+
             MotionMatchingSignalHub signalHub = GetComponent<MotionMatchingSignalHub>();
             if (signalHub != null)
             {
