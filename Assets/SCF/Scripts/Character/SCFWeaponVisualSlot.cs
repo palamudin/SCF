@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using System.Globalization;
 using UnityEngine;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -41,6 +44,12 @@ namespace SCF.Gameplay
         private const string Pose3LeftGripTargetName = "SCF_Pose3LeftGripTarget";
         private const string RailgunMuzzleTargetName = "SCF_RailgunMuzzleTarget";
         private const string RailgunMuzzleMarkerName = "SCF_RailgunMuzzleMarker";
+        private const string AimRayDebugRootName = "SCF_AimRayDebug";
+        private const string AimRayFaceLineName = "SCF_AimRay_FaceOrigin";
+        private const string AimRayChestLineName = "SCF_AimRay_ChestOrigin";
+        private const string AimRayMuzzleToFocusLineName = "SCF_AimRay_MuzzleToMouseColumn";
+        private const string AimRayMuzzleForwardLineName = "SCF_AimRay_MuzzleForward";
+        private const string AimRayMouseColumnLineName = "SCF_AimRay_MouseVertical";
         private const string RightElbowHintTargetName = "SCF_RightElbowHint";
         private const string LeftElbowHintTargetName = "SCF_LeftElbowHint";
         private static readonly Vector3 LegacyWeaponEulerAngles = new Vector3(0f, 90f, 90f);
@@ -154,9 +163,26 @@ namespace SCF.Gameplay
         [SerializeField, Min(0.1f)] private float muzzleAimSharpness = 24f;
         [SerializeField, Range(0f, 1f)] private float muzzleAimWeight = 1f;
         [SerializeField] private bool muzzleAimOnlyWhileAimHeld = true;
+        [SerializeField] private bool aimMuzzleAroundRightGripPivot = true;
+        [SerializeField, Range(0f, 1.5f)] private float muzzleSidePressure = 1f;
+        [SerializeField, Range(0f, 1.5f)] private float muzzleVerticalPressure = 0.62f;
+        [Tooltip("Aim at the face-height point on the mouse vertical column. This matches the eye/intent crossover instead of flattening to the muzzle.")]
+        [SerializeField] private bool useFaceMouseColumnAimFocus = true;
         [SerializeField] private bool flattenMuzzleAimToMuzzleHeight = true;
         [SerializeField] private float muzzleAimTargetHeightOffset;
         [SerializeField] private bool drawMuzzleAimDebug;
+
+        [Header("Aim Ray Debug")]
+        [SerializeField] private bool showAimRayDebug;
+        [SerializeField] private KeyCode aimRayDebugToggleKey = KeyCode.R;
+        [SerializeField, Min(0.001f)] private float aimRayDebugWidth = 0.025f;
+        [SerializeField, Min(0.1f)] private float aimRayMouseColumnHeight = 7.5f;
+        [SerializeField, Min(0f)] private float aimRayMouseColumnDepth = 1.5f;
+        [SerializeField] private Color aimRayFaceOriginColor = new Color(0.75f, 0.35f, 1f, 0.95f);
+        [SerializeField] private Color aimRayChestOriginColor = new Color(1f, 0.85f, 0.12f, 0.95f);
+        [SerializeField] private Color aimRayMuzzleToFocusColor = new Color(0.1f, 0.9f, 1f, 0.95f);
+        [SerializeField] private Color aimRayMuzzleForwardColor = new Color(1f, 0.25f, 0.08f, 0.95f);
+        [SerializeField] private Color aimRayMouseColumnColor = new Color(0.25f, 1f, 0.35f, 0.9f);
 
         [Header("Grip Targets")]
         [SerializeField] private Vector3 rightGripLocalPosition = new Vector3(0.02f, -0.05f, 0.12f);
@@ -216,6 +242,7 @@ namespace SCF.Gameplay
         private Transform rightGrip;
         private Transform leftGrip;
         private Transform chestAnchor;
+        private Transform faceAnchor;
         private Transform referenceWeaponAnchor;
         private Transform pose3RightGripTarget;
         private Transform pose3LeftGripTarget;
@@ -229,6 +256,13 @@ namespace SCF.Gameplay
         public event Action<SCFRailgunShot> RailgunFired;
         private Material railgunBeamMaterial;
         private Material railgunParticleMaterial;
+        private Material aimRayDebugMaterial;
+        private GameObject aimRayDebugRoot;
+        private LineRenderer aimRayFaceLine;
+        private LineRenderer aimRayChestLine;
+        private LineRenderer aimRayMuzzleToFocusLine;
+        private LineRenderer aimRayMuzzleForwardLine;
+        private LineRenderer aimRayMouseColumnLine;
 
         public bool HasActiveWeapon => activeWeapon != null;
         public string ActiveWeaponName => activeWeapon != null ? activeWeapon.name.Replace("SCF_Selected_", string.Empty) : "none";
@@ -694,11 +728,13 @@ namespace SCF.Gameplay
         private void LateUpdate()
         {
             ResolveReferences();
+            TickAimRayDebugToggle();
 
             if (activeWeapon == null)
             {
                 currentRightHandWeight = 0f;
                 currentLeftHandWeight = 0f;
+                TickAimRayDebug(false);
                 return;
             }
 
@@ -743,6 +779,7 @@ namespace SCF.Gameplay
 
             TickRailgunLiveTuningCapture();
             TickRailgunFire();
+            TickAimRayDebug(true);
         }
 
         private void OnDrawGizmosSelected()
@@ -758,6 +795,289 @@ namespace SCF.Gameplay
         {
             DestroyUnityObject(railgunBeamMaterial);
             DestroyUnityObject(railgunParticleMaterial);
+            DestroyUnityObject(aimRayDebugMaterial);
+            DestroyUnityObject(aimRayDebugRoot);
+        }
+
+        private void TickAimRayDebugToggle()
+        {
+            if (!Application.isPlaying || !WasAimRayDebugTogglePressed())
+            {
+                return;
+            }
+
+            showAimRayDebug = !showAimRayDebug;
+            Debug.Log("SCF aim ray debug " + (showAimRayDebug ? "enabled" : "disabled") + " (R)");
+            if (!showAimRayDebug)
+            {
+                SetAimRayDebugVisible(false);
+            }
+        }
+
+        private bool WasAimRayDebugTogglePressed()
+        {
+            if (aimRayDebugToggleKey == KeyCode.None)
+            {
+                return false;
+            }
+
+#if ENABLE_LEGACY_INPUT_MANAGER
+            if (UnityEngine.Input.GetKeyDown(aimRayDebugToggleKey))
+            {
+                return true;
+            }
+#endif
+
+#if ENABLE_INPUT_SYSTEM
+            Keyboard keyboard = Keyboard.current;
+            return aimRayDebugToggleKey == KeyCode.R && keyboard != null && keyboard.rKey.wasPressedThisFrame;
+#else
+            return false;
+#endif
+        }
+
+        private void TickAimRayDebug(bool canDraw)
+        {
+            if (!Application.isPlaying || !showAimRayDebug || !canDraw || activeWeapon == null)
+            {
+                SetAimRayDebugVisible(false);
+                return;
+            }
+
+            Transform muzzle = ResolveRailgunMuzzleTransform();
+            if (muzzle == null)
+            {
+                SetAimRayDebugVisible(false);
+                return;
+            }
+
+            EnsureAimRayDebugLines();
+            if (aimRayDebugRoot == null)
+            {
+                return;
+            }
+
+            SetAimRayDebugVisible(true);
+
+            Vector3 origin = muzzle.position;
+            Vector3 rawMousePoint = motor != null && motor.HasAimWorldPoint
+                ? motor.AimWorldPoint
+                : origin + ResolveRailgunFireDirection() * railgunFireRange;
+            Vector3 focusPoint = ResolveMuzzleAimFocusPoint(muzzle, rawMousePoint, ResolveFaceOrigin());
+            Vector3 columnTop;
+            Vector3 columnBottom;
+            ResolveMouseVerticalDebugRay(rawMousePoint, out columnTop, out columnBottom);
+            SetAimRayDebugLine(aimRayMouseColumnLine, columnTop, columnBottom, aimRayMouseColumnColor);
+            Debug.DrawLine(columnTop, columnBottom, aimRayMouseColumnColor);
+
+            Transform face = ResolveFaceOrigin();
+            if (face != null)
+            {
+                Vector3 faceEnd = ResolveAimDebugRayEnd(face.position, focusPoint);
+                SetAimRayDebugLine(aimRayFaceLine, face.position, faceEnd, aimRayFaceOriginColor);
+                Debug.DrawLine(face.position, faceEnd, aimRayFaceOriginColor);
+            }
+            else
+            {
+                SetLineEnabled(aimRayFaceLine, false);
+            }
+
+            Transform chest = ResolveChestOrigin();
+            if (chest != null)
+            {
+                Vector3 chestEnd = ResolveAimDebugRayEnd(chest.position, focusPoint);
+                SetAimRayDebugLine(aimRayChestLine, chest.position, chestEnd, aimRayChestOriginColor);
+                Debug.DrawLine(chest.position, chestEnd, aimRayChestOriginColor);
+            }
+            else
+            {
+                SetLineEnabled(aimRayChestLine, false);
+            }
+
+            Vector3 muzzleFocusEnd = ResolveAimDebugRayEnd(origin, focusPoint);
+            SetAimRayDebugLine(aimRayMuzzleToFocusLine, origin, muzzleFocusEnd, aimRayMuzzleToFocusColor);
+            Debug.DrawLine(origin, muzzleFocusEnd, aimRayMuzzleToFocusColor);
+
+            Vector3 muzzleDirection = muzzle.forward.sqrMagnitude > 0.0001f ? muzzle.forward.normalized : transform.forward;
+            Vector3 muzzleEnd = TryFindRailgunHit(origin, muzzleDirection, out RaycastHit muzzleHit)
+                ? muzzleHit.point
+                : origin + muzzleDirection * railgunFireRange;
+
+            SetAimRayDebugLine(aimRayMuzzleForwardLine, origin, muzzleEnd, aimRayMuzzleForwardColor);
+            Debug.DrawLine(origin, muzzleEnd, aimRayMuzzleForwardColor);
+        }
+
+        private Vector3 ResolveMuzzleAimFocusPoint(Transform muzzle, Vector3 rawTargetPoint, Transform faceOrigin)
+        {
+            Vector3 targetPoint = rawTargetPoint;
+
+            if (useFaceMouseColumnAimFocus && faceOrigin != null)
+            {
+                targetPoint.y = faceOrigin.position.y + muzzleAimTargetHeightOffset;
+            }
+            else
+            {
+                targetPoint.y += muzzleAimTargetHeightOffset;
+                if (flattenMuzzleAimToMuzzleHeight && muzzle != null)
+                {
+                    targetPoint.y = muzzle.position.y + muzzleAimTargetHeightOffset;
+                }
+            }
+
+            return targetPoint;
+        }
+
+        private Vector3 ResolveAimDebugRayEnd(Vector3 start, Vector3 focusPoint)
+        {
+            Vector3 direction = focusPoint - start;
+            float distance = direction.magnitude;
+            if (distance <= 0.001f)
+            {
+                return focusPoint;
+            }
+
+            RaycastHit[] hits = Physics.RaycastAll(start, direction / distance, distance, railgunHitMask, QueryTriggerInteraction.Ignore);
+            if (hits == null || hits.Length == 0)
+            {
+                return focusPoint;
+            }
+
+            Array.Sort(hits, (left, right) => left.distance.CompareTo(right.distance));
+            for (int i = 0; i < hits.Length; i++)
+            {
+                if (IsOwnRailgunHit(hits[i].transform))
+                {
+                    continue;
+                }
+
+                return hits[i].point;
+            }
+
+            return focusPoint;
+        }
+
+        private void ResolveMouseVerticalDebugRay(Vector3 rawMousePoint, out Vector3 columnTop, out Vector3 columnBottom)
+        {
+            columnTop = rawMousePoint + Vector3.up * aimRayMouseColumnHeight;
+            Vector3 fallbackBottom = rawMousePoint + Vector3.down * aimRayMouseColumnDepth;
+            columnBottom = fallbackBottom;
+
+            float distance = aimRayMouseColumnHeight + aimRayMouseColumnDepth;
+            RaycastHit[] hits = Physics.RaycastAll(columnTop, Vector3.down, distance, railgunHitMask, QueryTriggerInteraction.Ignore);
+            if (hits == null || hits.Length == 0)
+            {
+                return;
+            }
+
+            Array.Sort(hits, (left, right) => left.distance.CompareTo(right.distance));
+            for (int i = 0; i < hits.Length; i++)
+            {
+                if (IsOwnRailgunHit(hits[i].transform))
+                {
+                    continue;
+                }
+
+                columnBottom = hits[i].point;
+                return;
+            }
+        }
+
+        private Transform ResolveFaceOrigin()
+        {
+            if (faceAnchor == null && animator != null)
+            {
+                CacheBones();
+            }
+
+            return FirstNonNull(faceAnchor, chestAnchor, animator != null ? animator.transform : null, transform);
+        }
+
+        private Transform ResolveChestOrigin()
+        {
+            if (chestAnchor == null && animator != null)
+            {
+                CacheBones();
+            }
+
+            return FirstNonNull(chestAnchor, animator != null ? animator.transform : null, transform);
+        }
+
+        private void EnsureAimRayDebugLines()
+        {
+            if (aimRayDebugRoot == null)
+            {
+                aimRayDebugRoot = new GameObject(AimRayDebugRootName);
+                aimRayDebugRoot.hideFlags = HideFlags.DontSave;
+            }
+
+            aimRayFaceLine = EnsureAimRayDebugLine(aimRayFaceLine, AimRayFaceLineName, aimRayFaceOriginColor);
+            aimRayChestLine = EnsureAimRayDebugLine(aimRayChestLine, AimRayChestLineName, aimRayChestOriginColor);
+            aimRayMuzzleToFocusLine = EnsureAimRayDebugLine(aimRayMuzzleToFocusLine, AimRayMuzzleToFocusLineName, aimRayMuzzleToFocusColor);
+            aimRayMuzzleForwardLine = EnsureAimRayDebugLine(aimRayMuzzleForwardLine, AimRayMuzzleForwardLineName, aimRayMuzzleForwardColor);
+            aimRayMouseColumnLine = EnsureAimRayDebugLine(aimRayMouseColumnLine, AimRayMouseColumnLineName, aimRayMouseColumnColor);
+        }
+
+        private LineRenderer EnsureAimRayDebugLine(LineRenderer line, string lineName, Color color)
+        {
+            if (line != null)
+            {
+                return line;
+            }
+
+            GameObject lineObject = new GameObject(lineName);
+            lineObject.hideFlags = HideFlags.DontSave;
+            lineObject.transform.SetParent(aimRayDebugRoot.transform, false);
+            line = lineObject.AddComponent<LineRenderer>();
+            line.useWorldSpace = true;
+            line.positionCount = 2;
+            line.material = ResolveAimRayDebugMaterial();
+            line.startWidth = aimRayDebugWidth;
+            line.endWidth = aimRayDebugWidth;
+            line.startColor = color;
+            line.endColor = color;
+            line.numCapVertices = 4;
+            line.numCornerVertices = 1;
+            line.alignment = LineAlignment.View;
+            line.textureMode = LineTextureMode.Stretch;
+            return line;
+        }
+
+        private void SetAimRayDebugLine(LineRenderer line, Vector3 start, Vector3 end, Color color)
+        {
+            if (line == null)
+            {
+                return;
+            }
+
+            line.enabled = true;
+            line.startWidth = aimRayDebugWidth;
+            line.endWidth = aimRayDebugWidth;
+            line.startColor = color;
+            line.endColor = color;
+            line.SetPosition(0, start);
+            line.SetPosition(1, end);
+        }
+
+        private void SetAimRayDebugVisible(bool visible)
+        {
+            if (aimRayDebugRoot != null)
+            {
+                aimRayDebugRoot.SetActive(visible);
+            }
+
+            SetLineEnabled(aimRayFaceLine, visible);
+            SetLineEnabled(aimRayChestLine, visible);
+            SetLineEnabled(aimRayMuzzleToFocusLine, visible);
+            SetLineEnabled(aimRayMuzzleForwardLine, visible);
+            SetLineEnabled(aimRayMouseColumnLine, visible);
+        }
+
+        private static void SetLineEnabled(LineRenderer line, bool enabled)
+        {
+            if (line != null)
+            {
+                line.enabled = enabled;
+            }
         }
 
         private void ResolveReferences()
@@ -1378,6 +1698,16 @@ namespace SCF.Gameplay
             return railgunParticleMaterial;
         }
 
+        private Material ResolveAimRayDebugMaterial()
+        {
+            if (aimRayDebugMaterial == null)
+            {
+                aimRayDebugMaterial = CreateRailgunMaterial(Color.white);
+            }
+
+            return aimRayDebugMaterial;
+        }
+
         private static Material CreateRailgunMaterial(Color color)
         {
             Shader shader = Shader.Find("Particles/Standard Unlit")
@@ -1424,6 +1754,7 @@ namespace SCF.Gameplay
         private void CacheBones()
         {
             chestAnchor = null;
+            faceAnchor = null;
             rightArm = default;
             leftArm = default;
 
@@ -1439,6 +1770,12 @@ namespace SCF.Gameplay
                     animator.GetBoneTransform(HumanBodyBones.Chest),
                     animator.GetBoneTransform(HumanBodyBones.Spine),
                     animator.GetBoneTransform(HumanBodyBones.Hips),
+                    animator.transform);
+
+                faceAnchor = FirstNonNull(
+                    animator.GetBoneTransform(HumanBodyBones.Head),
+                    animator.GetBoneTransform(HumanBodyBones.Neck),
+                    chestAnchor,
                     animator.transform);
 
                 rightArm.Shoulder = animator.GetBoneTransform(HumanBodyBones.RightShoulder);
@@ -1458,6 +1795,12 @@ namespace SCF.Gameplay
                 FindFirstBone(root, "upperchest", "upper_chest", "spine2", "spine02", "spine_02", "spine 2", "ccbasespine02"),
                 FindFirstBone(root, "chest", "spine1", "spine01", "spine_01", "spine 1", "ccbasespine01"),
                 FindFirstBone(root, "waist", "spine", "ccbasespine"),
+                root);
+
+            faceAnchor = FirstNonNull(
+                FindFirstBone(root, "head", "ccbasehead"),
+                FindFirstBone(root, "neck", "necktwist", "ccbaseneck"),
+                chestAnchor,
                 root);
 
             rightArm.Shoulder = FindFirstBone(root, "rightshoulder", "rshoulder", "shoulder_r", "r_shoulder", "rightclavicle", "rclavicle", "clavicle_r", "r_clavicle", "ccbaserclavicle");
@@ -2327,11 +2670,66 @@ namespace SCF.Gameplay
                 return;
             }
 
+            float blend = (1f - Mathf.Exp(-muzzleAimSharpness * Time.deltaTime)) * Mathf.Clamp01(muzzleAimWeight);
+            if (aimMuzzleAroundRightGripPivot && rightGrip != null)
+            {
+                ApplyGripPivotMuzzleAim(muzzle, currentDirection.normalized, desiredDirection.normalized, blend);
+                return;
+            }
+
             Transform aimRoot = weaponSocket != null ? weaponSocket : activeWeapon.transform;
             Quaternion correction = Quaternion.FromToRotation(currentDirection.normalized, desiredDirection.normalized);
             Quaternion targetRotation = correction * aimRoot.rotation;
-            float blend = (1f - Mathf.Exp(-muzzleAimSharpness * Time.deltaTime)) * Mathf.Clamp01(muzzleAimWeight);
             aimRoot.rotation = Quaternion.Slerp(aimRoot.rotation, targetRotation, blend);
+        }
+
+        private void ApplyGripPivotMuzzleAim(Transform muzzle, Vector3 currentDirection, Vector3 desiredDirection, float blend)
+        {
+            Transform aimRoot = activeWeapon != null ? activeWeapon.transform : weaponSocket;
+            if (aimRoot == null || rightGrip == null || muzzle == null)
+            {
+                return;
+            }
+
+            Vector3 pivot = rightGrip.position;
+            Vector3 lockedPivotWorldPosition = pivot;
+            Quaternion rootStartRotation = aimRoot.rotation;
+            Vector3 rootStartPosition = aimRoot.position;
+
+            Vector3 planarCurrent = Vector3.ProjectOnPlane(currentDirection, Vector3.up);
+            Vector3 planarDesired = Vector3.ProjectOnPlane(desiredDirection, Vector3.up);
+            float yaw = 0f;
+            if (planarCurrent.sqrMagnitude > 0.0001f && planarDesired.sqrMagnitude > 0.0001f)
+            {
+                yaw = SignedAngleAroundAxis(planarCurrent.normalized, planarDesired.normalized, Vector3.up) * muzzleSidePressure;
+            }
+
+            Vector3 yawedDirection = Quaternion.AngleAxis(yaw, Vector3.up) * currentDirection;
+            Vector3 pitchAxis = Vector3.Cross(yawedDirection, Vector3.up);
+            if (pitchAxis.sqrMagnitude <= 0.0001f)
+            {
+                pitchAxis = aimRoot.right;
+            }
+
+            pitchAxis.Normalize();
+            Vector3 desiredAfterYawPlane = Vector3.ProjectOnPlane(desiredDirection, pitchAxis);
+            Vector3 currentAfterYawPlane = Vector3.ProjectOnPlane(yawedDirection, pitchAxis);
+            float pitch = 0f;
+            if (desiredAfterYawPlane.sqrMagnitude > 0.0001f && currentAfterYawPlane.sqrMagnitude > 0.0001f)
+            {
+                pitch = SignedAngleAroundAxis(currentAfterYawPlane.normalized, desiredAfterYawPlane.normalized, pitchAxis) * muzzleVerticalPressure;
+            }
+
+            Quaternion correction = Quaternion.AngleAxis(pitch, pitchAxis) * Quaternion.AngleAxis(yaw, Vector3.up);
+            Quaternion targetRotation = correction * rootStartRotation;
+            aimRoot.rotation = Quaternion.Slerp(rootStartRotation, targetRotation, blend);
+
+            Vector3 pivotAfterRotation = rightGrip.position;
+            aimRoot.position += lockedPivotWorldPosition - pivotAfterRotation;
+            if (!float.IsFinite(aimRoot.position.x) || !float.IsFinite(aimRoot.position.y) || !float.IsFinite(aimRoot.position.z))
+            {
+                aimRoot.SetPositionAndRotation(rootStartPosition, rootStartRotation);
+            }
         }
 
         private bool TryResolveMuzzleAimDirection(Transform muzzle, out Vector3 direction)
@@ -2356,12 +2754,7 @@ namespace SCF.Gameplay
                 return false;
             }
 
-            targetPoint.y += muzzleAimTargetHeightOffset;
-            if (flattenMuzzleAimToMuzzleHeight)
-            {
-                targetPoint.y = muzzle.position.y + muzzleAimTargetHeightOffset;
-            }
-
+            targetPoint = ResolveMuzzleAimFocusPoint(muzzle, targetPoint, ResolveFaceOrigin());
             direction = targetPoint - muzzle.position;
             return direction.sqrMagnitude > 0.0001f;
         }
@@ -2774,6 +3167,19 @@ namespace SCF.Gameplay
             Gizmos.color = color;
             Gizmos.DrawWireSphere(target.position, radius);
             Gizmos.DrawRay(target.position, target.forward * radius * 2f);
+        }
+
+        private static float SignedAngleAroundAxis(Vector3 from, Vector3 to, Vector3 axis)
+        {
+            from -= Vector3.Project(from, axis);
+            to -= Vector3.Project(to, axis);
+            if (from.sqrMagnitude <= 0.0001f || to.sqrMagnitude <= 0.0001f)
+            {
+                return 0f;
+            }
+
+            float angle = Vector3.Angle(from, to);
+            return angle * (Vector3.Dot(axis, Vector3.Cross(from, to)) < 0f ? -1f : 1f);
         }
 
         private static Transform FirstNonNull(params Transform[] transforms)
