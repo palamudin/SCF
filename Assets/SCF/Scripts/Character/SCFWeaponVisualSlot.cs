@@ -34,7 +34,7 @@ namespace SCF.Gameplay
     [DefaultExecutionOrder(95)]
     public sealed class SCFWeaponVisualSlot : MonoBehaviour
     {
-        private const int CurrentRailgunProfileRevision = 12;
+        private const int CurrentRailgunProfileRevision = 13;
         private const string PrototypeRailgunPath = "Assets/SCF/2.8 rail-gun prototype_Texture_Packed.blend";
         private const string RailgunFireClipPath = "Assets/SCF/Audio/kalsstockmedia-a-large-explosive-laser-gun-shot-scifi-410622.mp3";
         private const string ReferenceShotgunPath = "Assets/SCF/MovementAni/NVoperatorsoldier.glb";
@@ -60,7 +60,19 @@ namespace SCF.Gameplay
         private static readonly Vector3 DefaultLeftGripPosition = new Vector3(-0.04f, -0.02f, 0.28f);
         private static readonly Vector3 Pose3ReferenceRightWristFromShotgunBone = new Vector3(-0.0332f, -0.2147f, -0.8692f);
         private static readonly Vector3 Pose3ReferenceLeftWristFromShotgunBone = new Vector3(0.1325f, -0.2297f, 0.3901f);
-        private static readonly Vector3 DefaultRailgunMuzzleLocalPosition = new Vector3(0.92f, 0.11f, 0f);
+        private static readonly Vector3 DefaultRailgunSocketLocalPosition = new Vector3(0.09301f, 0.063495f, 0.288997f);
+        private static readonly Vector3 DefaultRailgunSocketLocalEulerAngles = new Vector3(-3.624756f, 0f, 0f);
+        private static readonly Vector3 DefaultRailgunWeaponLocalPosition = new Vector3(-0.058564f, 0.051804f, 0.081334f);
+        private static readonly Vector3 DefaultRailgunWeaponLocalEulerAngles = new Vector3(-23.89532f, -122.972f, 3.329829f);
+        private static readonly Vector3 DefaultRailgunWeaponLocalScale = new Vector3(0.8f, 0.8f, 0.8f);
+        private static readonly Vector3 DefaultRailgunModelLocalPosition = new Vector3(0.04f, 0.03f, 0f);
+        private static readonly Vector3 DefaultRailgunRightGripLocalPosition = new Vector3(-0.15f, 0.03f, -0.01f);
+        private static readonly Vector3 DefaultRailgunRightGripLocalEulerAngles = new Vector3(-32.43002f, 86.09999f, -81.39999f);
+        private static readonly Vector3 DefaultRailgunLeftGripLocalPosition = new Vector3(0.57f, -0.04f, -0.01f);
+        private static readonly Vector3 DefaultRailgunLeftGripLocalEulerAngles = new Vector3(0f, 115.46f, 147.62f);
+        private static readonly Vector3 DefaultRailgunRightElbowHintLocalPosition = new Vector3(-2.93f, -1.6f, -0.42355f);
+        private static readonly Vector3 DefaultRailgunLeftElbowHintLocalPosition = new Vector3(0.37f, -0.23f, 0.17f);
+        private static readonly Vector3 DefaultRailgunMuzzleLocalPosition = new Vector3(0.96f, 0.12f, 0f);
         private static readonly Vector3 DefaultRailgunMuzzleLocalEulerAngles = new Vector3(0f, 90f, 0f);
 
         [Header("References")]
@@ -91,17 +103,17 @@ namespace SCF.Gameplay
 
         [Header("Body Socket")]
         [Tooltip("Chest-bone local weapon socket offset.")]
-        [SerializeField] private Vector3 restSocketOffset = new Vector3(0.18f, 0.02f, 0.26f);
+        [SerializeField] private Vector3 restSocketOffset = DefaultRailgunSocketLocalPosition;
         [Tooltip("Right-click raised chest-bone local weapon socket offset.")]
-        [SerializeField] private Vector3 raisedSocketOffset = new Vector3(0.06f, 0.08f, 0.3f);
-        [SerializeField] private Vector3 restSocketEulerAngles = new Vector3(0f, 0f, 0f);
-        [SerializeField] private Vector3 raisedSocketEulerAngles = new Vector3(-5f, 0f, 0f);
+        [SerializeField] private Vector3 raisedSocketOffset = DefaultRailgunSocketLocalPosition;
+        [SerializeField] private Vector3 restSocketEulerAngles = DefaultRailgunSocketLocalEulerAngles;
+        [SerializeField] private Vector3 raisedSocketEulerAngles = DefaultRailgunSocketLocalEulerAngles;
         [SerializeField, Min(0.1f)] private float raiseSharpness = 14f;
 
         [Header("Weapon Local Fit")]
         [SerializeField] private Vector3 weaponLocalPosition = Vector3.zero;
-        [SerializeField] private Vector3 weaponLocalEulerAngles = new Vector3(170f, 90f, 180f);
-        [SerializeField] private Vector3 weaponLocalScale = Vector3.one;
+        [SerializeField] private Vector3 weaponLocalEulerAngles = DefaultRailgunWeaponLocalEulerAngles;
+        [SerializeField] private Vector3 weaponLocalScale = DefaultRailgunWeaponLocalScale;
 
         [Header("Weapon Anchor")]
         [SerializeField] private bool anchorWeaponByRightGrip = true;
@@ -170,7 +182,15 @@ namespace SCF.Gameplay
         [SerializeField] private bool useFaceMouseColumnAimFocus = true;
         [SerializeField] private bool flattenMuzzleAimToMuzzleHeight = true;
         [SerializeField] private float muzzleAimTargetHeightOffset;
+        [SerializeField] private bool useEyeCarryDirectionForBehindMuzzleTargets = true;
+        [SerializeField, Min(0f)] private float behindMuzzleTargetSlack = 0.02f;
         [SerializeField] private bool drawMuzzleAimDebug;
+
+        [Header("Weapon Local X Clamp")]
+        [SerializeField] private bool clampSelectedWeaponLocalX = true;
+        [SerializeField] private float selectedWeaponNeutralLocalX = -23.89532f;
+        [SerializeField, Range(0f, 15f)] private float selectedWeaponMovingLocalXLimit = 3f;
+        [SerializeField, Min(0f)] private float selectedWeaponXMovingThreshold = 0.2f;
 
         [Header("Aim Ray Debug")]
         [SerializeField] private bool showAimRayDebug;
@@ -230,6 +250,18 @@ namespace SCF.Gameplay
         [SerializeField, Range(0f, 1f)] private float wallRunCarryWeight = 0.58f;
         [SerializeField, Range(0f, 1f)] private float rollCarryWeight = 0.18f;
 
+        [Header("Traversal Weapon Handling")]
+        [SerializeField] private bool detachLeftHandDuringVault = true;
+        [SerializeField] private bool detachBothHandsDuringClimb = true;
+        [SerializeField] private bool suspendMuzzleAimDuringClimb = true;
+        [SerializeField] private bool lowerWeaponDuringClimb = true;
+        [SerializeField] private bool blockRailgunFireDuringClimb = true;
+        [SerializeField] private bool snapWeaponFitAfterMobilityAction = true;
+        [SerializeField] private bool blockLiveTuningDuringMobilityAction = true;
+        [SerializeField, Range(0f, 1f)] private float vaultRightHandCarryWeight = 0.82f;
+        [SerializeField, Range(0f, 1f)] private float vaultLeftHandCarryWeight = 0f;
+        [SerializeField, Range(0f, 1f)] private float climbHandCarryWeight = 0f;
+
         [Header("Debug")]
         [SerializeField] private string activeCharacterName;
         [SerializeField] private GameObject activeWeapon;
@@ -252,6 +284,7 @@ namespace SCF.Gameplay
         private ArmRig rightArm;
         private ArmRig leftArm;
         private float nextRailgunFireTime;
+        private bool wasInWeaponFitResetAction;
 
         public event Action<SCFRailgunShot> RailgunFired;
         private Material railgunBeamMaterial;
@@ -393,6 +426,9 @@ namespace SCF.Gameplay
 
             if (railgunProfileRevision >= 11)
             {
+                ApplyRailgunSocketDefaults();
+                ApplyRailgunGripTargetDefaults();
+                ApplyRailgunWeaponTransformDefaults();
                 ApplyRailgunAnatomyDefaults();
                 railgunProfileRevision = CurrentRailgunProfileRevision;
                 return;
@@ -525,10 +561,10 @@ namespace SCF.Gameplay
 
         private void ApplyRailgunSocketDefaults()
         {
-            restSocketOffset = new Vector3(0.18f, 0.02f, 0.26f);
-            raisedSocketOffset = new Vector3(0.06f, 0.08f, 0.3f);
-            restSocketEulerAngles = Vector3.zero;
-            raisedSocketEulerAngles = new Vector3(-5f, 0f, 0f);
+            restSocketOffset = DefaultRailgunSocketLocalPosition;
+            raisedSocketOffset = DefaultRailgunSocketLocalPosition;
+            restSocketEulerAngles = DefaultRailgunSocketLocalEulerAngles;
+            raisedSocketEulerAngles = DefaultRailgunSocketLocalEulerAngles;
         }
 
         private void ApplyRailgunGripTargetDefaults()
@@ -547,9 +583,12 @@ namespace SCF.Gameplay
 
         private void ApplyRailgunWeaponTransformDefaults()
         {
-            weaponLocalPosition = new Vector3(-0.06f, -0.02f, -0.04f) - ResolvePose3WeaponAnchorSocketOffset();
-            weaponLocalEulerAngles = new Vector3(-4.95f, -90.25f, 25.36f);
-            weaponLocalScale = Vector3.one * 0.8f;
+            weaponLocalPosition = DefaultRailgunWeaponLocalPosition - ResolvePose3WeaponAnchorSocketOffset();
+            weaponLocalEulerAngles = DefaultRailgunWeaponLocalEulerAngles;
+            weaponLocalScale = DefaultRailgunWeaponLocalScale;
+            railgunMuzzleLocalPosition = DefaultRailgunMuzzleLocalPosition;
+            railgunMuzzleLocalEulerAngles = DefaultRailgunMuzzleLocalEulerAngles;
+            selectedWeaponNeutralLocalX = DefaultRailgunWeaponLocalEulerAngles.x;
         }
 
         private void ApplyRailgunAnatomyDefaults()
@@ -570,8 +609,8 @@ namespace SCF.Gameplay
             manualArmHandLockWeight = 0.28f;
             rightArmReachWeight = 0.95f;
             leftArmReachWeight = 0.95f;
-            rightElbowHintLocalPosition = new Vector3(0.28f, -0.1f, -0.08f);
-            leftElbowHintLocalPosition = new Vector3(-0.32f, -0.06f, 0.14f);
+            rightElbowHintLocalPosition = DefaultRailgunRightElbowHintLocalPosition;
+            leftElbowHintLocalPosition = DefaultRailgunLeftElbowHintLocalPosition;
             useStateBasedCarryWeights = true;
             locomotionCarryWeight = 0.95f;
             aimedCarryWeight = 1f;
@@ -734,6 +773,7 @@ namespace SCF.Gameplay
             {
                 currentRightHandWeight = 0f;
                 currentLeftHandWeight = 0f;
+                wasInWeaponFitResetAction = false;
                 TickAimRayDebug(false);
                 return;
             }
@@ -745,9 +785,11 @@ namespace SCF.Gameplay
 
             float blend = 1f - Mathf.Exp(-handIkBlendSharpness * Time.deltaTime);
             bool canApplyIk = CanApplyHandIk();
-            float carryWeight = ResolveCarryStateWeight();
-            currentRightHandWeight = Mathf.Lerp(currentRightHandWeight, canApplyIk ? rightHandIkWeight * carryWeight : 0f, blend);
-            currentLeftHandWeight = Mathf.Lerp(currentLeftHandWeight, canApplyIk ? leftHandIkWeight * carryWeight : 0f, blend);
+            TickWeaponFitMobilityActionReset();
+            float rightCarryWeight = ResolveHandCarryStateWeight(true);
+            float leftCarryWeight = ResolveHandCarryStateWeight(false);
+            currentRightHandWeight = Mathf.Lerp(currentRightHandWeight, canApplyIk ? rightHandIkWeight * rightCarryWeight : 0f, blend);
+            currentLeftHandWeight = Mathf.Lerp(currentLeftHandWeight, canApplyIk ? leftHandIkWeight * leftCarryWeight : 0f, blend);
 
             UpdateRaisedBlend();
             UpdateWeaponSocket();
@@ -768,6 +810,7 @@ namespace SCF.Gameplay
             }
 
             ApplyMuzzleAimAuthority();
+            ClampSelectedWeaponLocalXAxis();
             EnsureElbowHints();
             if (ShouldApplyBoneFallback())
             {
@@ -1310,7 +1353,7 @@ namespace SCF.Gameplay
             }
 
             bool requested = input.AttackPressedThisFrame || (fireRailgunWhileHeld && input.AttackHeld);
-            if (!requested || Time.time < nextRailgunFireTime)
+            if (!requested || Time.time < nextRailgunFireTime || ShouldBlockRailgunFireForTraversal())
             {
                 return;
             }
@@ -2002,6 +2045,39 @@ namespace SCF.Gameplay
             }
         }
 
+        private void ApplyRailgunPrefabAnchorDefaults(bool force)
+        {
+            if (!force || activeWeapon == null || IsReferenceShotgunInstance())
+            {
+                return;
+            }
+
+            ApplyDefaultRailgunAnchorTransform("SCF_RailgunModel", DefaultRailgunModelLocalPosition, Vector3.zero);
+            ApplyDefaultRailgunAnchorTransform(rightGripName, DefaultRailgunRightGripLocalPosition, DefaultRailgunRightGripLocalEulerAngles);
+            ApplyDefaultRailgunAnchorTransform(leftGripName, DefaultRailgunLeftGripLocalPosition, DefaultRailgunLeftGripLocalEulerAngles);
+            ApplyDefaultRailgunAnchorTransform(railgunMuzzleTransformName, DefaultRailgunMuzzleLocalPosition, DefaultRailgunMuzzleLocalEulerAngles);
+            ApplyDefaultRailgunAnchorTransform(rightElbowHintName, DefaultRailgunRightElbowHintLocalPosition, Vector3.zero);
+            ApplyDefaultRailgunAnchorTransform(leftElbowHintName, DefaultRailgunLeftElbowHintLocalPosition, Vector3.zero);
+        }
+
+        private void ApplyDefaultRailgunAnchorTransform(string anchorName, Vector3 localPosition, Vector3 localEulerAngles)
+        {
+            if (activeWeapon == null || string.IsNullOrWhiteSpace(anchorName))
+            {
+                return;
+            }
+
+            Transform anchor = FindDescendantByName(activeWeapon.transform, anchorName);
+            if (anchor == null)
+            {
+                return;
+            }
+
+            anchor.localPosition = localPosition;
+            anchor.localRotation = Quaternion.Euler(localEulerAngles);
+            anchor.localScale = Vector3.one;
+        }
+
         private void EnsureElbowHints()
         {
             if (!useElbowHints || weaponSocket == null)
@@ -2057,6 +2133,7 @@ namespace SCF.Gameplay
             }
 
             ApplyWeaponLocalFit(true);
+            ApplyRailgunPrefabAnchorDefaults(true);
             UpdateWeaponSocket();
             if (IsReferenceShotgunInstance())
             {
@@ -2308,6 +2385,11 @@ namespace SCF.Gameplay
                 return;
             }
 
+            if (blockLiveTuningDuringMobilityAction && IsWeaponFitResetActionActive())
+            {
+                return;
+            }
+
             if (captureTuningEveryFrame)
             {
                 CaptureCurrentRailgunTuningInternal(false);
@@ -2340,6 +2422,11 @@ namespace SCF.Gameplay
             }
 
             EnsureWeaponSocket();
+            ApplyRailgunPrefabAnchorDefaults(true);
+            ApplyWeaponLocalFit(true);
+            EnsureRailgunMuzzleTarget();
+            EnsureElbowHints();
+            ClampSelectedWeaponLocalXAxis(true);
             bool oldPreserveTunedGripTargets = preserveTunedGripTargets;
             preserveTunedGripTargets = false;
             EnsureShotgunPose3GripTargets();
@@ -2582,7 +2669,7 @@ namespace SCF.Gameplay
 
         private void UpdateRaisedBlend()
         {
-            float target = input != null && input.AimHeld ? 1f : 0f;
+            float target = input != null && input.AimHeld && !ShouldLowerWeaponForTraversal() ? 1f : 0f;
             float blend = 1f - Mathf.Exp(-raiseSharpness * Time.deltaTime);
             raised01 = Mathf.Lerp(raised01, target, blend);
         }
@@ -2627,6 +2714,66 @@ namespace SCF.Gameplay
             return locomotionCarryWeight;
         }
 
+        private float ResolveHandCarryStateWeight(bool rightHand)
+        {
+            if (!useStateBasedCarryWeights || motor == null)
+            {
+                return 1f;
+            }
+
+            if (detachBothHandsDuringClimb && motor.IsClimbing)
+            {
+                return climbHandCarryWeight;
+            }
+
+            if (detachLeftHandDuringVault && motor.IsVaulting)
+            {
+                return rightHand ? vaultRightHandCarryWeight : vaultLeftHandCarryWeight;
+            }
+
+            return ResolveCarryStateWeight();
+        }
+
+        private bool ShouldSuspendMuzzleAimForTraversal()
+        {
+            return suspendMuzzleAimDuringClimb
+                   && detachBothHandsDuringClimb
+                   && motor != null
+                   && motor.IsClimbing;
+        }
+
+        private bool ShouldLowerWeaponForTraversal()
+        {
+            return lowerWeaponDuringClimb
+                   && detachBothHandsDuringClimb
+                   && motor != null
+                   && motor.IsClimbing;
+        }
+
+        private bool ShouldBlockRailgunFireForTraversal()
+        {
+            return blockRailgunFireDuringClimb
+                   && detachBothHandsDuringClimb
+                   && motor != null
+                   && motor.IsClimbing;
+        }
+
+        private void TickWeaponFitMobilityActionReset()
+        {
+            bool actionActive = IsWeaponFitResetActionActive();
+            if (snapWeaponFitAfterMobilityAction && wasInWeaponFitResetAction && !actionActive)
+            {
+                ApplySavedRailgunGripTargets();
+            }
+
+            wasInWeaponFitResetAction = actionActive;
+        }
+
+        private bool IsWeaponFitResetActionActive()
+        {
+            return motor != null && motor.MobilityState != CharacterMobilityState.Locomotion;
+        }
+
         private void UpdateWeaponSocket()
         {
             if (weaponSocket == null)
@@ -2649,6 +2796,11 @@ namespace SCF.Gameplay
         private void ApplyMuzzleAimAuthority()
         {
             if (!muzzleDrivesWeaponAim || activeWeapon == null || muzzleAimWeight <= 0.001f)
+            {
+                return;
+            }
+
+            if (ShouldSuspendMuzzleAimForTraversal())
             {
                 return;
             }
@@ -2756,7 +2908,88 @@ namespace SCF.Gameplay
 
             targetPoint = ResolveMuzzleAimFocusPoint(muzzle, targetPoint, ResolveFaceOrigin());
             direction = targetPoint - muzzle.position;
+            if (ShouldUseEyeCarryForMuzzleTarget(muzzle, targetPoint))
+            {
+                direction = ResolveEyeCarryDirection(muzzle);
+            }
+
             return direction.sqrMagnitude > 0.0001f;
+        }
+
+        private bool ShouldUseEyeCarryForMuzzleTarget(Transform muzzle, Vector3 targetPoint)
+        {
+            if (!useEyeCarryDirectionForBehindMuzzleTargets || muzzle == null)
+            {
+                return false;
+            }
+
+            Vector3 muzzleForward = muzzle.forward;
+            if (muzzleForward.sqrMagnitude <= 0.0001f)
+            {
+                return false;
+            }
+
+            Vector3 muzzleToTarget = targetPoint - muzzle.position;
+            if (muzzleToTarget.sqrMagnitude <= 0.0001f)
+            {
+                return true;
+            }
+
+            return Vector3.Dot(muzzleForward.normalized, muzzleToTarget) <= behindMuzzleTargetSlack;
+        }
+
+        private Vector3 ResolveEyeCarryDirection(Transform muzzle)
+        {
+            Transform face = ResolveFaceOrigin();
+            if (face != null && face.forward.sqrMagnitude > 0.0001f)
+            {
+                return face.forward.normalized;
+            }
+
+            if (motor != null && motor.HasAimDirection && motor.AimDirection.sqrMagnitude > 0.0001f)
+            {
+                return motor.AimDirection.normalized;
+            }
+
+            if (muzzle != null && muzzle.forward.sqrMagnitude > 0.0001f)
+            {
+                return muzzle.forward.normalized;
+            }
+
+            return transform.forward.sqrMagnitude > 0.0001f ? transform.forward.normalized : Vector3.forward;
+        }
+
+        private void ClampSelectedWeaponLocalXAxis(bool forceNeutral = false)
+        {
+            if (!clampSelectedWeaponLocalX || activeWeapon == null || IsReferenceShotgunInstance())
+            {
+                return;
+            }
+
+            Vector3 euler = NormalizeEuler(activeWeapon.transform.localEulerAngles);
+            float neutralX = NormalizeEulerAxis(selectedWeaponNeutralLocalX);
+            float limit = forceNeutral || ShouldHoldSelectedWeaponXNeutral() ? 0f : selectedWeaponMovingLocalXLimit;
+            float deltaFromNeutral = Mathf.DeltaAngle(neutralX, euler.x);
+            float clampedDelta = Mathf.Clamp(deltaFromNeutral, -limit, limit);
+            float clampedX = NormalizeEulerAxis(neutralX + clampedDelta);
+            if (Mathf.Abs(Mathf.DeltaAngle(euler.x, clampedX)) <= 0.001f)
+            {
+                return;
+            }
+
+            euler.x = clampedX;
+            activeWeapon.transform.localRotation = Quaternion.Euler(euler);
+        }
+
+        private bool ShouldHoldSelectedWeaponXNeutral()
+        {
+            if (motor == null || motor.AimHeld)
+            {
+                return true;
+            }
+
+            float threshold = selectedWeaponXMovingThreshold;
+            return motor.PlanarVelocity.sqrMagnitude <= threshold * threshold;
         }
 
         private Transform ResolveSocketParent()

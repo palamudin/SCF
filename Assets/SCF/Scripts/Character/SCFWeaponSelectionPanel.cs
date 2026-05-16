@@ -12,6 +12,8 @@ namespace SCF.Gameplay
     [DisallowMultipleComponent]
     public sealed class SCFWeaponSelectionPanel : MonoBehaviour
     {
+        private const string HiddenBaseRailgunPrefabName = "SCF_Railgun_Weapon";
+
         private static readonly string[] DefaultWeaponPrefabFolders =
         {
             "Assets/SCF/Prefabs/Weapons"
@@ -74,7 +76,7 @@ namespace SCF.Gameplay
             {
                 string path = AssetDatabase.GUIDToAssetPath(prefabGuids[i]);
                 GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-                if (prefab != null && !weaponPrefabs.Contains(prefab))
+                if (ShouldShowWeaponPrefab(prefab) && !weaponPrefabs.Contains(prefab))
                 {
                     weaponPrefabs.Add(prefab);
                 }
@@ -157,7 +159,7 @@ namespace SCF.Gameplay
             for (int i = 0; i < weaponPrefabs.Count; i++)
             {
                 GameObject prefab = weaponPrefabs[i];
-                if (prefab == null || !MatchesSearch(prefab))
+                if (!ShouldShowWeaponPrefab(prefab) || !MatchesSearch(prefab))
                 {
                     continue;
                 }
@@ -184,6 +186,12 @@ namespace SCF.Gameplay
         {
             return string.IsNullOrWhiteSpace(searchText)
                    || prefab.name.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private static bool ShouldShowWeaponPrefab(GameObject prefab)
+        {
+            return prefab != null
+                   && !string.Equals(prefab.name, HiddenBaseRailgunPrefabName, StringComparison.OrdinalIgnoreCase);
         }
 
         private void ClampWindowToScreen()

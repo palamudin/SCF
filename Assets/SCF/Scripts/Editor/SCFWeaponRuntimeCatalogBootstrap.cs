@@ -12,7 +12,7 @@ namespace SCF.Gameplay.Editor
         private const string PrefabFolder = "Assets/SCF/Prefabs/Weapons";
         private const string CatalogPath = CatalogFolder + "/SCFWeaponRuntimeCatalog.asset";
         private const string RailgunProfilePath = ProfileFolder + "/SCF_RailgunRigProfile.asset";
-        private const string RailgunPrefabPath = PrefabFolder + "/SCF_Railgun_Weapon.prefab";
+        private const string RailgunPrefabPath = PrefabFolder + "/SCF_Railgun_Weapon_Fiddled Variant.prefab";
         private const string RailgunPath = "Assets/SCF/2.8 rail-gun prototype_Texture_Packed.blend";
         private const string RailgunFireClipPath = "Assets/SCF/Audio/kalsstockmedia-a-large-explosive-laser-gun-shot-scifi-410622.mp3";
 
@@ -72,19 +72,19 @@ namespace SCF.Gameplay.Editor
             {
                 EnsureModelChild(prefabRoot.transform, railgunSource);
                 EnsureAnchor(prefabRoot.transform, "SCF_RightPistolGrip",
-                    SocketSpaceToWeaponLocal(new Vector3(0f, -0.08f, -0.14f)),
-                    SocketSpaceToWeaponLocalRotation(new Vector3(-106.2f, -23.89999f, -75.70001f)));
+                    new Vector3(-0.15f, 0.03f, -0.01f),
+                    Quaternion.Euler(-32.43002f, 86.09999f, -81.39999f));
                 EnsureAnchor(prefabRoot.transform, "SCF_LeftUnderbarrelGrip",
-                    SocketSpaceToWeaponLocal(new Vector3(-0.15f, 0.07f, 0.2f)),
-                    SocketSpaceToWeaponLocalRotation(new Vector3(-134.6f, 146.4f, -11.4f)));
+                    new Vector3(0.57f, -0.04f, -0.01f),
+                    Quaternion.Euler(0f, 115.46f, 147.62f));
                 EnsureAnchor(prefabRoot.transform, "SCF_RailgunMuzzleTarget",
-                    new Vector3(0.92f, 0.11f, 0f),
+                    new Vector3(0.96f, 0.12f, 0f),
                     Quaternion.Euler(0f, 90f, 0f));
                 EnsureAnchor(prefabRoot.transform, "SCF_RightElbowHint",
-                    SocketSpaceToWeaponLocal(new Vector3(0.28f, -0.1f, -0.08f)),
+                    new Vector3(-2.93f, -1.6f, -0.42355f),
                     Quaternion.identity);
                 EnsureAnchor(prefabRoot.transform, "SCF_LeftElbowHint",
-                    SocketSpaceToWeaponLocal(new Vector3(-0.32f, -0.06f, 0.14f)),
+                    new Vector3(0.37f, -0.23f, 0.17f),
                     Quaternion.identity);
 
                 PrefabUtility.SaveAsPrefabAsset(prefabRoot, RailgunPrefabPath);
@@ -177,7 +177,7 @@ namespace SCF.Gameplay.Editor
             Vector3 rightGripSocket = new Vector3(0f, -0.08f, -0.14f);
             Vector3 rightFromAnchor = new Vector3(0.0332f, -0.2147f, -0.8692f) * 0.27f;
             Vector3 weaponAnchorSocket = rightGripSocket - rightFromAnchor;
-            return new Vector3(-0.06f, -0.02f, -0.04f) - weaponAnchorSocket;
+            return new Vector3(-0.058564f, 0.051804f, 0.081334f) - weaponAnchorSocket;
         }
     }
 }
