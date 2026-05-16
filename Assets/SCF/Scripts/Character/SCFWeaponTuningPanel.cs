@@ -121,14 +121,20 @@ namespace SCF.Gameplay
         {
             using (new GUILayout.HorizontalScope())
             {
-                if (GUILayout.Button("Copy Values", GUILayout.Height(26f)))
+                if (GUILayout.Button("Copy File", GUILayout.Height(26f)))
                 {
                     CopyPanelValues();
                 }
 
-                if (GUILayout.Button("Capture", GUILayout.Height(26f)))
+                if (GUILayout.Button("Capture File", GUILayout.Height(26f)))
+                {
+                    SaveSnapshot();
+                }
+
+                if (GUILayout.Button("Slot Capture", GUILayout.Height(26f)))
                 {
                     weaponSlot?.CaptureCurrentRailgunTuning();
+                    SaveSnapshot();
                 }
 
                 if (GUILayout.Button("Grip Defaults", GUILayout.Height(26f)))
@@ -236,15 +242,21 @@ namespace SCF.Gameplay
 
         private void CopyPanelValues()
         {
-            string values = BuildPanelValuesText();
-            GUIUtility.systemCopyBuffer = values;
-            Debug.Log(values);
+            string path = weaponSlot != null ? weaponSlot.RecordWeaponFitSnapshot("SCF_WeaponFitPanelCopy") : string.Empty;
+            Debug.Log("SCF weapon fit copied to clipboard and file: " + path);
+        }
+
+        private void SaveSnapshot()
+        {
+            string path = weaponSlot != null ? weaponSlot.RecordWeaponFitSnapshot("SCF_WeaponFitPanel") : string.Empty;
+            Debug.Log("SCF weapon fit snapshot saved: " + path);
         }
 
         private string BuildPanelValuesText()
         {
             StringBuilder builder = new StringBuilder();
             builder.AppendLine("SCF weapon fit tuning");
+            builder.AppendLine("Captured at: " + System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture));
             builder.AppendLine("Active weapon: " + (weaponSlot != null ? weaponSlot.ActiveWeaponName : "none"));
             AppendTransform(builder, "SOCKET / SCF_ChestWeaponSocket", weaponSlot != null ? weaponSlot.WeaponSocketTransform : null);
             AppendTransform(builder, "WEAPON / SCF_Selected_Railgun", weaponSlot != null ? weaponSlot.ActiveWeaponTransform : null);

@@ -168,7 +168,9 @@ namespace SCF.Gameplay
         public Vector3 DesiredVelocity { get; private set; }
         public Vector3 PlanarVelocity { get; private set; }
         public Vector3 AimDirection { get; private set; } = Vector3.forward;
+        public Vector3 AimWorldPoint { get; private set; }
         public bool HasAimDirection { get; private set; }
+        public bool HasAimWorldPoint { get; private set; }
         public bool IsGrounded => IsControllerSupported(0.03f);
         public bool AimHeld => input != null && input.AimHeld;
         public bool SprintHeld => input != null && input.SprintHeld && !AimHeld;
@@ -2036,6 +2038,7 @@ namespace SCF.Gameplay
         {
             if (input == null)
             {
+                HasAimWorldPoint = false;
                 return;
             }
 
@@ -2046,25 +2049,35 @@ namespace SCF.Gameplay
                 if (resolvedDirection.sqrMagnitude > 0.0001f)
                 {
                     AimDirection = resolvedDirection.normalized;
+                    AimWorldPoint = transform.position + AimDirection * aimRayDistance;
                     HasAimDirection = true;
+                    HasAimWorldPoint = true;
                 }
 
                 return;
             }
 
-            if (input.AimMode == AimInputMode.ScreenPoint && TryGetScreenAimDirection(input.AimValue, out resolvedDirection))
+            if (input.AimMode == AimInputMode.ScreenPoint && TryGetScreenAimDirection(input.AimValue, out resolvedDirection, out Vector3 aimPoint))
             {
                 AimDirection = resolvedDirection;
+                AimWorldPoint = aimPoint;
                 HasAimDirection = true;
+                HasAimWorldPoint = true;
                 return;
             }
 
             HasAimDirection = AimDirection.sqrMagnitude > 0.0001f;
+            HasAimWorldPoint = HasAimDirection;
+            if (HasAimWorldPoint)
+            {
+                AimWorldPoint = transform.position + AimDirection.normalized * aimRayDistance;
+            }
         }
 
-        private bool TryGetScreenAimDirection(Vector2 screenPosition, out Vector3 direction)
+        private bool TryGetScreenAimDirection(Vector2 screenPosition, out Vector3 direction, out Vector3 point)
         {
             direction = Vector3.zero;
+            point = Vector3.zero;
 
             Camera camera = worldCamera != null ? worldCamera : Camera.main;
             if (camera == null)
@@ -2073,7 +2086,7 @@ namespace SCF.Gameplay
             }
 
             Ray ray = camera.ScreenPointToRay(screenPosition);
-            if (TryRaycastAimSurface(ray, out Vector3 point) || TryIntersectAimPlane(ray, out point))
+            if (TryRaycastAimSurface(ray, out point) || TryIntersectAimPlane(ray, out point))
             {
                 Vector3 toPoint = point - transform.position;
                 toPoint.y = 0f;

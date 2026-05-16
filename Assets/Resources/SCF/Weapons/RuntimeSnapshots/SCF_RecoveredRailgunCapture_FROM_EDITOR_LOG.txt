@@ -1,0 +1,13 @@
+SCF railgun tuning captured
+weaponLocalPosition = new Vector3(-0.081f, -0.018f, -0.2047f)
+weaponLocalEulerAngles = new Vector3(14.1f, -130.47f, 20.09f)
+weaponLocalScale = new Vector3(0.8f, 0.8f, 0.8f)
+shotgunPose3Scale = 0.27
+shotgunPose3RightGripTuningOffset = new Vector3(0f, -0.08f, -0.14f)
+shotgunPose3RightGripEulerAngles = new Vector3(-106.2f, -23.9f, -75.7f)
+shotgunPose3LeftGripTuningOffset = new Vector3(-0.1053f, 0.1541f, 0f)
+shotgunPose3LeftGripEulerAngles = new Vector3(-134.6f, 146.4f, -11.4f)
+shotgunPose3WeaponAnchorTuningOffset = new Vector3(0f, 0f, 0f)
+railgunMuzzleLocalPosition = new Vector3(0.96f, 0.12f, 0f)
+railgunMuzzleLocalEulerAngles = new Vector3(0f, 90f, 0f)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)

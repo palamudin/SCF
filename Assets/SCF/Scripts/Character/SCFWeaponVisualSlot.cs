@@ -149,6 +149,15 @@ namespace SCF.Gameplay
         [SerializeField, Min(0f)] private float railgunTracerEmissionPerDistance = 95f;
         [SerializeField, Min(0f)] private int railgunImpactBurstCount = 28;
 
+        [Header("Muzzle Aim Authority")]
+        [SerializeField] private bool muzzleDrivesWeaponAim = true;
+        [SerializeField, Min(0.1f)] private float muzzleAimSharpness = 24f;
+        [SerializeField, Range(0f, 1f)] private float muzzleAimWeight = 1f;
+        [SerializeField] private bool muzzleAimOnlyWhileAimHeld = true;
+        [SerializeField] private bool flattenMuzzleAimToMuzzleHeight = true;
+        [SerializeField] private float muzzleAimTargetHeightOffset;
+        [SerializeField] private bool drawMuzzleAimDebug;
+
         [Header("Grip Targets")]
         [SerializeField] private Vector3 rightGripLocalPosition = new Vector3(0.02f, -0.05f, 0.12f);
         [SerializeField] private Vector3 rightGripLocalEulerAngles = new Vector3(0f, 90f, 90f);
@@ -524,7 +533,9 @@ namespace SCF.Gameplay
             leftElbowHintWeight = 0.95f;
             manualElbowHintAssistWeight = 0.85f;
             manualArmSolveIterations = 2;
-            manualArmHandLockWeight = 0.55f;
+            manualArmHandLockWeight = 0.28f;
+            rightArmReachWeight = 0.95f;
+            leftArmReachWeight = 0.95f;
             rightElbowHintLocalPosition = new Vector3(0.28f, -0.1f, -0.08f);
             leftElbowHintLocalPosition = new Vector3(-0.32f, -0.06f, 0.14f);
             useStateBasedCarryWeights = true;
@@ -720,6 +731,7 @@ namespace SCF.Gameplay
                 }
             }
 
+            ApplyMuzzleAimAuthority();
             EnsureElbowHints();
             if (ShouldApplyBoneFallback())
             {
@@ -1961,7 +1973,7 @@ namespace SCF.Gameplay
 #if ENABLE_LEGACY_INPUT_MANAGER
             if (captureTuningHotkey != KeyCode.None && Input.GetKeyDown(captureTuningHotkey))
             {
-                CaptureCurrentRailgunTuningInternal(true);
+                CaptureCurrentRailgunTuning();
             }
 #endif
         }
@@ -1969,6 +1981,7 @@ namespace SCF.Gameplay
         public void CaptureCurrentRailgunTuning()
         {
             CaptureCurrentRailgunTuningInternal(true);
+            RecordWeaponFitSnapshot("SCF_RailgunCapture");
         }
 
         public void CopyCurrentRailgunTuning()
@@ -2001,6 +2014,26 @@ namespace SCF.Gameplay
             EnsureGrips();
             EnsureRailgunMuzzleTarget();
             EnsureElbowHints();
+        }
+
+        public string RecordWeaponFitSnapshot(string snapshotName = "SCF_WeaponFit")
+        {
+            RefreshWeaponTuningTargets();
+            return SCFTransformSnapshotRecorder.CaptureHierarchy(snapshotName, ActiveWeaponTransform, BuildWeaponFitSnapshotTargets());
+        }
+
+        public SCFTransformSnapshotTarget[] BuildWeaponFitSnapshotTargets()
+        {
+            return new[]
+            {
+                new SCFTransformSnapshotTarget("SOCKET / SCF_ChestWeaponSocket", weaponSocket),
+                new SCFTransformSnapshotTarget("WEAPON ROOT / SCF_Selected_Railgun", ActiveWeaponTransform),
+                new SCFTransformSnapshotTarget("RIGHT HAND GRIP / SCF_RightPistolGrip", rightGrip),
+                new SCFTransformSnapshotTarget("LEFT HAND GRIP / SCF_LeftUnderbarrelGrip", leftGrip),
+                new SCFTransformSnapshotTarget("RIGHT ELBOW ORIENTATOR / SCF_RightElbowHint", rightElbowHint),
+                new SCFTransformSnapshotTarget("LEFT ELBOW ORIENTATOR / SCF_LeftElbowHint", leftElbowHint),
+                new SCFTransformSnapshotTarget("MUZZLE / SCF_RailgunMuzzleTarget", railgunMuzzleTarget)
+            };
         }
 
         [ContextMenu("SCF/Capture Current Railgun Tuning")]
@@ -2270,6 +2303,69 @@ namespace SCF.Gameplay
             weaponSocket.localRotation = Quaternion.Slerp(restRotation, raisedRotation, raised01);
         }
 
+        private void ApplyMuzzleAimAuthority()
+        {
+            if (!muzzleDrivesWeaponAim || activeWeapon == null || muzzleAimWeight <= 0.001f)
+            {
+                return;
+            }
+
+            if (muzzleAimOnlyWhileAimHeld && (motor == null || !motor.AimHeld))
+            {
+                return;
+            }
+
+            Transform muzzle = ResolveRailgunMuzzleTransform();
+            if (muzzle == null || !TryResolveMuzzleAimDirection(muzzle, out Vector3 desiredDirection))
+            {
+                return;
+            }
+
+            Vector3 currentDirection = muzzle.forward;
+            if (currentDirection.sqrMagnitude <= 0.0001f || desiredDirection.sqrMagnitude <= 0.0001f)
+            {
+                return;
+            }
+
+            Transform aimRoot = weaponSocket != null ? weaponSocket : activeWeapon.transform;
+            Quaternion correction = Quaternion.FromToRotation(currentDirection.normalized, desiredDirection.normalized);
+            Quaternion targetRotation = correction * aimRoot.rotation;
+            float blend = (1f - Mathf.Exp(-muzzleAimSharpness * Time.deltaTime)) * Mathf.Clamp01(muzzleAimWeight);
+            aimRoot.rotation = Quaternion.Slerp(aimRoot.rotation, targetRotation, blend);
+        }
+
+        private bool TryResolveMuzzleAimDirection(Transform muzzle, out Vector3 direction)
+        {
+            direction = Vector3.zero;
+            if (muzzle == null)
+            {
+                return false;
+            }
+
+            Vector3 targetPoint;
+            if (motor != null && motor.HasAimWorldPoint)
+            {
+                targetPoint = motor.AimWorldPoint;
+            }
+            else if (motor != null && motor.HasAimDirection)
+            {
+                targetPoint = muzzle.position + motor.AimDirection.normalized * railgunFireRange;
+            }
+            else
+            {
+                return false;
+            }
+
+            targetPoint.y += muzzleAimTargetHeightOffset;
+            if (flattenMuzzleAimToMuzzleHeight)
+            {
+                targetPoint.y = muzzle.position.y + muzzleAimTargetHeightOffset;
+            }
+
+            direction = targetPoint - muzzle.position;
+            return direction.sqrMagnitude > 0.0001f;
+        }
+
         private Transform ResolveSocketParent()
         {
             return FirstNonNull(chestAnchor, animator != null ? animator.transform : null, transform);
@@ -2392,7 +2488,7 @@ namespace SCF.Gameplay
                 ApplyTwoBoneElbowHint(rig, targetPosition, elbowHint.position, weight);
             }
 
-            float handLockWeight = Mathf.Clamp01(weight * manualArmHandLockWeight);
+            float handLockWeight = Mathf.Clamp01(weight * Mathf.Min(manualArmHandLockWeight, 0.35f));
             if (handLockWeight > 0.001f)
             {
                 rig.Hand.position = Vector3.Lerp(rig.Hand.position, targetPosition, handLockWeight);
@@ -2474,7 +2570,7 @@ namespace SCF.Gameplay
                 return targetPosition;
             }
 
-            float reachScale = Mathf.Clamp(reachWeight, 0.1f, 2f);
+            float reachScale = Mathf.Clamp(reachWeight, 0.1f, 1f);
             float hardReach = armLength * maxArmReachMultiplier * reachScale;
             float softReach = hardReach + armLength * armReachSoftZone;
             Vector3 toTarget = targetPosition - root.position;
