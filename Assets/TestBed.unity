@@ -1204,8 +1204,11 @@ MonoBehaviour:
   movementRotationSharpness: 16
   aimRotationSharpness: 24
   separateAimFromLocomotion: 1
+  aimLocomotionFacesAim: 1
   lowerBodyAimsWhenIdle: 0
   lowerBodyMoveThreshold: 0.2
+  lowerBodyFollowsAimPastYawLimit: 1
+  aimLowerBodyFollowYawLimit: 65
   aimSurfaceMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -1231,6 +1234,8 @@ MonoBehaviour:
   enableFallbackBindings: 1
   enableMouseAim: 1
   stickLookDeadZone: 0.18
+  enableTimeFreezeHotkey: 1
+  logTimeFreezeToggle: 1
 --- !u!114 &348264564
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1274,6 +1279,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SCF.Gameplay.CursorLockGuard
   keepCursorVisible: 1
   keepCursorUnlocked: 1
+  hideCursorInPlayUnlessControlHeld: 1
 --- !u!114 &348264566
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1547,6 +1553,8 @@ MonoBehaviour:
   idleSpeedThreshold: 0.15
   currentClipBias: 0.08
   preferDirectionalLocomotionWhileAiming: 1
+  useDedicatedAimLocomotion: 1
+  useAimFrameForAimLocomotion: 1
   locomotionBlendTime: 0.18
   actionBlendTime: 0.08
   applyFootIK: 1
@@ -1558,6 +1566,10 @@ MonoBehaviour:
   weaponAimPoseClip: {fileID: 0}
   weaponMoveClip: {fileID: 0}
   weaponUpperBodyClip: {fileID: 0}
+  useWalkUpperBodyForAimRun: 1
+  aimRunUpperBodyClip: {fileID: 0}
+  aimRunUpperBodyWeight: 1
+  aimRunUpperBodyPlaybackSpeed: 1
   weaponCarryUpperBodyWeight: 0.62
   weaponAimUpperBodyWeight: 0.92
   weaponUpperBodyPlaybackSpeed: 1
@@ -1641,6 +1653,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2684919694184133148, guid: 8239b07f86bd639438b2772e706ab073, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2684919694194076636, guid: 8239b07f86bd639438b2772e706ab073, type: 3}
       propertyPath: m_Name
       value: RockMesh
@@ -2399,7 +2415,7 @@ MeshCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
+  m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 5
   m_Convex: 0

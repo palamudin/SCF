@@ -4,6 +4,8 @@ using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
+using UnityEngine.Animations;
+using UnityEngine.Playables;
 
 namespace SCF.Gameplay
 {
@@ -28,8 +30,20 @@ namespace SCF.Gameplay
         [SerializeField] private IsometricCharacterMotor localMotor;
         [SerializeField] private SCFCharacterVisualSlot localVisualSlot;
         [SerializeField] private SCFWeaponVisualSlot localWeaponSlot;
+        [SerializeField] private SCFMotionSelector localMotionSelector;
         [SerializeField, Min(1f)] private float maxHealth = 100f;
         [SerializeField, Min(1f)] private float railgunDamage = 34f;
+
+        [Header("Damage")]
+        [SerializeField, Min(0.1f)] private float playerCollisionRadius = 0.85f;
+        [SerializeField, Min(0f)] private float playerCollisionMinRelativeSpeed = 1.2f;
+        [SerializeField, Min(0f)] private float playerCollisionDamage = 7f;
+        [SerializeField, Min(0f)] private float playerCollisionDamageCooldown = 0.65f;
+        [SerializeField, Range(0f, 1f)] private float playerCollisionMomentumProtection = 0.65f;
+        [SerializeField, Min(0f)] private float deathLeaveDelay = 1.25f;
+        [SerializeField, Min(0.05f)] private float proceduralDeathDuration = 0.45f;
+        [SerializeField] private bool leaveRoomOnDeath = true;
+        [SerializeField] private bool disconnectOnDeath;
 
         [Header("Sync")]
         [SerializeField, Range(2f, 30f)] private float stateSendRate = 12f;
@@ -46,6 +60,9 @@ namespace SCF.Gameplay
         private SCFWeaponVisualSlot subscribedWeaponSlot;
         private float localHealth;
         private float nextStateSendTime;
+        private bool localDead;
+        private float localDeathLeaveTime;
+        private SCFNetworkDeathCue localDeathCue;
         private bool localSpawnOffsetApplied;
         private Material remoteBlueMaterial;
         private Material remoteRedMaterial;
@@ -85,8 +102,10 @@ namespace SCF.Gameplay
         private void Update()
         {
             ResolveLocalReferences();
+            TickDeathLeave();
             TickStateSend();
             TickRemoteAvatars();
+            TickPlayerCollisionDamage();
         }
 
         private void OnGUI()
@@ -109,7 +128,7 @@ namespace SCF.Gameplay
         {
             GUILayout.Label("State: " + PhotonNetwork.NetworkClientState);
             GUILayout.Label("Room: " + (PhotonNetwork.InRoom ? PhotonNetwork.CurrentRoom.Name + " (" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + ")" : "none"));
-            GUILayout.Label("Health: " + Mathf.CeilToInt(localHealth) + " / " + Mathf.CeilToInt(maxHealth));
+            GUILayout.Label("Health: " + Mathf.CeilToInt(localHealth) + " / " + Mathf.CeilToInt(maxHealth) + (localDead ? " DOWN" : ""));
             foreach (KeyValuePair<int, float> health in knownHealth)
             {
                 if (PhotonNetwork.InRoom && health.Key != PhotonNetwork.LocalPlayer.ActorNumber)
@@ -202,8 +221,11 @@ namespace SCF.Gameplay
 
         public override void OnJoinedRoom()
         {
+            localDead = false;
+            localDeathLeaveTime = 0f;
             localHealth = maxHealth;
             knownHealth[PhotonNetwork.LocalPlayer.ActorNumber] = localHealth;
+            ResetLocalDeathCue();
             OffsetLocalPlayerOnce();
             foreach (Photon.Realtime.Player player in PhotonNetwork.PlayerList)
             {
@@ -218,8 +240,11 @@ namespace SCF.Gameplay
 
         public override void OnLeftRoom()
         {
+            localDead = false;
+            localDeathLeaveTime = 0f;
             localSpawnOffsetApplied = false;
             ClearRemoteAvatars();
+            ResetLocalDeathCue();
         }
 
         public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
@@ -271,6 +296,11 @@ namespace SCF.Gameplay
                 localWeaponSlot = localPlayerRoot.GetComponent<SCFWeaponVisualSlot>();
             }
 
+            if (localMotionSelector == null && localPlayerRoot != null)
+            {
+                localMotionSelector = localPlayerRoot.GetComponent<SCFMotionSelector>();
+            }
+
             SubscribeToWeaponSlot(localWeaponSlot);
         }
 
@@ -316,7 +346,11 @@ namespace SCF.Gameplay
                 PhotonNetwork.LocalPlayer.ActorNumber,
                 localPlayerRoot.position,
                 localPlayerRoot.rotation,
-                localHealth
+                localHealth,
+                localMotionSelector != null ? localMotionSelector.SelectedMotionIndex : -1,
+                localMotor != null ? localMotor.PlanarVelocity : Vector3.zero,
+                localMotor != null ? localMotor.PlanarVelocity.magnitude : 0f,
+                localDead
             };
 
             RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
@@ -340,7 +374,15 @@ namespace SCF.Gameplay
             avatar.TargetPosition = (Vector3)data[1];
             avatar.TargetRotation = (Quaternion)data[2];
             avatar.Health = Convert.ToSingle(data[3]);
+            avatar.MotionIndex = data.Length > 4 ? Convert.ToInt32(data[4]) : -1;
+            avatar.TargetVelocity = data.Length > 5 ? (Vector3)data[5] : Vector3.zero;
+            avatar.MotionSpeed = data.Length > 6 ? Convert.ToSingle(data[6]) : avatar.TargetVelocity.magnitude;
+            avatar.Dead = (data.Length > 7 && Convert.ToBoolean(data[7])) || avatar.Health <= 0.001f;
             knownHealth[actor] = avatar.Health;
+            if (avatar.Dead)
+            {
+                PlayRemoteDeathCue(avatar);
+            }
         }
 
         private void OnLocalRailgunFired(SCFRailgunShot shot)
@@ -383,6 +425,11 @@ namespace SCF.Gameplay
 
         private void SendDamage(int targetActor, float damage)
         {
+            if (targetActor <= 0 || damage <= 0.001f || !PhotonNetwork.InRoom)
+            {
+                return;
+            }
+
             object[] payload =
             {
                 targetActor,
@@ -400,15 +447,21 @@ namespace SCF.Gameplay
             }
 
             int targetActor = Convert.ToInt32(data[0]);
+            int sourceActor = Convert.ToInt32(data[1]);
             float damage = Convert.ToSingle(data[2]);
             if (targetActor == PhotonNetwork.LocalPlayer.ActorNumber)
             {
+                if (localDead)
+                {
+                    return;
+                }
+
                 localHealth = Mathf.Max(0f, localHealth - damage);
                 knownHealth[targetActor] = localHealth;
                 if (localHealth <= 0.001f)
                 {
-                    localHealth = maxHealth;
-                    knownHealth[targetActor] = localHealth;
+                    HandleLocalDeath(sourceActor);
+                    return;
                 }
 
                 SendState(true);
@@ -419,7 +472,12 @@ namespace SCF.Gameplay
             if (remoteAvatars.TryGetValue(targetActor, out avatar))
             {
                 avatar.Health = Mathf.Max(0f, avatar.Health - damage);
+                avatar.Dead = avatar.Health <= 0.001f;
                 knownHealth[targetActor] = avatar.Health;
+                if (avatar.Dead)
+                {
+                    PlayRemoteDeathCue(avatar);
+                }
             }
         }
 
@@ -439,16 +497,19 @@ namespace SCF.Gameplay
             collider.height = remoteHeight;
             collider.radius = Mathf.Max(0.2f, remoteHeight * 0.18f);
             collider.center = Vector3.up * (remoteHeight * 0.5f);
+            collider.isTrigger = true;
 
             SCFNetworkHitbox hitbox = root.AddComponent<SCFNetworkHitbox>();
             hitbox.ActorNumber = actorNumber;
 
-            CreateRemoteVisual(root.transform, actorNumber);
+            GameObject visual = CreateRemoteVisual(root.transform, actorNumber);
             avatar = new RemoteAvatar(root.transform)
             {
+                VisualRoot = visual != null ? visual.transform : root.transform,
                 TargetPosition = root.transform.position,
                 TargetRotation = root.transform.rotation,
-                Health = maxHealth
+                Health = maxHealth,
+                MotionPlayback = new RemoteMotionPlayback(visual, ResolveMotionDatabase())
             };
             remoteAvatars.Add(actorNumber, avatar);
             knownHealth[actorNumber] = maxHealth;
@@ -520,8 +581,67 @@ namespace SCF.Gameplay
                     continue;
                 }
 
+                Vector3 previousPosition = avatar.Root.position;
                 avatar.Root.position = Vector3.Lerp(avatar.Root.position, avatar.TargetPosition, moveBlend);
                 avatar.Root.rotation = Quaternion.Slerp(avatar.Root.rotation, avatar.TargetRotation, turnBlend);
+                avatar.EstimatedVelocity = Time.deltaTime > 0.0001f ? (avatar.Root.position - previousPosition) / Time.deltaTime : Vector3.zero;
+                if (avatar.MotionPlayback != null)
+                {
+                    avatar.MotionPlayback.ConfigureDatabase(ResolveMotionDatabase());
+                    avatar.MotionPlayback.Tick(avatar.MotionIndex, avatar.MotionSpeed, avatar.Dead);
+                }
+            }
+        }
+
+        private void TickPlayerCollisionDamage()
+        {
+            if (!PhotonNetwork.InRoom || localDead || localPlayerRoot == null)
+            {
+                return;
+            }
+
+            int localActor = PhotonNetwork.LocalPlayer.ActorNumber;
+            Vector3 localVelocity = localMotor != null ? localMotor.PlanarVelocity : Vector3.zero;
+            float radiusSqr = playerCollisionRadius * playerCollisionRadius;
+
+            foreach (KeyValuePair<int, RemoteAvatar> pair in remoteAvatars)
+            {
+                int remoteActor = pair.Key;
+                RemoteAvatar avatar = pair.Value;
+                if (avatar == null || avatar.Root == null || avatar.Dead || avatar.Health <= 0.001f)
+                {
+                    continue;
+                }
+
+                if (localActor > remoteActor || Time.time < avatar.NextCollisionDamageTime)
+                {
+                    continue;
+                }
+
+                Vector3 delta = localPlayerRoot.position - avatar.Root.position;
+                delta.y = 0f;
+                if (delta.sqrMagnitude > radiusSqr)
+                {
+                    continue;
+                }
+
+                Vector3 remoteVelocity = avatar.TargetVelocity.sqrMagnitude > 0.0001f ? avatar.TargetVelocity : avatar.EstimatedVelocity;
+                float relativeSpeed = (localVelocity - remoteVelocity).magnitude;
+                if (relativeSpeed < playerCollisionMinRelativeSpeed)
+                {
+                    continue;
+                }
+
+                float localMomentum = localVelocity.magnitude;
+                float remoteMomentum = remoteVelocity.magnitude;
+                float totalMomentum = Mathf.Max(0.001f, localMomentum + remoteMomentum);
+                float localDamageShare = Mathf.Lerp(0.5f, remoteMomentum / totalMomentum, playerCollisionMomentumProtection);
+                float impactScale = Mathf.Clamp(relativeSpeed / Mathf.Max(0.1f, playerCollisionMinRelativeSpeed), 0.35f, 2.5f);
+                float totalDamage = playerCollisionDamage * impactScale;
+
+                SendDamage(localActor, totalDamage * localDamageShare);
+                SendDamage(remoteActor, totalDamage * (1f - localDamageShare));
+                avatar.NextCollisionDamageTime = Time.time + playerCollisionDamageCooldown;
             }
         }
 
@@ -568,9 +688,17 @@ namespace SCF.Gameplay
         private void DestroyRemoteAvatar(int actorNumber)
         {
             RemoteAvatar avatar;
-            if (remoteAvatars.TryGetValue(actorNumber, out avatar) && avatar.Root != null)
+            if (remoteAvatars.TryGetValue(actorNumber, out avatar))
             {
-                Destroy(avatar.Root.gameObject);
+                if (avatar.MotionPlayback != null)
+                {
+                    avatar.MotionPlayback.Destroy();
+                }
+
+                if (avatar.Root != null)
+                {
+                    Destroy(avatar.Root.gameObject);
+                }
             }
 
             remoteAvatars.Remove(actorNumber);
@@ -620,6 +748,92 @@ namespace SCF.Gameplay
             return beamMaterial;
         }
 
+        private SCFMotionDatabase ResolveMotionDatabase()
+        {
+            if (localMotionSelector != null)
+            {
+                return localMotionSelector.Database;
+            }
+
+            SCFMotionSelector selector = FindFirstSceneObject<SCFMotionSelector>();
+            return selector != null ? selector.Database : null;
+        }
+
+        private void HandleLocalDeath(int sourceActor)
+        {
+            if (localDead)
+            {
+                return;
+            }
+
+            localDead = true;
+            localHealth = 0f;
+            knownHealth[PhotonNetwork.LocalPlayer.ActorNumber] = localHealth;
+            Transform cueTarget = localVisualSlot != null && localVisualSlot.ActiveVisual != null ? localVisualSlot.ActiveVisual.transform : localPlayerRoot;
+            localDeathCue = PlayDeathCue(cueTarget);
+            localDeathLeaveTime = Time.unscaledTime + deathLeaveDelay;
+            SendState(true);
+        }
+
+        private void TickDeathLeave()
+        {
+            if (!localDead || !leaveRoomOnDeath || localDeathLeaveTime <= 0f || Time.unscaledTime < localDeathLeaveTime)
+            {
+                return;
+            }
+
+            localDeathLeaveTime = 0f;
+            if (disconnectOnDeath)
+            {
+                PhotonNetwork.Disconnect();
+            }
+            else if (PhotonNetwork.InRoom)
+            {
+                PhotonNetwork.LeaveRoom();
+            }
+        }
+
+        private SCFNetworkDeathCue PlayDeathCue(Transform target)
+        {
+            if (target == null)
+            {
+                return null;
+            }
+
+            SCFNetworkDeathCue cue = target.GetComponent<SCFNetworkDeathCue>();
+            if (cue == null)
+            {
+                cue = target.gameObject.AddComponent<SCFNetworkDeathCue>();
+            }
+
+            cue.Play(proceduralDeathDuration);
+            return cue;
+        }
+
+        private void PlayRemoteDeathCue(RemoteAvatar avatar)
+        {
+            if (avatar == null || avatar.DeathCue != null)
+            {
+                return;
+            }
+
+            Transform target = avatar.VisualRoot != null ? avatar.VisualRoot : avatar.Root;
+            avatar.DeathCue = PlayDeathCue(target);
+            if (avatar.MotionPlayback != null)
+            {
+                avatar.MotionPlayback.Stop();
+            }
+        }
+
+        private void ResetLocalDeathCue()
+        {
+            if (localDeathCue != null)
+            {
+                localDeathCue.ResetPose();
+                localDeathCue = null;
+            }
+        }
+
         private static T FindFirstSceneObject<T>() where T : UnityEngine.Object
         {
 #if UNITY_2023_1_OR_NEWER
@@ -632,13 +846,132 @@ namespace SCF.Gameplay
         private sealed class RemoteAvatar
         {
             public readonly Transform Root;
+            public Transform VisualRoot;
             public Vector3 TargetPosition;
             public Quaternion TargetRotation;
+            public Vector3 TargetVelocity;
+            public Vector3 EstimatedVelocity;
+            public int MotionIndex = -1;
+            public float MotionSpeed;
             public float Health;
+            public bool Dead;
+            public float NextCollisionDamageTime;
+            public RemoteMotionPlayback MotionPlayback;
+            public SCFNetworkDeathCue DeathCue;
 
             public RemoteAvatar(Transform root)
             {
                 Root = root;
+            }
+        }
+
+        private sealed class RemoteMotionPlayback
+        {
+            private readonly Animator animator;
+            private SCFMotionDatabase database;
+            private PlayableGraph graph;
+            private AnimationClipPlayable clipPlayable;
+            private int activeMotionIndex = -1;
+
+            public RemoteMotionPlayback(GameObject visual, SCFMotionDatabase database)
+            {
+                this.database = database;
+                animator = visual != null ? visual.GetComponentInChildren<Animator>(true) : null;
+                if (animator != null)
+                {
+                    animator.applyRootMotion = false;
+                    animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+                }
+            }
+
+            public void ConfigureDatabase(SCFMotionDatabase targetDatabase)
+            {
+                if (database == null && targetDatabase != null)
+                {
+                    database = targetDatabase;
+                }
+            }
+
+            public void Tick(int motionIndex, float motionSpeed, bool dead)
+            {
+                if (dead)
+                {
+                    Stop();
+                    return;
+                }
+
+                if (animator == null || database == null || motionIndex < 0)
+                {
+                    return;
+                }
+
+                if (activeMotionIndex != motionIndex)
+                {
+                    SwitchToMotion(motionIndex);
+                }
+
+                if (!clipPlayable.IsValid() || !database.TryGetClip(activeMotionIndex, out SCFMotionClipData clipData))
+                {
+                    return;
+                }
+
+                float speed = 1f;
+                if (clipData.MotionType == SCFMotionType.Locomotion && clipData.AveragePlanarSpeed > 0.1f)
+                {
+                    speed = Mathf.Clamp(motionSpeed / clipData.AveragePlanarSpeed, 0.75f, 1.35f);
+                }
+
+                clipPlayable.SetSpeed(speed);
+                double duration = Mathf.Max(0.01f, clipData.Duration);
+                double time = clipPlayable.GetTime();
+                if (clipData.Looping)
+                {
+                    if (time >= duration || time < 0d)
+                    {
+                        clipPlayable.SetTime(time - Math.Floor(time / duration) * duration);
+                    }
+                }
+                else if (time > duration)
+                {
+                    clipPlayable.SetTime(duration);
+                    clipPlayable.SetSpeed(0d);
+                }
+            }
+
+            public void Stop()
+            {
+                Destroy();
+                activeMotionIndex = -1;
+            }
+
+            public void Destroy()
+            {
+                if (graph.IsValid())
+                {
+                    graph.Destroy();
+                }
+
+                clipPlayable = default;
+            }
+
+            private void SwitchToMotion(int motionIndex)
+            {
+                if (!database.TryGetClip(motionIndex, out SCFMotionClipData clipData))
+                {
+                    return;
+                }
+
+                Destroy();
+                graph = PlayableGraph.Create("SCF_RemoteMotion_" + animator.gameObject.name);
+                graph.SetTimeUpdateMode(DirectorUpdateMode.GameTime);
+                AnimationPlayableOutput output = AnimationPlayableOutput.Create(graph, "RemoteMotion", animator);
+                clipPlayable = AnimationClipPlayable.Create(graph, clipData.Clip);
+                clipPlayable.SetApplyFootIK(true);
+                clipPlayable.SetDuration(Mathf.Max(0.01f, clipData.Duration));
+                clipPlayable.SetTime(0d);
+                output.SetSourcePlayable(clipPlayable);
+                graph.Play();
+                activeMotionIndex = motionIndex;
             }
         }
     }

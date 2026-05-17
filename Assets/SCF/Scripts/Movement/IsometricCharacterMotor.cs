@@ -327,6 +327,95 @@ namespace SCF.Gameplay
             carriedLoad01 = Mathf.Clamp01(load01);
         }
 
+        public void RespawnAt(Vector3 position, Quaternion rotation)
+        {
+            if (characterController == null)
+            {
+                characterController = GetComponent<CharacterController>();
+            }
+
+            bool controllerWasEnabled = characterController != null && characterController.enabled;
+            if (controllerWasEnabled)
+            {
+                characterController.enabled = false;
+            }
+
+            transform.SetPositionAndRotation(position, rotation);
+            if (facingRoot != null && facingRoot != transform)
+            {
+                facingRoot.rotation = rotation;
+            }
+
+            if (controllerWasEnabled)
+            {
+                characterController.enabled = true;
+            }
+
+            ResetMovementState();
+        }
+
+        public void ResetMovementState()
+        {
+            if (!hasControllerPoseDefaults)
+            {
+                CacheStandingControllerPose();
+            }
+
+            DesiredVelocity = Vector3.zero;
+            PlanarVelocity = Vector3.zero;
+            verticalVelocity = 0f;
+            MobilityState = CharacterMobilityState.Locomotion;
+            MobilityStateNormalizedTime = 0f;
+            JumpCharge01 = 0f;
+            mobilityStateTimer = 0f;
+            jumpHasLeftGround = false;
+            mobilityTapStartedAirborne = false;
+            jumpChargeStartedAirborne = false;
+            combatRollStartedAirborne = false;
+            parkourAirMobilityAvailable = false;
+            jumpRetainedPlanarSpeed = 0f;
+            activeCombatRollDuration = combatRollDuration;
+            activeCombatRollSpeed = combatRollSpeed;
+            activeCombatRollSpeedBonus = 0f;
+            wallRunRetainedSpeed = 0f;
+            wallJumpRollBoostTimer = 0f;
+            wallRunRegrabLockoutTimer = 0f;
+            standardWallRunAwaitingRelease = false;
+            wallRunIsVertical = false;
+            wallRunCollider = null;
+            Vector3 flatForward = Vector3.ProjectOnPlane(transform.forward, Vector3.up);
+            if (flatForward.sqrMagnitude <= 0.0001f)
+            {
+                flatForward = Vector3.forward;
+            }
+
+            flatForward.Normalize();
+            BodyFacingDirection = flatForward;
+            AimDirection = flatForward;
+            HasAimDirection = false;
+            HasAimWorldPoint = false;
+            AimWorldPoint = transform.position + flatForward * 5f;
+            lockedMobilityDirection = flatForward;
+            wallNormal = -flatForward;
+            wallRunDirection = flatForward;
+            wallRunSurfacePoint = transform.position;
+            wallRunGroundY = transform.position.y;
+            wallRunTargetCenterY = transform.position.y;
+            vaultStartPosition = transform.position;
+            vaultContactPosition = transform.position;
+            vaultEndPosition = transform.position;
+            hasVaultContactPosition = false;
+            activeTraversalUsesSlide = false;
+            activeTraversalDuration = 0f;
+            activeTraversalArcHeight = 0f;
+
+            if (characterController != null && characterController.enabled)
+            {
+                characterController.height = standingControllerHeight;
+                characterController.center = standingControllerCenter;
+            }
+        }
+
         private void NormalizeMovementSpeeds()
         {
             runSpeed = Mathf.Max(0f, runSpeed);

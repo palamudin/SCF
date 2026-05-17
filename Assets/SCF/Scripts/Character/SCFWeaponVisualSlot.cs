@@ -2066,7 +2066,7 @@ namespace SCF.Gameplay
         {
             hit = default;
             Vector3 origin = muzzle + direction * railgunRaycastStartOffset;
-            RaycastHit[] hits = Physics.RaycastAll(origin, direction, railgunFireRange, railgunHitMask, QueryTriggerInteraction.Ignore);
+            RaycastHit[] hits = Physics.RaycastAll(origin, direction, railgunFireRange, railgunHitMask, QueryTriggerInteraction.Collide);
             if (hits == null || hits.Length == 0)
             {
                 return false;

@@ -13,6 +13,7 @@ namespace SCF.Gameplay
     public sealed class SCFWeaponSelectionPanel : MonoBehaviour
     {
         private const string HiddenBaseRailgunPrefabName = "SCF_Railgun_Weapon";
+        private const string RuntimeWeaponCatalogPath = "SCF/SCFWeaponRuntimeCatalog";
 
         private static readonly string[] DefaultWeaponPrefabFolders =
         {
@@ -20,6 +21,7 @@ namespace SCF.Gameplay
         };
 
         [SerializeField] private SCFWeaponVisualSlot weaponSlot;
+        [SerializeField] private SCFWeaponRuntimeCatalog runtimeWeaponCatalog;
         [SerializeField] private List<GameObject> weaponPrefabs = new List<GameObject>();
         [SerializeField] private bool visible = true;
         [SerializeField] private Key toggleKey = Key.F6;
@@ -43,12 +45,16 @@ namespace SCF.Gameplay
                 weaponSlot = GetComponent<SCFWeaponVisualSlot>();
             }
 
+            LoadWeaponPrefabsFromRuntimeCatalog();
+
 #if UNITY_EDITOR
-            if (weaponPrefabs.Count == 0)
+            if (!HasAnyVisibleWeaponPrefab())
             {
                 LoadWeaponPrefabsFromProject();
             }
 #endif
+
+            SortWeaponPrefabs();
         }
 
         private void Update()
@@ -66,23 +72,47 @@ namespace SCF.Gameplay
             visible = true;
         }
 
-#if UNITY_EDITOR
-        [ContextMenu("Load Weapon Prefabs From Project")]
-        public void LoadWeaponPrefabsFromProject()
+        [ContextMenu("Load Weapon Prefabs")]
+        public void LoadWeaponPrefabs()
         {
             weaponPrefabs.Clear();
+            LoadWeaponPrefabsFromRuntimeCatalog();
+
+#if UNITY_EDITOR
+            LoadWeaponPrefabsFromProject();
+#endif
+
+            SortWeaponPrefabs();
+        }
+
+        private void LoadWeaponPrefabsFromRuntimeCatalog()
+        {
+            SCFWeaponRuntimeCatalog catalog = ResolveRuntimeWeaponCatalog();
+            if (catalog == null)
+            {
+                return;
+            }
+
+            AddWeaponPrefab(catalog.RailgunWeaponPrefab);
+        }
+
+#if UNITY_EDITOR
+        [ContextMenu("Load Weapon Prefabs From Project")]
+        public void LoadWeaponPrefabsFromProjectOnly()
+        {
+            weaponPrefabs.Clear();
+            LoadWeaponPrefabsFromProject();
+            SortWeaponPrefabs();
+        }
+
+        private void LoadWeaponPrefabsFromProject()
+        {
             string[] prefabGuids = AssetDatabase.FindAssets("t:Prefab", DefaultWeaponPrefabFolders);
             for (int i = 0; i < prefabGuids.Length; i++)
             {
                 string path = AssetDatabase.GUIDToAssetPath(prefabGuids[i]);
-                GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-                if (ShouldShowWeaponPrefab(prefab) && !weaponPrefabs.Contains(prefab))
-                {
-                    weaponPrefabs.Add(prefab);
-                }
+                AddWeaponPrefab(AssetDatabase.LoadAssetAtPath<GameObject>(path));
             }
-
-            weaponPrefabs.Sort((left, right) => string.Compare(left != null ? left.name : string.Empty, right != null ? right.name : string.Empty, StringComparison.OrdinalIgnoreCase));
         }
 #endif
 
@@ -144,9 +174,7 @@ namespace SCF.Gameplay
 
                 if (GUILayout.Button("Reload", GUILayout.Height(26f)))
                 {
-#if UNITY_EDITOR
-                    LoadWeaponPrefabsFromProject();
-#endif
+                    LoadWeaponPrefabs();
                 }
             }
 
@@ -156,6 +184,7 @@ namespace SCF.Gameplay
         private void DrawWeaponList()
         {
             scroll = GUILayout.BeginScrollView(scroll, GUILayout.Height(Mathf.Max(120f, windowRect.height - 132f)));
+            bool drewAnyWeapon = false;
             for (int i = 0; i < weaponPrefabs.Count; i++)
             {
                 GameObject prefab = weaponPrefabs[i];
@@ -176,7 +205,13 @@ namespace SCF.Gameplay
                     weaponSlot?.EquipWeaponPrefab(prefab);
                 }
 
+                drewAnyWeapon = true;
                 GUI.backgroundColor = previousColor;
+            }
+
+            if (!drewAnyWeapon)
+            {
+                GUILayout.Label("No runtime weapons found.");
             }
 
             GUILayout.EndScrollView();
@@ -192,6 +227,43 @@ namespace SCF.Gameplay
         {
             return prefab != null
                    && !string.Equals(prefab.name, HiddenBaseRailgunPrefabName, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private void AddWeaponPrefab(GameObject prefab)
+        {
+            if (ShouldShowWeaponPrefab(prefab) && !weaponPrefabs.Contains(prefab))
+            {
+                weaponPrefabs.Add(prefab);
+            }
+        }
+
+        private void SortWeaponPrefabs()
+        {
+            weaponPrefabs.Sort((left, right) => string.Compare(left != null ? left.name : string.Empty, right != null ? right.name : string.Empty, StringComparison.OrdinalIgnoreCase));
+        }
+
+        private bool HasAnyVisibleWeaponPrefab()
+        {
+            for (int i = 0; i < weaponPrefabs.Count; i++)
+            {
+                if (ShouldShowWeaponPrefab(weaponPrefabs[i]))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private SCFWeaponRuntimeCatalog ResolveRuntimeWeaponCatalog()
+        {
+            if (runtimeWeaponCatalog != null)
+            {
+                return runtimeWeaponCatalog;
+            }
+
+            runtimeWeaponCatalog = Resources.Load<SCFWeaponRuntimeCatalog>(RuntimeWeaponCatalogPath);
+            return runtimeWeaponCatalog;
         }
 
         private void ClampWindowToScreen()
