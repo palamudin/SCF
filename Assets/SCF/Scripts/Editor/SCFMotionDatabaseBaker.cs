@@ -264,8 +264,7 @@ namespace SCF.EditorTools
             AddMotion(clips, "Humanoid Dodge Left Fallback", rollFallback, SCFMotionType.CombatRoll, SCFMotionTags.Grounded | SCFMotionTags.Action | SCFMotionTags.CombatRoll, false, 6.2f, Vector2.left);
             AddMotion(clips, "Humanoid Dodge Right Fallback", rollFallback, SCFMotionType.CombatRoll, SCFMotionTags.Grounded | SCFMotionTags.Action | SCFMotionTags.CombatRoll, false, 6.2f, Vector2.right);
             AddMotion(clips, "Humanoid Vault Slide", rollFallback, SCFMotionType.VaultSlide, SCFMotionTags.Grounded | SCFMotionTags.Action | SCFMotionTags.Vault | SCFMotionTags.VaultSlide, false, 6.8f, Vector2.up);
-            AddMotion(clips, "Humanoid Wall Run Left Fallback", run, SCFMotionType.WallRun, SCFMotionTags.Airborne | SCFMotionTags.Action | SCFMotionTags.WallRun | SCFMotionTags.Loop, true, 7.4f, Vector2.left);
-            AddMotion(clips, "Humanoid Wall Run Right Fallback", run, SCFMotionType.WallRun, SCFMotionTags.Airborne | SCFMotionTags.Action | SCFMotionTags.WallRun | SCFMotionTags.Loop, true, 7.4f, Vector2.right);
+            AddMotion(clips, "Humanoid Wall Run Forward Fallback", run, SCFMotionType.WallRun, SCFMotionTags.Airborne | SCFMotionTags.Action | SCFMotionTags.WallRun | SCFMotionTags.Loop, true, 7.4f, Vector2.up);
             AddMotion(clips, "Humanoid Vault Fence", vault, SCFMotionType.Vault, SCFMotionTags.Grounded | SCFMotionTags.Action | SCFMotionTags.Vault, false, 5.2f, Vector2.up);
             AddMotion(clips, "Humanoid Ledge Climb", climb, SCFMotionType.Climb, SCFMotionTags.Grounded | SCFMotionTags.Action | SCFMotionTags.Climb, false, 3.2f, Vector2.up);
 

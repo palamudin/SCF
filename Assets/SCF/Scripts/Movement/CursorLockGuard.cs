@@ -1,4 +1,7 @@
 using UnityEngine;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 
 namespace SCF.Gameplay
 {
@@ -8,6 +11,7 @@ namespace SCF.Gameplay
     {
         [SerializeField] private bool keepCursorVisible = true;
         [SerializeField] private bool keepCursorUnlocked = true;
+        [SerializeField] private bool hideCursorInPlayUnlessControlHeld = true;
 
         private void OnEnable()
         {
@@ -39,10 +43,33 @@ namespace SCF.Gameplay
                 Cursor.lockState = CursorLockMode.None;
             }
 
-            if (keepCursorVisible && !Cursor.visible)
+            bool shouldBeVisible = keepCursorVisible;
+            if (Application.isPlaying && hideCursorInPlayUnlessControlHeld)
             {
-                Cursor.visible = true;
+                shouldBeVisible = IsControlHeld();
             }
+
+            if (Cursor.visible != shouldBeVisible)
+            {
+                Cursor.visible = shouldBeVisible;
+            }
+        }
+
+        private static bool IsControlHeld()
+        {
+#if ENABLE_INPUT_SYSTEM
+            Keyboard keyboard = Keyboard.current;
+            if (keyboard != null && (keyboard.leftCtrlKey.isPressed || keyboard.rightCtrlKey.isPressed))
+            {
+                return true;
+            }
+#endif
+
+#if ENABLE_LEGACY_INPUT_MANAGER
+            return Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
+#else
+            return false;
+#endif
         }
     }
 }

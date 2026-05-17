@@ -238,10 +238,9 @@ namespace SCF.Gameplay
             Mouse mouse = Mouse.current;
             if (enableMouseAim && mouse != null)
             {
-                if (Cursor.lockState != CursorLockMode.None || !Cursor.visible)
+                if (Cursor.lockState != CursorLockMode.None)
                 {
                     Cursor.lockState = CursorLockMode.None;
-                    Cursor.visible = true;
                 }
 
                 AimMode = AimInputMode.ScreenPoint;

@@ -59,6 +59,7 @@ namespace SCF.Gameplay
         private const string AimRayMuzzleToFocusLineName = "SCF_AimRay_MuzzleToMouseColumn";
         private const string AimRayMuzzleForwardLineName = "SCF_AimRay_MuzzleForward";
         private const string AimRayMouseColumnLineName = "SCF_AimRay_MouseVertical";
+        private const string AimFocusCursorName = "SCF_AimFocusCursor";
         private const string RightElbowHintTargetName = "SCF_RightElbowHint";
         private const string LeftElbowHintTargetName = "SCF_LeftElbowHint";
         private const float MaxElbowHintLocalDistance = 150f;
@@ -228,6 +229,13 @@ namespace SCF.Gameplay
         [SerializeField] private Color aimRayMuzzleForwardColor = new Color(1f, 0.25f, 0.08f, 0.95f);
         [SerializeField] private Color aimRayMouseColumnColor = new Color(0.25f, 1f, 0.35f, 0.9f);
 
+        [Header("Aim Cursor")]
+        [SerializeField] private bool showAimFocusCursor = true;
+        [SerializeField] private bool aimFocusCursorOnlyWhileAiming;
+        [SerializeField, Min(0.01f)] private float aimFocusCursorRadius = 0.085f;
+        [SerializeField, Min(0f)] private float aimFocusCursorSurfaceLift = 0.015f;
+        [SerializeField] private Color aimFocusCursorColor = new Color(1f, 0.02f, 0.02f, 0.95f);
+
         [Header("Grip Targets")]
         [SerializeField] private Vector3 rightGripLocalPosition = new Vector3(0.02f, -0.05f, 0.12f);
         [SerializeField] private Vector3 rightGripLocalEulerAngles = new Vector3(0f, 90f, 90f);
@@ -330,6 +338,9 @@ namespace SCF.Gameplay
         private LineRenderer aimRayMuzzleToFocusLine;
         private LineRenderer aimRayMuzzleForwardLine;
         private LineRenderer aimRayMouseColumnLine;
+        private GameObject aimFocusCursor;
+        private Renderer aimFocusCursorRenderer;
+        private Material aimFocusCursorMaterial;
         private float nextWeaponIkLiveLogTime;
         private int lastWeaponTargetSolveFrame = -1;
         private int lastHandWeightUpdateFrame = -1;
@@ -918,6 +929,7 @@ namespace SCF.Gameplay
                 currentLeftHandWeight = 0f;
                 wasInWeaponFitResetAction = false;
                 TickAimRayDebug(false);
+                TickAimFocusCursor(false);
                 TickWeaponIkLiveLogger();
                 return;
             }
@@ -941,6 +953,7 @@ namespace SCF.Gameplay
             TickRailgunLiveTuningCapture();
             TickRailgunFire();
             TickAimRayDebug(true);
+            TickAimFocusCursor(true);
             TickWeaponIkLiveLogger();
         }
 
@@ -1325,7 +1338,9 @@ namespace SCF.Gameplay
             DestroyUnityObject(railgunBeamMaterial);
             DestroyUnityObject(railgunParticleMaterial);
             DestroyUnityObject(aimRayDebugMaterial);
+            DestroyUnityObject(aimFocusCursorMaterial);
             DestroyUnityObject(aimRayDebugRoot);
+            DestroyUnityObject(aimFocusCursor);
         }
 
         private void TickAimRayDebugToggle()
@@ -1454,6 +1469,81 @@ namespace SCF.Gameplay
             }
 
             return targetPoint;
+        }
+
+        private void TickAimFocusCursor(bool canDraw)
+        {
+            if (!Application.isPlaying
+                || !showAimFocusCursor
+                || !canDraw
+                || activeWeapon == null
+                || motor == null
+                || !motor.HasAimWorldPoint
+                || (aimFocusCursorOnlyWhileAiming && !motor.AimHeld))
+            {
+                SetAimFocusCursorVisible(false);
+                return;
+            }
+
+            EnsureAimFocusCursor();
+            if (aimFocusCursor == null)
+            {
+                return;
+            }
+
+            Transform muzzle = ResolveRailgunMuzzleTransform();
+            Vector3 focusPoint = ResolveMuzzleAimFocusPoint(muzzle, motor.AimWorldPoint, ResolveFaceOrigin());
+            aimFocusCursor.transform.position = focusPoint + Vector3.up * aimFocusCursorSurfaceLift;
+            aimFocusCursor.transform.rotation = Quaternion.identity;
+            aimFocusCursor.transform.localScale = Vector3.one * (Mathf.Max(0.01f, aimFocusCursorRadius) * 2f);
+
+            if (aimFocusCursorRenderer != null)
+            {
+                aimFocusCursorRenderer.enabled = true;
+            }
+
+            aimFocusCursor.SetActive(true);
+        }
+
+        private void EnsureAimFocusCursor()
+        {
+            if (aimFocusCursor != null)
+            {
+                return;
+            }
+
+            aimFocusCursor = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            aimFocusCursor.name = AimFocusCursorName;
+            aimFocusCursor.hideFlags = HideFlags.DontSave;
+            aimFocusCursor.layer = 2;
+
+            Collider markerCollider = aimFocusCursor.GetComponent<Collider>();
+            DestroyUnityObject(markerCollider);
+
+            aimFocusCursorRenderer = aimFocusCursor.GetComponent<Renderer>();
+            if (aimFocusCursorRenderer != null)
+            {
+                aimFocusCursorMaterial = CreateRailgunMaterial(aimFocusCursorColor);
+                if (aimFocusCursorMaterial != null)
+                {
+                    aimFocusCursorRenderer.sharedMaterial = aimFocusCursorMaterial;
+                }
+            }
+
+            aimFocusCursor.SetActive(false);
+        }
+
+        private void SetAimFocusCursorVisible(bool visible)
+        {
+            if (aimFocusCursor != null)
+            {
+                aimFocusCursor.SetActive(visible);
+            }
+
+            if (aimFocusCursorRenderer != null)
+            {
+                aimFocusCursorRenderer.enabled = visible;
+            }
         }
 
         private Vector3 ResolveAimDebugRayEnd(Vector3 start, Vector3 focusPoint)

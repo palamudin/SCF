@@ -692,10 +692,7 @@ namespace SCF.Gameplay
 
         private int ChooseWallRunLocomotion(out float cost)
         {
-            float side = motor != null && motor.WallRunSide < 0f ? -1f : 1f;
-            Vector2 wallRunDirection = motor != null && motor.TraversalProfile == SCFTraversalProfile.Parkour
-                ? Vector2.up
-                : Vector2.right * side;
+            Vector2 wallRunDirection = Vector2.up;
             float speed = motor != null ? motor.PlanarVelocity.magnitude : 0f;
             int locomotion = database.FindBestLocomotion(wallRunDirection, speed, selectedMotionIndex, currentClipBias, out cost);
             if (locomotion >= 0)
