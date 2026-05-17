@@ -29,7 +29,10 @@ namespace SCF.Gameplay
         WallRun = 1 << 7,
         Vault = 1 << 8,
         Climb = 1 << 9,
-        VaultSlide = 1 << 10
+        VaultSlide = 1 << 10,
+        Aim = 1 << 11,
+        AimWalk = 1 << 12,
+        AimRun = 1 << 13
     }
 
     [Serializable]
@@ -290,6 +293,48 @@ namespace SCF.Gameplay
                 }
 
                 float cost = Mathf.Abs(clipData.AveragePlanarSpeed - speed);
+                cost += DirectionCost(direction, clipData.MovementDirection);
+                if (i == currentIndex)
+                {
+                    cost -= Mathf.Max(0f, currentClipBias);
+                }
+
+                if (cost < bestCost)
+                {
+                    bestCost = cost;
+                    bestIndex = i;
+                }
+            }
+
+            return bestIndex;
+        }
+
+        public int FindBestLocomotionWithTags(Vector2 desiredDirection, float desiredPlanarSpeed, SCFMotionTags requiredTags, int currentIndex, float currentClipBias, out float bestCost)
+        {
+            int bestIndex = -1;
+            bestCost = float.PositiveInfinity;
+
+            if (clips == null)
+            {
+                return bestIndex;
+            }
+
+            float speed = Mathf.Max(0f, desiredPlanarSpeed);
+            Vector2 direction = desiredDirection.sqrMagnitude > 0.0001f ? desiredDirection.normalized : Vector2.zero;
+            for (int i = 0; i < clips.Length; i++)
+            {
+                SCFMotionClipData clipData = clips[i];
+                if (clipData == null || !clipData.IsValid || clipData.MotionType != SCFMotionType.Locomotion)
+                {
+                    continue;
+                }
+
+                if (!clipData.HasTag(requiredTags))
+                {
+                    continue;
+                }
+
+                float cost = Mathf.Abs(clipData.AveragePlanarSpeed - speed) * 0.25f;
                 cost += DirectionCost(direction, clipData.MovementDirection);
                 if (i == currentIndex)
                 {

@@ -15,6 +15,7 @@ namespace SCF.EditorTools
         private const string ParkourPlayerAnimationFolder = "Assets/RedNotRed/3D Adaptive Parkour System/Animations/Player";
         private const string DynamicParkourAnimationFolder = "Assets/SCF/ThirdParty/DynamicParkour/Animations";
         private const string TpsEquippedWalkPath = "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Walk/walk.fbx";
+        private const string TpsEquippedRunPath = "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Run/run.fbx";
         private const string TpsEquippedWalkForwardClipName = "walk_fwd";
 
         private const float PoseInterval = 0.1f;
@@ -190,8 +191,8 @@ namespace SCF.EditorTools
                 DynamicParkourAnimationFolder + "/Walk.fbx",
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Locomotion--Walk_N.anim.fbx",
                 "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Walk/walk.fbx");
-            AnimationClip run = FindFirstClip(
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Run/run.fbx",
+            AnimationClip run = FindClipInAsset(TpsEquippedRunPath, "run") ?? FindFirstClip(
+                TpsEquippedRunPath,
                 DynamicParkourAnimationFolder + "/Run.fbx",
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Locomotion--Run_N.anim.fbx",
                 "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Run/run.fbx");
@@ -228,8 +229,16 @@ namespace SCF.EditorTools
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Jump--InAir.anim.fbx",
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Jump--Jump.anim.fbx");
             AnimationClip rollFallback = slide != null ? slide : crouchForward;
+            AnimationClip aimWalkForward = FindClipInAsset(TpsEquippedWalkPath, "walk_fwd") ?? walk;
+            AnimationClip aimWalkBackward = aimWalkForward;
+            AnimationClip aimWalkLeft = FindClipInAsset(TpsEquippedWalkPath, "walk_45_left") ?? aimWalkForward;
+            AnimationClip aimWalkRight = FindClipInAsset(TpsEquippedWalkPath, "walk_45_right") ?? aimWalkForward;
+            AnimationClip aimRunForward = FindClipInAsset(TpsEquippedRunPath, "run") ?? run;
+            AnimationClip aimRunBackward = FindClipInAsset(TpsEquippedWalkPath, "walk_bwd") ?? aimWalkForward;
             AnimationClip walkLeft = FindClipInAsset(TpsEquippedWalkPath, "walk_left");
             AnimationClip walkRight = FindClipInAsset(TpsEquippedWalkPath, "walk_right");
+            AnimationClip aimRunLeft = walkLeft != null ? walkLeft : aimWalkLeft;
+            AnimationClip aimRunRight = walkRight != null ? walkRight : aimWalkRight;
 
             AddMotion(clips, "Humanoid Idle", idle, SCFMotionType.Idle, SCFMotionTags.Grounded | SCFMotionTags.Loop, true, 0f, Vector2.zero);
             AddMotion(clips, "Humanoid Walk", walk, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 2.6f, Vector2.up);
@@ -241,6 +250,14 @@ namespace SCF.EditorTools
             AddMotion(clips, "Humanoid Run Backward", runBack, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.2f, Vector2.down);
             AddMotion(clips, "Humanoid Run Backward Left", runBack, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.2f, new Vector2(-1f, -1f));
             AddMotion(clips, "Humanoid Run Backward Right", runBack, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.2f, new Vector2(1f, -1f));
+            AddMotion(clips, "Humanoid Aim Walk Forward", aimWalkForward, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop | SCFMotionTags.Aim | SCFMotionTags.AimWalk, true, 2.6f, Vector2.up, true);
+            AddMotion(clips, "Humanoid Aim Walk Backward", aimWalkBackward, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop | SCFMotionTags.Aim | SCFMotionTags.AimWalk, true, 2.6f, Vector2.down, true);
+            AddMotion(clips, "Humanoid Aim Walk Left", aimWalkLeft, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop | SCFMotionTags.Aim | SCFMotionTags.AimWalk, true, 2.6f, Vector2.left, true);
+            AddMotion(clips, "Humanoid Aim Walk Right", aimWalkRight, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop | SCFMotionTags.Aim | SCFMotionTags.AimWalk, true, 2.6f, Vector2.right, true);
+            AddMotion(clips, "Humanoid Aim Run Forward", aimRunForward, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop | SCFMotionTags.Aim | SCFMotionTags.AimRun, true, 5.2f, Vector2.up, true);
+            AddMotion(clips, "Humanoid Aim Run Backward", aimRunBackward, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop | SCFMotionTags.Aim | SCFMotionTags.AimRun, true, 5.2f, Vector2.down, true);
+            AddMotion(clips, "Humanoid Aim Run Left", aimRunLeft, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop | SCFMotionTags.Aim | SCFMotionTags.AimRun, true, 5.2f, Vector2.left, true);
+            AddMotion(clips, "Humanoid Aim Run Right", aimRunRight, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop | SCFMotionTags.Aim | SCFMotionTags.AimRun, true, 5.2f, Vector2.right, true);
             AddMotion(clips, "Humanoid Jump", jump, SCFMotionType.Jump, SCFMotionTags.Airborne | SCFMotionTags.Action | SCFMotionTags.Jump, false, 5.5f, Vector2.up);
             AddMotion(clips, "Humanoid Slide Roll", rollFallback, SCFMotionType.CombatRoll, SCFMotionTags.Grounded | SCFMotionTags.Action | SCFMotionTags.CombatRoll, false, 6.2f, Vector2.up);
             AddMotion(clips, "Humanoid Back Step Fallback", runBack, SCFMotionType.CombatRoll, SCFMotionTags.Grounded | SCFMotionTags.Action | SCFMotionTags.CombatRoll, false, 6.2f, Vector2.down);

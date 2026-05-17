@@ -157,6 +157,7 @@ namespace SCF.Gameplay
         [SerializeField, Min(0.1f)] private float movementRotationSharpness = 16f;
         [SerializeField, Min(0.1f)] private float aimRotationSharpness = 24f;
         [SerializeField] private bool separateAimFromLocomotion = true;
+        [SerializeField] private bool aimLocomotionFacesAim = true;
         [SerializeField] private bool lowerBodyAimsWhenIdle;
         [SerializeField, Min(0f)] private float lowerBodyMoveThreshold = 0.2f;
         [SerializeField] private bool lowerBodyFollowsAimPastYawLimit = true;
@@ -2240,6 +2241,13 @@ namespace SCF.Gameplay
 
             if (separateAimFromLocomotion)
             {
+                if (aimLocomotionFacesAim && AimHeld && facingMode != CharacterFacingMode.MovementOnly && HasAimDirection)
+                {
+                    facingDirection = AimDirection;
+                    sharpness = aimRotationSharpness;
+                    return true;
+                }
+
                 if (hasMovementFacing)
                 {
                     Vector3 movementFacing = planarMove.normalized;

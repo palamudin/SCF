@@ -26,6 +26,10 @@ namespace SCF.Gameplay
         [SerializeField] private bool enableMouseAim = true;
         [SerializeField, Range(0.05f, 0.5f)] private float stickLookDeadZone = 0.18f;
 
+        [Header("Debug Time Freeze")]
+        [SerializeField] private bool enableTimeFreezeHotkey = true;
+        [SerializeField] private bool logTimeFreezeToggle = true;
+
         public Vector2 Move { get; private set; }
         public Vector2 AimValue { get; private set; }
         public AimInputMode AimMode { get; private set; }
@@ -39,6 +43,9 @@ namespace SCF.Gameplay
         public bool MobilityPressedThisFrame { get; private set; }
         public bool MobilityReleasedThisFrame { get; private set; }
         public float MobilityHeldDuration { get; private set; }
+
+        private static bool timeFrozenByHotkey;
+        private static float preFreezeTimeScale = 1f;
 
         private void OnEnable()
         {
@@ -70,10 +77,22 @@ namespace SCF.Gameplay
             MobilityPressedThisFrame = false;
             MobilityReleasedThisFrame = false;
             MobilityHeldDuration = 0f;
+
+            if (timeFrozenByHotkey)
+            {
+                RestoreTimeScale(false);
+            }
         }
 
         private void Update()
         {
+            TickTimeFreezeHotkey();
+            if (timeFrozenByHotkey)
+            {
+                ClearPressedThisFrameFlags();
+                return;
+            }
+
             Move = Vector2.ClampMagnitude(ReadMove(), 1f);
             SprintHeld = ReadButton(sprintAction) || ReadFallbackSprint();
             AttackHeld = ReadButton(attackAction) || ReadFallbackAttack();
@@ -90,6 +109,53 @@ namespace SCF.Gameplay
             MobilityHeldDuration = MobilityHeld ? MobilityHeldDuration + Time.deltaTime : 0f;
             SkillPressedThisFrame = MobilityPressedThisFrame;
             ReadAim();
+        }
+
+        private void TickTimeFreezeHotkey()
+        {
+            if (!enableTimeFreezeHotkey)
+            {
+                return;
+            }
+
+            Keyboard keyboard = Keyboard.current;
+            if (keyboard == null || !keyboard.fKey.wasPressedThisFrame)
+            {
+                return;
+            }
+
+            if (timeFrozenByHotkey)
+            {
+                RestoreTimeScale(logTimeFreezeToggle);
+            }
+            else
+            {
+                preFreezeTimeScale = Time.timeScale > 0.0001f ? Time.timeScale : 1f;
+                Time.timeScale = 0f;
+                timeFrozenByHotkey = true;
+                if (logTimeFreezeToggle)
+                {
+                    Debug.Log("SCF time frozen. Press F to resume.");
+                }
+            }
+        }
+
+        private void ClearPressedThisFrameFlags()
+        {
+            AttackPressedThisFrame = false;
+            SkillPressedThisFrame = false;
+            MobilityPressedThisFrame = false;
+            MobilityReleasedThisFrame = false;
+        }
+
+        private static void RestoreTimeScale(bool announce)
+        {
+            Time.timeScale = preFreezeTimeScale > 0.0001f ? preFreezeTimeScale : 1f;
+            timeFrozenByHotkey = false;
+            if (announce)
+            {
+                Debug.Log("SCF time resumed.");
+            }
         }
 
         private Vector2 ReadMove()

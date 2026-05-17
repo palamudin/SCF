@@ -27,6 +27,8 @@ namespace SCF.Gameplay
         [SerializeField, Min(0f)] private float idleSpeedThreshold = 0.15f;
         [SerializeField, Min(0f)] private float currentClipBias = 0.08f;
         [SerializeField] private bool preferDirectionalLocomotionWhileAiming = true;
+        [SerializeField] private bool useDedicatedAimLocomotion = true;
+        [SerializeField] private bool useAimFrameForAimLocomotion = true;
 
         [Header("Blending")]
         [SerializeField, Min(0.01f)] private float locomotionBlendTime = 0.18f;
@@ -43,6 +45,10 @@ namespace SCF.Gameplay
         [SerializeField] private AnimationClip weaponAimPoseClip;
         [SerializeField] private AnimationClip weaponMoveClip;
         [SerializeField] private AnimationClip weaponUpperBodyClip;
+        [SerializeField] private bool useWalkUpperBodyForAimRun = true;
+        [SerializeField] private AnimationClip aimRunUpperBodyClip;
+        [SerializeField, Range(0f, 1f)] private float aimRunUpperBodyWeight = 1f;
+        [SerializeField, Min(0.01f)] private float aimRunUpperBodyPlaybackSpeed = 1f;
         [SerializeField, Range(0f, 1f)] private float weaponCarryUpperBodyWeight = 0.62f;
         [SerializeField, Range(0f, 1f)] private float weaponAimUpperBodyWeight = 0.92f;
         [SerializeField, Min(0.01f)] private float weaponUpperBodyPlaybackSpeed = 1f;
@@ -196,7 +202,7 @@ namespace SCF.Gameplay
 #if UNITY_EDITOR
         private void ResolveDefaultWeaponUpperBodyClips()
         {
-            if (!autoLoadTpsArmedForwardUpperBody || HasAnyWeaponUpperBodyClip())
+            if (!autoLoadTpsArmedForwardUpperBody || HasAllDefaultWeaponUpperBodyClips())
             {
                 return;
             }
@@ -207,10 +213,31 @@ namespace SCF.Gameplay
                 return;
             }
 
-            weaponCarryPoseClip = forwardArmedWalk;
-            weaponAimPoseClip = forwardArmedWalk;
-            weaponMoveClip = forwardArmedWalk;
-            weaponUpperBodyClip = forwardArmedWalk;
+            if (weaponCarryPoseClip == null)
+            {
+                weaponCarryPoseClip = forwardArmedWalk;
+            }
+
+            if (weaponAimPoseClip == null)
+            {
+                weaponAimPoseClip = forwardArmedWalk;
+            }
+
+            if (weaponMoveClip == null)
+            {
+                weaponMoveClip = forwardArmedWalk;
+            }
+
+            if (weaponUpperBodyClip == null)
+            {
+                weaponUpperBodyClip = forwardArmedWalk;
+            }
+
+            if (aimRunUpperBodyClip == null)
+            {
+                aimRunUpperBodyClip = forwardArmedWalk;
+            }
+
             enableWeaponUpperBodyLayer = true;
         }
 
@@ -246,6 +273,15 @@ namespace SCF.Gameplay
             return false;
         }
 #endif
+
+        private bool HasAllDefaultWeaponUpperBodyClips()
+        {
+            return weaponCarryPoseClip != null
+                   && weaponAimPoseClip != null
+                   && weaponMoveClip != null
+                   && weaponUpperBodyClip != null
+                   && aimRunUpperBodyClip != null;
+        }
 
         private bool EnsureGraph()
         {
@@ -370,11 +406,11 @@ namespace SCF.Gameplay
                 return;
             }
 
-            if (activeWeaponUpperBodyClip == weaponMoveClip
+            if (ShouldPlayActiveWeaponUpperBodyClip()
                 && currentWeaponUpperBodyWeight > 0.001f
                 && ShouldPlayWeaponUpperBodyMotion())
             {
-                weaponUpperBodyPlayable.SetSpeed(weaponUpperBodyPlaybackSpeed);
+                weaponUpperBodyPlayable.SetSpeed(ResolveActiveWeaponUpperBodyPlaybackSpeed());
             }
             else
             {
@@ -401,11 +437,21 @@ namespace SCF.Gameplay
                 return 0f;
             }
 
+            if (IsAimRunUpperBodySplitActive())
+            {
+                return aimRunUpperBodyWeight;
+            }
+
             return Mathf.Lerp(weaponCarryUpperBodyWeight, weaponAimUpperBodyWeight, weaponVisualSlot.Raised01);
         }
 
         private AnimationClip ResolveDesiredWeaponUpperBodyClip()
         {
+            if (IsAimRunUpperBodySplitActive())
+            {
+                return FirstAvailableClip(aimRunUpperBodyClip, weaponMoveClip, weaponAimPoseClip, weaponUpperBodyClip, weaponCarryPoseClip);
+            }
+
             bool moving = ShouldPlayWeaponUpperBodyMotion();
             if (moving && weaponMoveClip != null)
             {
@@ -420,12 +466,36 @@ namespace SCF.Gameplay
             return FirstAvailableClip(weaponCarryPoseClip, weaponAimPoseClip, weaponMoveClip, weaponUpperBodyClip);
         }
 
+        private bool IsAimRunUpperBodySplitActive()
+        {
+            return useWalkUpperBodyForAimRun
+                   && motor != null
+                   && motor.AimHeld
+                   && motor.RunHeld
+                   && CanApplyWeaponUpperBodyLayer();
+        }
+
+        private bool ShouldPlayActiveWeaponUpperBodyClip()
+        {
+            return activeWeaponUpperBodyClip != null
+                   && (activeWeaponUpperBodyClip == weaponMoveClip
+                       || (IsAimRunUpperBodySplitActive() && activeWeaponUpperBodyClip == aimRunUpperBodyClip));
+        }
+
+        private float ResolveActiveWeaponUpperBodyPlaybackSpeed()
+        {
+            return IsAimRunUpperBodySplitActive() && activeWeaponUpperBodyClip == aimRunUpperBodyClip
+                ? aimRunUpperBodyPlaybackSpeed
+                : weaponUpperBodyPlaybackSpeed;
+        }
+
         private bool HasAnyWeaponUpperBodyClip()
         {
             return weaponCarryPoseClip != null
                    || weaponAimPoseClip != null
                    || weaponMoveClip != null
-                   || weaponUpperBodyClip != null;
+                   || weaponUpperBodyClip != null
+                   || aimRunUpperBodyClip != null;
         }
 
         private bool CanApplyWeaponUpperBodyLayer()
@@ -565,7 +635,16 @@ namespace SCF.Gameplay
                     }
                 }
 
-                Vector2 localMotionDirection = ResolveLocalMotionDirection();
+                Vector2 localMotionDirection = ResolveLocalMotionDirection(motor.AimHeld && useAimFrameForAimLocomotion);
+                if (useDedicatedAimLocomotion && motor.AimHeld)
+                {
+                    int aimMotion = ChooseAimLocomotion(localMotionDirection, speed, out cost);
+                    if (aimMotion >= 0)
+                    {
+                        return aimMotion;
+                    }
+                }
+
                 if (preferDirectionalLocomotionWhileAiming && motor.AimHeld)
                 {
                     int directionalMotion = database.FindBestByType(SCFMotionType.Locomotion, localMotionDirection, selectedMotionIndex, currentClipBias, out cost);
@@ -579,6 +658,36 @@ namespace SCF.Gameplay
             }
 
             return database.FindFirst(SCFMotionType.Idle);
+        }
+
+        private int ChooseAimLocomotion(Vector2 localMotionDirection, float speed, out float cost)
+        {
+            cost = float.PositiveInfinity;
+            if (database == null || motor == null)
+            {
+                return -1;
+            }
+
+            SCFMotionTags gaitTag = motor.RunHeld ? SCFMotionTags.AimRun : SCFMotionTags.AimWalk;
+            int gaitMotion = database.FindBestLocomotionWithTags(
+                localMotionDirection,
+                speed,
+                SCFMotionTags.Aim | gaitTag,
+                selectedMotionIndex,
+                currentClipBias,
+                out cost);
+            if (gaitMotion >= 0)
+            {
+                return gaitMotion;
+            }
+
+            return database.FindBestLocomotionWithTags(
+                localMotionDirection,
+                speed,
+                SCFMotionTags.Aim,
+                selectedMotionIndex,
+                currentClipBias,
+                out cost);
         }
 
         private int ChooseWallRunLocomotion(out float cost)
@@ -882,6 +991,11 @@ namespace SCF.Gameplay
 
         private Vector2 ResolveLocalMotionDirection()
         {
+            return ResolveLocalMotionDirection(false);
+        }
+
+        private Vector2 ResolveLocalMotionDirection(bool useAimReference)
+        {
             if (motor == null)
             {
                 return Vector2.zero;
@@ -894,8 +1008,20 @@ namespace SCF.Gameplay
                 return Vector2.zero;
             }
 
-            Transform reference = animator != null ? animator.transform : transform;
-            Vector3 localVelocity = reference.InverseTransformDirection(velocity.normalized);
+            Vector3 localVelocity;
+            Vector3 planarAim = useAimReference && motor.HasAimDirection
+                ? Vector3.ProjectOnPlane(motor.AimDirection, Vector3.up)
+                : Vector3.zero;
+            if (planarAim.sqrMagnitude > 0.0001f)
+            {
+                localVelocity = Quaternion.Inverse(Quaternion.LookRotation(planarAim.normalized, Vector3.up)) * velocity.normalized;
+            }
+            else
+            {
+                Transform reference = animator != null ? animator.transform : transform;
+                localVelocity = reference.InverseTransformDirection(velocity.normalized);
+            }
+
             Vector2 localDirection = new Vector2(localVelocity.x, localVelocity.z);
             return localDirection.sqrMagnitude > 0.0001f ? localDirection.normalized : Vector2.zero;
         }

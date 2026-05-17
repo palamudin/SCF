@@ -1,0 +1,421 @@
+﻿SCF transform snapshot
+name = SCF_WeaponFitPanelCopy
+type = hierarchy
+count = 17
+capturedLocal = 2026-05-16 20:29:52.820
+capturedUtc = 2026-05-16 18:29:52.820
+unityPlayMode = True
+
+rootPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+namedTargetCount = 7
+
+NAMED TARGETS
+[000] SOCKET / SCF_ChestWeaponSocket
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket
+relativePath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket
+gameObject = SCF_ChestWeaponSocket
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2
+parentRelativePath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2
+localPosition = new Vector3(0.18f, 0.02f, 0.26f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(248.2258f, 130.4726f, 156.8878f)
+worldEulerAngles = new Vector3(12.8094f, -91.48221f, -3.386505f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[001] WEAPON ROOT / SCF_Selected_Railgun
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+relativePath = .
+gameObject = SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket
+parentRelativePath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket
+localPosition = new Vector3(-0.067674f, 0.041314f, 0.052682f)
+localEulerAngles = new Vector3(-27.86679f, -133.1561f, 1.938466f)
+localScale = new Vector3(0.8f, 0.8f, 0.8f)
+worldPosition = new Vector3(248.1661f, 130.5051f, 156.8211f)
+worldEulerAngles = new Vector3(-38.77008f, 140.7304f, -7.08905f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[002] RIGHT HAND GRIP / SCF_RightPistolGrip
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RightPistolGrip/SCF_RightPistolGrip_FitTarget
+relativePath = SCF_RightPistolGrip/SCF_RightPistolGrip_FitTarget
+gameObject = SCF_RightPistolGrip_FitTarget
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RightPistolGrip
+parentRelativePath = SCF_RightPistolGrip
+localPosition = new Vector3(0.080014f, 0.019994f, -0.000015f)
+localEulerAngles = new Vector3(0.000003f, -0.000012f, -0.000005f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(248.2258f, 130.4726f, 156.8878f)
+worldEulerAngles = new Vector3(-21.70557f, -115.3561f, -124.2021f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[003] LEFT HAND GRIP / SCF_LeftUnderbarrelGrip
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_LeftUnderbarrelGrip/SCF_LeftUnderbarrelGrip_FitTarget
+relativePath = SCF_LeftUnderbarrelGrip/SCF_LeftUnderbarrelGrip_FitTarget
+gameObject = SCF_LeftUnderbarrelGrip_FitTarget
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_LeftUnderbarrelGrip
+parentRelativePath = SCF_LeftUnderbarrelGrip
+localPosition = new Vector3(-0.000003f, -0.000014f, -0.000012f)
+localEulerAngles = new Vector3(0.000004f, 0.000005f, 0.000015f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(247.8498f, 130.4314f, 156.4994f)
+worldEulerAngles = new Vector3(20.85876f, -112.7704f, 113.5107f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[004] RIGHT ELBOW ORIENTATOR / SCF_RightElbowHint
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RightElbowHint/SCF_RightElbowHint_FitTarget
+relativePath = SCF_RightElbowHint/SCF_RightElbowHint_FitTarget
+gameObject = SCF_RightElbowHint_FitTarget
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RightElbowHint
+parentRelativePath = SCF_RightElbowHint
+localPosition = new Vector3(-0.000002f, 0.000006f, 0.000007f)
+localEulerAngles = new Vector3(-0.000002f, -0.000003f, -0.000002f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(250.3108f, 129.5281f, 158.1224f)
+worldEulerAngles = new Vector3(-38.77008f, 140.7304f, -7.08905f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[005] LEFT ELBOW ORIENTATOR / SCF_LeftElbowHint
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_LeftElbowHint/SCF_LeftElbowHint_FitTarget
+relativePath = SCF_LeftElbowHint/SCF_LeftElbowHint_FitTarget
+gameObject = SCF_LeftElbowHint_FitTarget
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_LeftElbowHint
+parentRelativePath = SCF_LeftElbowHint
+localPosition = new Vector3(0.000003f, -0.000002f, 0.000003f)
+localEulerAngles = new Vector3(-0.000002f, -0.000003f, -0.000002f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(248.1102f, 130.4194f, 156.4613f)
+worldEulerAngles = new Vector3(-38.77008f, 140.7304f, -7.08905f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[006] MUZZLE / SCF_RailgunMuzzleTarget
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunMuzzleTarget/SCF_RailgunMuzzleTarget_FitTarget
+relativePath = SCF_RailgunMuzzleTarget/SCF_RailgunMuzzleTarget_FitTarget
+gameObject = SCF_RailgunMuzzleTarget_FitTarget
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunMuzzleTarget
+parentRelativePath = SCF_RailgunMuzzleTarget
+localPosition = new Vector3(0.000009f, 0.000005f, -0.000004f)
+localEulerAngles = new Vector3(-0.000002f, -0.000007f, 0.000001f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(247.5667f, 130.5054f, 156.3315f)
+worldEulerAngles = new Vector3(5.521529f, -133.7225f, -38.98489f)
+lossyScale = new Vector3(0.800001f, 0.8f, 0.800001f)
+
+FULL HIERARCHY
+[000] SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+relativePath = .
+gameObject = SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket
+parentRelativePath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket
+localPosition = new Vector3(-0.067674f, 0.041314f, 0.052682f)
+localEulerAngles = new Vector3(-27.86679f, -133.1561f, 1.938466f)
+localScale = new Vector3(0.8f, 0.8f, 0.8f)
+worldPosition = new Vector3(248.1661f, 130.5051f, 156.8211f)
+worldEulerAngles = new Vector3(-38.77008f, 140.7304f, -7.08905f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[001] SCF_RailgunModel
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel
+relativePath = SCF_RailgunModel
+gameObject = SCF_RailgunModel
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+parentRelativePath = .
+localPosition = new Vector3(0.04f, 0.03f, 0f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(248.1313f, 130.5205f, 156.8088f)
+worldEulerAngles = new Vector3(-38.77008f, 140.7304f, -7.08905f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[002] Cube
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel/Cube
+relativePath = SCF_RailgunModel/Cube
+gameObject = Cube
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel
+parentRelativePath = SCF_RailgunModel
+localPosition = new Vector3(0f, 0f, 0f)
+localEulerAngles = new Vector3(-89.98022f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(248.1313f, 130.5205f, 156.8088f)
+worldEulerAngles = new Vector3(-50.68777f, -50.50235f, -171.2644f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[003] Cube.001
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel/Cube.001
+relativePath = SCF_RailgunModel/Cube.001
+gameObject = Cube.001
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel
+parentRelativePath = SCF_RailgunModel
+localPosition = new Vector3(0f, 0f, 0f)
+localEulerAngles = new Vector3(-89.98022f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(248.1313f, 130.5205f, 156.8088f)
+worldEulerAngles = new Vector3(-50.68777f, -50.50235f, -171.2644f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[004] Cube.002
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel/Cube.002
+relativePath = SCF_RailgunModel/Cube.002
+gameObject = Cube.002
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel
+parentRelativePath = SCF_RailgunModel
+localPosition = new Vector3(0f, 0f, 0f)
+localEulerAngles = new Vector3(-89.98022f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(248.1313f, 130.5205f, 156.8088f)
+worldEulerAngles = new Vector3(-50.68777f, -50.50235f, -171.2644f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[005] Point.003
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel/Point.003
+relativePath = SCF_RailgunModel/Point.003
+gameObject = Point.003
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel
+parentRelativePath = SCF_RailgunModel
+localPosition = new Vector3(0.368024f, 0.032793f, 0.000664f)
+localEulerAngles = new Vector3(90f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(247.907f, 130.5128f, 156.6165f)
+worldEulerAngles = new Vector3(50.68778f, 129.4976f, -8.735596f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[006] SCF_RightPistolGrip
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RightPistolGrip
+relativePath = SCF_RightPistolGrip
+gameObject = SCF_RightPistolGrip
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+parentRelativePath = .
+localPosition = new Vector3(-0.15f, 0.03f, -0.01f)
+localEulerAngles = new Vector3(-32.43002f, 86.09999f, -81.39999f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(248.2367f, 130.5302f, 156.9182f)
+worldEulerAngles = new Vector3(-21.70557f, -115.3562f, -124.2021f)
+lossyScale = new Vector3(0.8f, 0.800001f, 0.8f)
+
+[007] SCF_RightPistolGrip_FitTarget
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RightPistolGrip/SCF_RightPistolGrip_FitTarget
+relativePath = SCF_RightPistolGrip/SCF_RightPistolGrip_FitTarget
+gameObject = SCF_RightPistolGrip_FitTarget
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RightPistolGrip
+parentRelativePath = SCF_RightPistolGrip
+localPosition = new Vector3(0.080014f, 0.019994f, -0.000015f)
+localEulerAngles = new Vector3(0.000003f, -0.000012f, -0.000005f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(248.2258f, 130.4726f, 156.8878f)
+worldEulerAngles = new Vector3(-21.70557f, -115.3561f, -124.2021f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[008] SCF_LeftUnderbarrelGrip
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_LeftUnderbarrelGrip
+relativePath = SCF_LeftUnderbarrelGrip
+gameObject = SCF_LeftUnderbarrelGrip
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+parentRelativePath = .
+localPosition = new Vector3(0.57f, -0.04f, -0.01f)
+localEulerAngles = new Vector3(-0.000002f, 115.46f, 147.62f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(247.8498f, 130.4314f, 156.4994f)
+worldEulerAngles = new Vector3(20.85875f, -112.7704f, 113.5107f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[009] SCF_LeftUnderbarrelGrip_FitTarget
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_LeftUnderbarrelGrip/SCF_LeftUnderbarrelGrip_FitTarget
+relativePath = SCF_LeftUnderbarrelGrip/SCF_LeftUnderbarrelGrip_FitTarget
+gameObject = SCF_LeftUnderbarrelGrip_FitTarget
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_LeftUnderbarrelGrip
+parentRelativePath = SCF_LeftUnderbarrelGrip
+localPosition = new Vector3(-0.000003f, -0.000014f, -0.000012f)
+localEulerAngles = new Vector3(0.000004f, 0.000005f, 0.000015f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(247.8498f, 130.4314f, 156.4994f)
+worldEulerAngles = new Vector3(20.85876f, -112.7704f, 113.5107f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[010] SCF_RailgunMuzzleTarget
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunMuzzleTarget
+relativePath = SCF_RailgunMuzzleTarget
+gameObject = SCF_RailgunMuzzleTarget
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+parentRelativePath = .
+localPosition = new Vector3(0.96f, 0.12f, 0f)
+localEulerAngles = new Vector3(0f, 90f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(247.5667f, 130.5054f, 156.3315f)
+worldEulerAngles = new Vector3(5.521533f, -133.7225f, -38.98489f)
+lossyScale = new Vector3(0.800001f, 0.8f, 0.800001f)
+
+[011] SCF_RailgunMuzzleTarget_FitTarget
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunMuzzleTarget/SCF_RailgunMuzzleTarget_FitTarget
+relativePath = SCF_RailgunMuzzleTarget/SCF_RailgunMuzzleTarget_FitTarget
+gameObject = SCF_RailgunMuzzleTarget_FitTarget
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunMuzzleTarget
+parentRelativePath = SCF_RailgunMuzzleTarget
+localPosition = new Vector3(0.000009f, 0.000005f, -0.000004f)
+localEulerAngles = new Vector3(-0.000002f, -0.000007f, 0.000001f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(247.5667f, 130.5054f, 156.3315f)
+worldEulerAngles = new Vector3(5.521529f, -133.7225f, -38.98489f)
+lossyScale = new Vector3(0.800001f, 0.8f, 0.800001f)
+
+[012] SCF_RailgunMuzzleMarker
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunMuzzleTarget/SCF_RailgunMuzzleTarget_FitTarget/SCF_RailgunMuzzleMarker
+relativePath = SCF_RailgunMuzzleTarget/SCF_RailgunMuzzleTarget_FitTarget/SCF_RailgunMuzzleMarker
+gameObject = SCF_RailgunMuzzleMarker
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunMuzzleTarget/SCF_RailgunMuzzleTarget_FitTarget
+parentRelativePath = SCF_RailgunMuzzleTarget/SCF_RailgunMuzzleTarget_FitTarget
+localPosition = new Vector3(0f, 0f, 0f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(0.055f, 0.055f, 0.055f)
+worldPosition = new Vector3(247.5667f, 130.5054f, 156.3315f)
+worldEulerAngles = new Vector3(5.521529f, -133.7225f, -38.98489f)
+lossyScale = new Vector3(0.044f, 0.044f, 0.044f)
+
+[013] SCF_RightElbowHint
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RightElbowHint
+relativePath = SCF_RightElbowHint
+gameObject = SCF_RightElbowHint
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+parentRelativePath = .
+localPosition = new Vector3(-2.93f, -1.6f, -0.42355f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(250.3108f, 129.5281f, 158.1224f)
+worldEulerAngles = new Vector3(-38.77008f, 140.7304f, -7.08905f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[014] SCF_RightElbowHint_FitTarget
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RightElbowHint/SCF_RightElbowHint_FitTarget
+relativePath = SCF_RightElbowHint/SCF_RightElbowHint_FitTarget
+gameObject = SCF_RightElbowHint_FitTarget
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RightElbowHint
+parentRelativePath = SCF_RightElbowHint
+localPosition = new Vector3(-0.000002f, 0.000006f, 0.000007f)
+localEulerAngles = new Vector3(-0.000002f, -0.000003f, -0.000002f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(250.3108f, 129.5281f, 158.1224f)
+worldEulerAngles = new Vector3(-38.77008f, 140.7304f, -7.08905f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[015] SCF_LeftElbowHint
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_LeftElbowHint
+relativePath = SCF_LeftElbowHint
+gameObject = SCF_LeftElbowHint
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+parentRelativePath = .
+localPosition = new Vector3(0.37f, -0.23f, 0.17f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(248.1102f, 130.4194f, 156.4613f)
+worldEulerAngles = new Vector3(-38.77008f, 140.7304f, -7.08905f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[016] SCF_LeftElbowHint_FitTarget
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_LeftElbowHint/SCF_LeftElbowHint_FitTarget
+relativePath = SCF_LeftElbowHint/SCF_LeftElbowHint_FitTarget
+gameObject = SCF_LeftElbowHint_FitTarget
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_LeftElbowHint
+parentRelativePath = SCF_LeftElbowHint
+localPosition = new Vector3(0.000003f, -0.000002f, 0.000003f)
+localEulerAngles = new Vector3(-0.000002f, -0.000003f, -0.000002f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(248.1102f, 130.4194f, 156.4613f)
+worldEulerAngles = new Vector3(-38.77008f, 140.7304f, -7.08905f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+

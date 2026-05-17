@@ -1,0 +1,2291 @@
+﻿SCF transform snapshot
+name = SCF_WeaponFitPose_Neutral
+type = hierarchy
+count = 127
+capturedLocal = 2026-05-17 02:16:42.171
+capturedUtc = 2026-05-17 00:16:42.171
+unityPlayMode = True
+
+rootPath = /SCF_Player
+namedTargetCount = 7
+
+NAMED TARGETS
+[000] SOCKET / SCF_ChestWeaponSocket
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket
+gameObject = SCF_ChestWeaponSocket
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2
+localPosition = new Vector3(0.09301f, 0.063495f, 0.288997f)
+localEulerAngles = new Vector3(-3.624756f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.1183f, 130.5361f, 287.6575f)
+worldEulerAngles = new Vector3(2.109415f, 40.64645f, -5.688843f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[001] WEAPON ROOT / SCF_Selected_Railgun
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+gameObject = SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket
+localPosition = new Vector3(0.021819f, -0.028958f, -0.128823f)
+localEulerAngles = new Vector3(0f, -126.9507f, -17.69623f)
+localScale = new Vector3(0.8f, 0.8f, 0.8f)
+worldPosition = new Vector3(140.048f, 130.5099f, 287.5467f)
+worldEulerAngles = new Vector3(-5.813416f, -86.28757f, -15.96063f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[002] RIGHT HAND GRIP / SCF_RightPistolGrip
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RightPistolGrip
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RightPistolGrip
+gameObject = SCF_RightPistolGrip
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+localPosition = new Vector3(-0.1f, -0.03f, -0.01f)
+localEulerAngles = new Vector3(-30.5f, 95.7f, -77.81f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.0504f, 130.508f, 287.4628f)
+worldEulerAngles = new Vector3(-14.01947f, 10.26312f, -82.16171f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[003] LEFT HAND GRIP / SCF_LeftUnderbarrelGrip
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_LeftUnderbarrelGrip
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_LeftUnderbarrelGrip
+gameObject = SCF_LeftUnderbarrelGrip
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+localPosition = new Vector3(0.86f, -0.07f, -0.2f)
+localEulerAngles = new Vector3(-17.67001f, 124.98f, -132.4f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.2241f, 130.2519f, 288.1827f)
+worldEulerAngles = new Vector3(-1.228241f, 37.17391f, -128.1645f)
+lossyScale = new Vector3(0.800001f, 0.800001f, 0.8f)
+
+[004] RIGHT ELBOW ORIENTATOR / SCF_RightElbowHint
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RightElbowHint
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RightElbowHint
+gameObject = SCF_RightElbowHint
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+localPosition = new Vector3(-3.03f, -0.9211f, -0.76f)
+localEulerAngles = new Vector3(37.30001f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.4833f, 130.4066f, 284.9799f)
+worldEulerAngles = new Vector3(29.93776f, -97.37402f, -18.40216f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[005] LEFT ELBOW ORIENTATOR / SCF_LeftElbowHint
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_LeftElbowHint
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_LeftElbowHint
+gameObject = SCF_LeftElbowHint
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+localPosition = new Vector3(0.39f, -0.23f, 0.17f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.9025f, 130.2623f, 287.806f)
+worldEulerAngles = new Vector3(-5.813416f, -86.28757f, -15.96063f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[006] MUZZLE / SCF_RailgunMuzzleTarget
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunMuzzleTarget
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunMuzzleTarget
+gameObject = SCF_RailgunMuzzleTarget
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+localPosition = new Vector3(0.96f, 0.12f, 0f)
+localEulerAngles = new Vector3(0f, 90f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.0855f, 130.3916f, 288.3107f)
+worldEulerAngles = new Vector3(15.87636f, 2.053125f, -6.04483f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+FULL HIERARCHY
+[000] SCF_Player
+ownerPath = /SCF_Player
+relativePath = .
+gameObject = SCF_Player
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Player
+parent = none
+parentRelativePath = none
+localPosition = new Vector3(139.8706f, 129.265f, 287.5638f)
+localEulerAngles = new Vector3(0f, -30.53598f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8706f, 129.265f, 287.5638f)
+worldEulerAngles = new Vector3(0f, -30.53598f, 0f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[001] PlayerCameraRoot
+ownerPath = /SCF_Player/PlayerCameraRoot
+relativePath = PlayerCameraRoot
+gameObject = PlayerCameraRoot
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = CinemachineTarget
+parent = /SCF_Player
+parentRelativePath = .
+localPosition = new Vector3(0f, 2.095f, 0f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8706f, 131.36f, 287.5638f)
+worldEulerAngles = new Vector3(0f, -30.53598f, 0f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[002] Geometry
+ownerPath = /SCF_Player/Geometry
+relativePath = Geometry
+gameObject = Geometry
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player
+parentRelativePath = .
+localPosition = new Vector3(0f, 0f, 0f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8706f, 129.265f, 287.5638f)
+worldEulerAngles = new Vector3(0f, -30.53598f, 0f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[003] Skeleton
+ownerPath = /SCF_Player/Skeleton
+relativePath = Skeleton
+gameObject = Skeleton
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player
+parentRelativePath = .
+localPosition = new Vector3(0f, 0f, 0f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8706f, 129.265f, 287.5638f)
+worldEulerAngles = new Vector3(0f, -30.53598f, 0f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[004] Hips
+ownerPath = /SCF_Player/Skeleton/Hips
+relativePath = Skeleton/Hips
+gameObject = Hips
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton
+parentRelativePath = Skeleton
+localPosition = new Vector3(0f, 0.981099f, -0.015905f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8787f, 130.2461f, 287.55f)
+worldEulerAngles = new Vector3(0f, -30.53598f, 0f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[005] Left_UpperLeg
+ownerPath = /SCF_Player/Skeleton/Hips/Left_UpperLeg
+relativePath = Skeleton/Hips/Left_UpperLeg
+gameObject = Left_UpperLeg
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips
+parentRelativePath = Skeleton/Hips
+localPosition = new Vector3(-0.086103f, -0.053458f, -0.011471f)
+localEulerAngles = new Vector3(-0.298645f, 179.9894f, -177.9654f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8104f, 130.1926f, 287.4964f)
+worldEulerAngles = new Vector3(-0.298645f, 149.4534f, -177.9654f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[006] Left_LowerLeg
+ownerPath = /SCF_Player/Skeleton/Hips/Left_UpperLeg/Left_LowerLeg
+relativePath = Skeleton/Hips/Left_UpperLeg/Left_LowerLeg
+gameObject = Left_LowerLeg
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Left_UpperLeg
+parentRelativePath = Skeleton/Hips/Left_UpperLeg
+localPosition = new Vector3(0f, 0.413344f, 0f)
+localEulerAngles = new Vector3(3.902146f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.7988f, 129.7796f, 287.4871f)
+worldEulerAngles = new Vector3(-4.198334f, 149.3146f, -177.96f)
+lossyScale = new Vector3(1f, 1.000001f, 1f)
+
+[007] Left_Foot
+ownerPath = /SCF_Player/Skeleton/Hips/Left_UpperLeg/Left_LowerLeg/Left_Foot
+relativePath = Skeleton/Hips/Left_UpperLeg/Left_LowerLeg/Left_Foot
+gameObject = Left_Foot
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Left_UpperLeg/Left_LowerLeg
+parentRelativePath = Skeleton/Hips/Left_UpperLeg/Left_LowerLeg
+localPosition = new Vector3(0f, 0.41404f, 0f)
+localEulerAngles = new Vector3(-3.973633f, 5.816841f, -2.449493f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8016f, 129.3669f, 287.4536f)
+worldEulerAngles = new Vector3(0.000002f, 143.6575f, 180f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[008] Left_Toes
+ownerPath = /SCF_Player/Skeleton/Hips/Left_UpperLeg/Left_LowerLeg/Left_Foot/Left_Toes
+relativePath = Skeleton/Hips/Left_UpperLeg/Left_LowerLeg/Left_Foot/Left_Toes
+gameObject = Left_Toes
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Left_UpperLeg/Left_LowerLeg/Left_Foot
+parentRelativePath = Skeleton/Hips/Left_UpperLeg/Left_LowerLeg/Left_Foot
+localPosition = new Vector3(0f, 0.072248f, -0.118066f)
+localEulerAngles = new Vector3(-90f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.7316f, 129.2946f, 287.5486f)
+worldEulerAngles = new Vector3(89.97202f, -36.34244f, 0f)
+lossyScale = new Vector3(1f, 1.000001f, 1.000001f)
+
+[009] Left_ToesEnd
+ownerPath = /SCF_Player/Skeleton/Hips/Left_UpperLeg/Left_LowerLeg/Left_Foot/Left_Toes/Left_ToesEnd
+relativePath = Skeleton/Hips/Left_UpperLeg/Left_LowerLeg/Left_Foot/Left_Toes/Left_ToesEnd
+gameObject = Left_ToesEnd
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Left_UpperLeg/Left_LowerLeg/Left_Foot/Left_Toes
+parentRelativePath = Skeleton/Hips/Left_UpperLeg/Left_LowerLeg/Left_Foot/Left_Toes
+localPosition = new Vector3(-0.001003f, 0.064235f, 0.016844f)
+localEulerAngles = new Vector3(88.76299f, -90f, -90f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.6928f, 129.2778f, 287.5998f)
+worldEulerAngles = new Vector3(0.000002f, 144.8944f, 180f)
+lossyScale = new Vector3(1f, 1.000001f, 1.000001f)
+
+[010] Right_UpperLeg
+ownerPath = /SCF_Player/Skeleton/Hips/Right_UpperLeg
+relativePath = Skeleton/Hips/Right_UpperLeg
+gameObject = Right_UpperLeg
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips
+parentRelativePath = Skeleton/Hips
+localPosition = new Vector3(0.086103f, -0.053458f, -0.011471f)
+localEulerAngles = new Vector3(0.298657f, 0.01061f, 2.03457f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.9587f, 130.1926f, 287.5839f)
+worldEulerAngles = new Vector3(0.298657f, -30.52536f, 2.03457f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[011] Right_LowerLeg
+ownerPath = /SCF_Player/Skeleton/Hips/Right_UpperLeg/Right_LowerLeg
+relativePath = Skeleton/Hips/Right_UpperLeg/Right_LowerLeg
+gameObject = Right_LowerLeg
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Right_UpperLeg
+parentRelativePath = Skeleton/Hips/Right_UpperLeg
+localPosition = new Vector3(0f, -0.413344f, 0f)
+localEulerAngles = new Vector3(3.902146f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.9724f, 129.7796f, 287.5895f)
+worldEulerAngles = new Vector3(4.198338f, -30.38657f, 2.040019f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[012] Right_Foot
+ownerPath = /SCF_Player/Skeleton/Hips/Right_UpperLeg/Right_LowerLeg/Right_Foot
+relativePath = Skeleton/Hips/Right_UpperLeg/Right_LowerLeg/Right_Foot
+gameObject = Right_Foot
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Right_UpperLeg/Right_LowerLeg
+parentRelativePath = Skeleton/Hips/Right_UpperLeg/Right_LowerLeg
+localPosition = new Vector3(-0.000001f, -0.41404f, 0f)
+localEulerAngles = new Vector3(-3.973633f, 5.816841f, -2.449493f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.0005f, 129.3669f, 287.5708f)
+worldEulerAngles = new Vector3(0f, -24.72949f, 0f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[013] Right_Toes
+ownerPath = /SCF_Player/Skeleton/Hips/Right_UpperLeg/Right_LowerLeg/Right_Foot/Right_Toes
+relativePath = Skeleton/Hips/Right_UpperLeg/Right_LowerLeg/Right_Foot/Right_Toes
+gameObject = Right_Toes
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Right_UpperLeg/Right_LowerLeg/Right_Foot
+parentRelativePath = Skeleton/Hips/Right_UpperLeg/Right_LowerLeg/Right_Foot
+localPosition = new Vector3(0f, -0.072248f, 0.11807f)
+localEulerAngles = new Vector3(-90f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.9511f, 129.2946f, 287.6781f)
+worldEulerAngles = new Vector3(-89.97202f, -24.72949f, 0f)
+lossyScale = new Vector3(1f, 1.000001f, 1f)
+
+[014] Right_ToesEnd
+ownerPath = /SCF_Player/Skeleton/Hips/Right_UpperLeg/Right_LowerLeg/Right_Foot/Right_Toes/Right_ToesEnd
+relativePath = Skeleton/Hips/Right_UpperLeg/Right_LowerLeg/Right_Foot/Right_Toes/Right_ToesEnd
+gameObject = Right_ToesEnd
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Right_UpperLeg/Right_LowerLeg/Right_Foot/Right_Toes
+parentRelativePath = Skeleton/Hips/Right_UpperLeg/Right_LowerLeg/Right_Foot/Right_Toes
+localPosition = new Vector3(0.001003f, -0.064231f, -0.016844f)
+localEulerAngles = new Vector3(88.76299f, -90f, -90f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.9251f, 129.2778f, 287.7368f)
+worldEulerAngles = new Vector3(0f, -25.96637f, 0f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[015] Spine
+ownerPath = /SCF_Player/Skeleton/Hips/Spine
+relativePath = Skeleton/Hips/Spine
+gameObject = Spine
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips
+parentRelativePath = Skeleton/Hips
+localPosition = new Vector3(0f, 0.058229f, 0.001223f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8781f, 130.3043f, 287.5511f)
+worldEulerAngles = new Vector3(0f, -30.53598f, 0f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[016] Chest
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest
+relativePath = Skeleton/Hips/Spine/Chest
+gameObject = Chest
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine
+parentRelativePath = Skeleton/Hips/Spine
+localPosition = new Vector3(0f, 0.103404f, 0f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8781f, 130.4077f, 287.5511f)
+worldEulerAngles = new Vector3(0f, -30.53598f, 0f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[017] UpperChest
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest
+gameObject = UpperChest
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest
+parentRelativePath = Skeleton/Hips/Spine/Chest
+localPosition = new Vector3(0f, 0.103404f, 0f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8781f, 130.5111f, 287.5511f)
+worldEulerAngles = new Vector3(0f, -30.53598f, 0f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[018] Left_Shoulder
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder
+gameObject = Left_Shoulder
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest
+localPosition = new Vector3(-0.000957f, 0.191492f, -0.008728f)
+localEulerAngles = new Vector3(0f, -13.04919f, 4.992901f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8817f, 130.7026f, 287.5431f)
+worldEulerAngles = new Vector3(0f, -43.58517f, 4.992902f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[019] Left_UpperArm
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm
+gameObject = Left_UpperArm
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder
+localPosition = new Vector3(-0.167435f, 0f, 0f)
+localEulerAngles = new Vector3(5.070915f, 20.24303f, 134.3494f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.7609f, 130.688f, 287.4281f)
+worldEulerAngles = new Vector3(3.328334f, -22.99832f, 139.0412f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[020] Left_LowerArm
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm
+gameObject = Left_LowerArm
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm
+localPosition = new Vector3(0f, 0.285081f, 0f)
+localEulerAngles = new Vector3(43.94489f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.5937f, 130.4731f, 287.3436f)
+worldEulerAngles = new Vector3(-28.77582f, 8.266719f, 131.7024f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[021] Left_Hand
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand
+gameObject = Left_Hand
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm
+localPosition = new Vector3(0f, 0.240362f, 0f)
+localEulerAngles = new Vector3(-4.901337f, -27.93207f, 2.81102f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.4272f, 130.333f, 287.4456f)
+worldEulerAngles = new Vector3(-3.928223f, 22.58307f, 129.1467f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[022] Left_IndexProximal
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_IndexProximal
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_IndexProximal
+gameObject = Left_IndexProximal
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand
+localPosition = new Vector3(0.007815f, 0.091844f, 0.026573f)
+localEulerAngles = new Vector3(27.45448f, -89.2157f, 5.85933f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.3684f, 130.283f, 287.5026f)
+worldEulerAngles = new Vector3(23.28462f, 110.1297f, -179.0802f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[023] Left_IndexIntermediate
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_IndexProximal/Left_IndexIntermediate
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_IndexProximal/Left_IndexIntermediate
+gameObject = Left_IndexIntermediate
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_IndexProximal
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_IndexProximal
+localPosition = new Vector3(0f, 0.042098f, 0f)
+localEulerAngles = new Vector3(30.2319f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.3526f, 130.2443f, 287.5077f)
+worldEulerAngles = new Vector3(-6.943848f, 109.6632f, -179.1488f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[024] Left_IndexDistal
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_IndexProximal/Left_IndexIntermediate/Left_IndexDistal
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_IndexProximal/Left_IndexIntermediate/Left_IndexDistal
+gameObject = Left_IndexDistal
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_IndexProximal/Left_IndexIntermediate
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_IndexProximal/Left_IndexIntermediate
+localPosition = new Vector3(0f, 0.025139f, 0f)
+localEulerAngles = new Vector3(9.543483f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.3553f, 130.2194f, 287.5063f)
+worldEulerAngles = new Vector3(-16.48624f, 109.516f, -179.1189f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[025] Left_IndexDistalEnd
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_IndexProximal/Left_IndexIntermediate/Left_IndexDistal/Left_IndexDistalEnd
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_IndexProximal/Left_IndexIntermediate/Left_IndexDistal/Left_IndexDistalEnd
+gameObject = Left_IndexDistalEnd
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_IndexProximal/Left_IndexIntermediate/Left_IndexDistal
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_IndexProximal/Left_IndexIntermediate/Left_IndexDistal
+localPosition = new Vector3(0f, 0.024609f, 0f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.3618f, 130.1958f, 287.5036f)
+worldEulerAngles = new Vector3(-16.48624f, 109.516f, -179.1189f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[026] Left_MiddleProximal
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_MiddleProximal
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_MiddleProximal
+gameObject = Left_MiddleProximal
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand
+localPosition = new Vector3(0.012848f, 0.086098f, 0.003435f)
+localEulerAngles = new Vector3(24.30716f, -80.17664f, 11.72333f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.3605f, 130.2889f, 287.4803f)
+worldEulerAngles = new Vector3(25.14293f, 100.789f, 178.9916f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[027] Left_MiddleIntermediate
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_MiddleProximal/Left_MiddleIntermediate
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_MiddleProximal/Left_MiddleIntermediate
+gameObject = Left_MiddleIntermediate
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_MiddleProximal
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_MiddleProximal
+localPosition = new Vector3(0f, 0.051279f, 0f)
+localEulerAngles = new Vector3(39.87358f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.3393f, 130.2425f, 287.4853f)
+worldEulerAngles = new Vector3(-14.72534f, 101.4575f, 179.0561f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[028] Left_MiddleDistal
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_MiddleProximal/Left_MiddleIntermediate/Left_MiddleDistal
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_MiddleProximal/Left_MiddleIntermediate/Left_MiddleDistal
+gameObject = Left_MiddleDistal
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_MiddleProximal/Left_MiddleIntermediate
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_MiddleProximal/Left_MiddleIntermediate
+localPosition = new Vector3(0f, 0.028284f, 0f)
+localEulerAngles = new Vector3(3.836685f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.3465f, 130.2152f, 287.4843f)
+worldEulerAngles = new Vector3(-18.56149f, 101.5241f, 179.037f)
+lossyScale = new Vector3(1f, 1.000001f, 1f)
+
+[029] Left_MiddleDistalEnd
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_MiddleProximal/Left_MiddleIntermediate/Left_MiddleDistal/Left_MiddleDistalEnd
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_MiddleProximal/Left_MiddleIntermediate/Left_MiddleDistal/Left_MiddleDistalEnd
+gameObject = Left_MiddleDistalEnd
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_MiddleProximal/Left_MiddleIntermediate/Left_MiddleDistal
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_MiddleProximal/Left_MiddleIntermediate/Left_MiddleDistal
+localPosition = new Vector3(0f, 0.023346f, 0f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.3538f, 130.193f, 287.4832f)
+worldEulerAngles = new Vector3(-18.56149f, 101.5241f, 179.037f)
+lossyScale = new Vector3(1f, 1.000001f, 1f)
+
+[030] Left_PinkyProximal
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_PinkyProximal
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_PinkyProximal
+gameObject = Left_PinkyProximal
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand
+localPosition = new Vector3(0.004437f, 0.072882f, -0.029359f)
+localEulerAngles = new Vector3(22.65664f, -57.952f, 38.27879f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.3623f, 130.2885f, 287.444f)
+worldEulerAngles = new Vector3(19.20998f, 79.6471f, -171.4735f)
+lossyScale = new Vector3(1f, 1.000001f, 1f)
+
+[031] Left_PinkyIntermediate
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_PinkyProximal/Left_PinkyIntermediate
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_PinkyProximal/Left_PinkyIntermediate
+gameObject = Left_PinkyIntermediate
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_PinkyProximal
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_PinkyProximal
+localPosition = new Vector3(0f, 0.032273f, 0f)
+localEulerAngles = new Vector3(34.81746f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.3528f, 130.2584f, 287.4374f)
+worldEulerAngles = new Vector3(-15.25327f, 74.61315f, -171.6556f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[032] Left_PinkyDistal
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_PinkyProximal/Left_PinkyIntermediate/Left_PinkyDistal
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_PinkyProximal/Left_PinkyIntermediate/Left_PinkyDistal
+gameObject = Left_PinkyDistal
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_PinkyProximal/Left_PinkyIntermediate
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_PinkyProximal/Left_PinkyIntermediate
+localPosition = new Vector3(0f, 0.020224f, 0f)
+localEulerAngles = new Vector3(16.36746f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.3587f, 130.239f, 287.436f)
+worldEulerAngles = new Vector3(-31.42728f, 71.86614f, -170.5561f)
+lossyScale = new Vector3(1.000001f, 1.000001f, 1f)
+
+[033] Left_PinkyDistalEnd
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_PinkyProximal/Left_PinkyIntermediate/Left_PinkyDistal/Left_PinkyDistalEnd
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_PinkyProximal/Left_PinkyIntermediate/Left_PinkyDistal/Left_PinkyDistalEnd
+gameObject = Left_PinkyDistalEnd
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_PinkyProximal/Left_PinkyIntermediate/Left_PinkyDistal
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_PinkyProximal/Left_PinkyIntermediate/Left_PinkyDistal
+localPosition = new Vector3(0f, 0.018519f, 0f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.3687f, 130.2235f, 287.436f)
+worldEulerAngles = new Vector3(-31.42728f, 71.86614f, -170.5561f)
+lossyScale = new Vector3(1.000001f, 1.000001f, 1f)
+
+[034] Left_RingProximal
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_RingProximal
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_RingProximal
+gameObject = Left_RingProximal
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand
+localPosition = new Vector3(0.009526f, 0.081616f, -0.012242f)
+localEulerAngles = new Vector3(23.77891f, -67.54089f, 27.80102f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.3597f, 130.2881f, 287.4637f)
+worldEulerAngles = new Vector3(22.11244f, 88.62063f, -174.9905f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[035] Left_RingIntermediate
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_RingProximal/Left_RingIntermediate
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_RingProximal/Left_RingIntermediate
+gameObject = Left_RingIntermediate
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_RingProximal
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_RingProximal
+localPosition = new Vector3(0f, 0.04363f, 0f)
+localEulerAngles = new Vector3(46.0074f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.3434f, 130.2478f, 287.4595f)
+worldEulerAngles = new Vector3(-23.73553f, 84.68556f, -174.93f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[036] Left_RingDistal
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_RingProximal/Left_RingIntermediate/Left_RingDistal
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_RingProximal/Left_RingIntermediate/Left_RingDistal
+gameObject = Left_RingDistal
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_RingProximal/Left_RingIntermediate
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_RingProximal/Left_RingIntermediate
+localPosition = new Vector3(0f, 0.027115f, 0f)
+localEulerAngles = new Vector3(10.38808f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.3545f, 130.2231f, 287.4581f)
+worldEulerAngles = new Vector3(-34.07892f, 83.58319f, -174.3949f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[037] Left_RingDistalEnd
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_RingProximal/Left_RingIntermediate/Left_RingDistal/Left_RingDistalEnd
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_RingProximal/Left_RingIntermediate/Left_RingDistal/Left_RingDistalEnd
+gameObject = Left_RingDistalEnd
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_RingProximal/Left_RingIntermediate/Left_RingDistal
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_RingProximal/Left_RingIntermediate/Left_RingDistal
+localPosition = new Vector3(0f, 0.020957f, 0f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.3663f, 130.2058f, 287.4574f)
+worldEulerAngles = new Vector3(-34.07892f, 83.58319f, -174.3949f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[038] Left_ThumbProximal
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_ThumbProximal
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_ThumbProximal
+gameObject = Left_ThumbProximal
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand
+localPosition = new Vector3(-0.000805f, 0.028817f, 0.023514f)
+localEulerAngles = new Vector3(-36.74945f, -173.3869f, -30.11249f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.4165f, 130.3158f, 287.4768f)
+worldEulerAngles = new Vector3(30.18258f, -129.4219f, -148.4735f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[039] Left_ThumbIntermediate
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_ThumbProximal/Left_ThumbIntermediate
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_ThumbProximal/Left_ThumbIntermediate
+gameObject = Left_ThumbIntermediate
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_ThumbProximal
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_ThumbProximal
+localPosition = new Vector3(0f, 0.027578f, 0.003818f)
+localEulerAngles = new Vector3(14.68559f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.414f, 130.2936f, 287.4933f)
+worldEulerAngles = new Vector3(17.42962f, -137.4084f, -151.7217f)
+lossyScale = new Vector3(1f, 1.000001f, 1f)
+
+[040] Left_ThumbDistal
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_ThumbProximal/Left_ThumbIntermediate/Left_ThumbDistal
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_ThumbProximal/Left_ThumbIntermediate/Left_ThumbDistal
+gameObject = Left_ThumbDistal
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_ThumbProximal/Left_ThumbIntermediate
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_ThumbProximal/Left_ThumbIntermediate
+localPosition = new Vector3(0f, 0.044597f, -0.00687f)
+localEulerAngles = new Vector3(19.74713f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.4108f, 130.2582f, 287.5211f)
+worldEulerAngles = new Vector3(-0.11264f, -146.6192f, -153.1277f)
+lossyScale = new Vector3(1f, 1.000001f, 1f)
+
+[041] Left_ThumbDistalEnd
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_ThumbProximal/Left_ThumbIntermediate/Left_ThumbDistal/Left_ThumbDistalEnd
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_ThumbProximal/Left_ThumbIntermediate/Left_ThumbDistal/Left_ThumbDistalEnd
+gameObject = Left_ThumbDistalEnd
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_ThumbProximal/Left_ThumbIntermediate/Left_ThumbDistal
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Left_Shoulder/Left_UpperArm/Left_LowerArm/Left_Hand/Left_ThumbProximal/Left_ThumbIntermediate/Left_ThumbDistal
+localPosition = new Vector3(0f, 0.029458f, 0f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.3997f, 130.2319f, 287.5284f)
+worldEulerAngles = new Vector3(-0.11264f, -146.6192f, -153.1277f)
+lossyScale = new Vector3(1f, 1.000001f, 1f)
+
+[042] Neck
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Neck
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Neck
+gameObject = Neck
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest
+localPosition = new Vector3(0f, 0.251047f, -0.01533f)
+localEulerAngles = new Vector3(6.958659f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8859f, 130.7622f, 287.5379f)
+worldEulerAngles = new Vector3(6.958659f, -30.53598f, 0f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[043] Head
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Neck/Head
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Neck/Head
+gameObject = Head
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Neck
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Neck
+localPosition = new Vector3(0f, 0.127474f, 0f)
+localEulerAngles = new Vector3(-6.958649f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.878f, 130.8887f, 287.5512f)
+worldEulerAngles = new Vector3(0f, -30.53598f, 0f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[044] Jaw
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Neck/Head/Jaw
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Neck/Head/Jaw
+gameObject = Jaw
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Neck/Head
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Neck/Head
+localPosition = new Vector3(0f, -0.007635f, 0.012895f)
+localEulerAngles = new Vector3(0f, 90f, 26.07113f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8715f, 130.8811f, 287.5623f)
+worldEulerAngles = new Vector3(0f, 59.46403f, 26.07113f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[045] Left_Eye
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Neck/Head/Left_Eye
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Neck/Head/Left_Eye
+gameObject = Left_Eye
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Neck/Head
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Neck/Head
+localPosition = new Vector3(-0.033303f, 0.034598f, 0.08674f)
+localEulerAngles = new Vector3(0f, 90f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8053f, 130.9233f, 287.609f)
+worldEulerAngles = new Vector3(0f, 59.46404f, 0f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[046] Right_Eye
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Neck/Head/Right_Eye
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Neck/Head/Right_Eye
+gameObject = Right_Eye
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Neck/Head
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Neck/Head
+localPosition = new Vector3(0.033303f, 0.034596f, 0.08674f)
+localEulerAngles = new Vector3(0f, 90f, 180f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8626f, 130.9233f, 287.6428f)
+worldEulerAngles = new Vector3(0f, 59.46404f, 180f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[047] Neck_Twist_A
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Neck/Neck_Twist_A
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Neck/Neck_Twist_A
+gameObject = Neck_Twist_A
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Neck
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Neck
+localPosition = new Vector3(0f, 0.063737f, 0f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8819f, 130.8255f, 287.5446f)
+worldEulerAngles = new Vector3(6.958659f, -30.53598f, 0f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[048] Right_Shoulder
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder
+gameObject = Right_Shoulder
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest
+localPosition = new Vector3(0.000957f, 0.191494f, -0.008728f)
+localEulerAngles = new Vector3(-0.000004f, -166.9508f, -175.0071f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8833f, 130.7026f, 287.5441f)
+worldEulerAngles = new Vector3(-0.000004f, 162.5132f, -175.0071f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[049] Right_UpperArm
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm
+gameObject = Right_UpperArm
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder
+localPosition = new Vector3(0.167434f, -0.000002f, 0f)
+localEulerAngles = new Vector3(5.070915f, 20.24303f, 134.3494f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.0424f, 130.6881f, 287.5942f)
+worldEulerAngles = new Vector3(-3.328339f, 141.9264f, -40.95886f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[050] Right_LowerArm
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm
+gameObject = Right_LowerArm
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm
+localPosition = new Vector3(0.000004f, -0.285085f, 0f)
+localEulerAngles = new Vector3(43.94489f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.1973f, 130.4731f, 287.6996f)
+worldEulerAngles = new Vector3(28.77581f, 110.6613f, -48.29758f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[051] Right_Hand
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand
+gameObject = Right_Hand
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm
+localPosition = new Vector3(0.000001f, -0.240364f, 0.000002f)
+localEulerAngles = new Vector3(-4.901337f, -27.93207f, 2.81102f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.1886f, 130.333f, 287.8947f)
+worldEulerAngles = new Vector3(3.928219f, 96.34499f, -50.85327f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[052] Right_IndexProximal
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_IndexProximal
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_IndexProximal
+gameObject = Right_IndexProximal
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand
+localPosition = new Vector3(-0.007822f, -0.091839f, -0.026575f)
+localEulerAngles = new Vector3(27.45448f, -89.2157f, 5.85933f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.1671f, 130.283f, 287.9737f)
+worldEulerAngles = new Vector3(-23.28461f, 8.798345f, 0.91983f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[053] Right_IndexIntermediate
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_IndexProximal/Right_IndexIntermediate
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_IndexProximal/Right_IndexIntermediate
+gameObject = Right_IndexIntermediate
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_IndexProximal
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_IndexProximal
+localPosition = new Vector3(0.000001f, -0.042102f, -0.000001f)
+localEulerAngles = new Vector3(30.2319f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.1703f, 130.2443f, 287.99f)
+worldEulerAngles = new Vector3(6.943838f, 9.26489f, 0.851145f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[054] Right_IndexDistal
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_IndexProximal/Right_IndexIntermediate/Right_IndexDistal
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_IndexProximal/Right_IndexIntermediate/Right_IndexDistal
+gameObject = Right_IndexDistal
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_IndexProximal/Right_IndexIntermediate
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_IndexProximal/Right_IndexIntermediate
+localPosition = new Vector3(0f, -0.025139f, -0.000001f)
+localEulerAngles = new Vector3(9.543483f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.1702f, 130.2194f, 287.987f)
+worldEulerAngles = new Vector3(16.48623f, 9.412038f, 0.881133f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[055] Right_IndexDistalEnd
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_IndexProximal/Right_IndexIntermediate/Right_IndexDistal/Right_IndexDistalEnd
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_IndexProximal/Right_IndexIntermediate/Right_IndexDistal/Right_IndexDistalEnd
+gameObject = Right_IndexDistalEnd
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_IndexProximal/Right_IndexIntermediate/Right_IndexDistal
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_IndexProximal/Right_IndexIntermediate/Right_IndexDistal
+localPosition = new Vector3(0f, -0.024609f, 0.000001f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.1694f, 130.1958f, 287.98f)
+worldEulerAngles = new Vector3(16.48623f, 9.412038f, 0.881133f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[056] Right_MiddleProximal
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_MiddleProximal
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_MiddleProximal
+gameObject = Right_MiddleProximal
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand
+localPosition = new Vector3(-0.012849f, -0.086098f, -0.003436f)
+localEulerAngles = new Vector3(24.30716f, -80.17664f, 11.72333f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.1904f, 130.2889f, 287.9698f)
+worldEulerAngles = new Vector3(-25.14291f, 18.13905f, -1.008453f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[057] Right_MiddleIntermediate
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_MiddleProximal/Right_MiddleIntermediate
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_MiddleProximal/Right_MiddleIntermediate
+gameObject = Right_MiddleIntermediate
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_MiddleProximal
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_MiddleProximal
+localPosition = new Vector3(0f, -0.051276f, 0.000001f)
+localEulerAngles = new Vector3(39.87358f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.1963f, 130.2425f, 287.9908f)
+worldEulerAngles = new Vector3(14.72534f, 17.47061f, -0.943878f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[058] Right_MiddleDistal
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_MiddleProximal/Right_MiddleIntermediate/Right_MiddleDistal
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_MiddleProximal/Right_MiddleIntermediate/Right_MiddleDistal
+gameObject = Right_MiddleDistal
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_MiddleProximal/Right_MiddleIntermediate
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_MiddleProximal/Right_MiddleIntermediate
+localPosition = new Vector3(0f, -0.028284f, 0f)
+localEulerAngles = new Vector3(3.836685f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.1937f, 130.2152f, 287.9841f)
+worldEulerAngles = new Vector3(18.56149f, 17.40399f, -0.962982f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[059] Right_MiddleDistalEnd
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_MiddleProximal/Right_MiddleIntermediate/Right_MiddleDistal/Right_MiddleDistalEnd
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_MiddleProximal/Right_MiddleIntermediate/Right_MiddleDistal/Right_MiddleDistalEnd
+gameObject = Right_MiddleDistalEnd
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_MiddleProximal/Right_MiddleIntermediate/Right_MiddleDistal
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_MiddleProximal/Right_MiddleIntermediate/Right_MiddleDistal
+localPosition = new Vector3(0f, -0.023345f, 0.000001f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.1911f, 130.193f, 287.9771f)
+worldEulerAngles = new Vector3(18.56149f, 17.40399f, -0.962982f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[060] Right_PinkyProximal
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_PinkyProximal
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_PinkyProximal
+gameObject = Right_PinkyProximal
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand
+localPosition = new Vector3(-0.004438f, -0.072881f, 0.029359f)
+localEulerAngles = new Vector3(22.65664f, -57.952f, 38.27879f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.2213f, 130.2885f, 287.9507f)
+worldEulerAngles = new Vector3(-19.20999f, 39.28097f, 8.526488f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[061] Right_PinkyIntermediate
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_PinkyProximal/Right_PinkyIntermediate
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_PinkyProximal/Right_PinkyIntermediate
+gameObject = Right_PinkyIntermediate
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_PinkyProximal
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_PinkyProximal
+localPosition = new Vector3(0f, -0.032269f, 0.000001f)
+localEulerAngles = new Vector3(34.81746f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.2317f, 130.2584f, 287.9558f)
+worldEulerAngles = new Vector3(15.25327f, 44.31492f, 8.344423f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[062] Right_PinkyDistal
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_PinkyProximal/Right_PinkyIntermediate/Right_PinkyDistal
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_PinkyProximal/Right_PinkyIntermediate/Right_PinkyDistal
+gameObject = Right_PinkyDistal
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_PinkyProximal/Right_PinkyIntermediate
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_PinkyProximal/Right_PinkyIntermediate
+localPosition = new Vector3(0f, -0.020225f, 0.000001f)
+localEulerAngles = new Vector3(16.36746f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.2301f, 130.239f, 287.95f)
+worldEulerAngles = new Vector3(31.42728f, 47.06193f, 9.443866f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[063] Right_PinkyDistalEnd
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_PinkyProximal/Right_PinkyIntermediate/Right_PinkyDistal/Right_PinkyDistalEnd
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_PinkyProximal/Right_PinkyIntermediate/Right_PinkyDistal/Right_PinkyDistalEnd
+gameObject = Right_PinkyDistalEnd
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_PinkyProximal/Right_PinkyIntermediate/Right_PinkyDistal
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_PinkyProximal/Right_PinkyIntermediate/Right_PinkyDistal
+localPosition = new Vector3(0.000001f, -0.018519f, 0f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.2252f, 130.2235f, 287.9413f)
+worldEulerAngles = new Vector3(31.42728f, 47.06193f, 9.443866f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[064] Right_RingProximal
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_RingProximal
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_RingProximal
+gameObject = Right_RingProximal
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand
+localPosition = new Vector3(-0.009527f, -0.081614f, 0.012242f)
+localEulerAngles = new Vector3(23.77891f, -67.54089f, 27.80102f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.2053f, 130.2881f, 287.9626f)
+worldEulerAngles = new Vector3(-22.11243f, 30.30745f, 5.009498f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[065] Right_RingIntermediate
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_RingProximal/Right_RingIntermediate
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_RingProximal/Right_RingIntermediate
+gameObject = Right_RingIntermediate
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_RingProximal
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_RingProximal
+localPosition = new Vector3(0f, -0.043629f, 0.000001f)
+localEulerAngles = new Vector3(46.0074f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.2169f, 130.2478f, 287.9747f)
+worldEulerAngles = new Vector3(23.73553f, 34.2425f, 5.070039f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[066] Right_RingDistal
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_RingProximal/Right_RingIntermediate/Right_RingDistal
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_RingProximal/Right_RingIntermediate/Right_RingDistal
+gameObject = Right_RingDistal
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_RingProximal/Right_RingIntermediate
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_RingProximal/Right_RingIntermediate
+localPosition = new Vector3(0f, -0.027115f, 0f)
+localEulerAngles = new Vector3(10.38808f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.2128f, 130.2231f, 287.9644f)
+worldEulerAngles = new Vector3(34.07892f, 35.34488f, 5.605107f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[067] Right_RingDistalEnd
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_RingProximal/Right_RingIntermediate/Right_RingDistal/Right_RingDistalEnd
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_RingProximal/Right_RingIntermediate/Right_RingDistal/Right_RingDistalEnd
+gameObject = Right_RingDistalEnd
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_RingProximal/Right_RingIntermediate/Right_RingDistal
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_RingProximal/Right_RingIntermediate/Right_RingDistal
+localPosition = new Vector3(0f, -0.020958f, 0.000001f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.2077f, 130.2058f, 287.9537f)
+worldEulerAngles = new Vector3(34.07892f, 35.34488f, 5.605107f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[068] Right_ThumbProximal
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_ThumbProximal
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_ThumbProximal
+gameObject = Right_ThumbProximal
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand
+localPosition = new Vector3(0.000803f, -0.028816f, -0.023515f)
+localEulerAngles = new Vector3(-36.74945f, -173.3869f, -30.11249f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.1664f, 130.3158f, 287.9191f)
+worldEulerAngles = new Vector3(-30.18259f, -111.6501f, 31.5265f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[069] Right_ThumbIntermediate
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_ThumbProximal/Right_ThumbIntermediate
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_ThumbProximal/Right_ThumbIntermediate
+gameObject = Right_ThumbIntermediate
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_ThumbProximal
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_ThumbProximal
+localPosition = new Vector3(0f, -0.027578f, -0.003818f)
+localEulerAngles = new Vector3(14.68559f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.1531f, 130.2936f, 287.9294f)
+worldEulerAngles = new Vector3(-17.42963f, -103.6636f, 28.27834f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[070] Right_ThumbDistal
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_ThumbProximal/Right_ThumbIntermediate/Right_ThumbDistal
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_ThumbProximal/Right_ThumbIntermediate/Right_ThumbDistal
+gameObject = Right_ThumbDistal
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_ThumbProximal/Right_ThumbIntermediate
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_ThumbProximal/Right_ThumbIntermediate
+localPosition = new Vector3(0.000001f, -0.044595f, 0.006871f)
+localEulerAngles = new Vector3(19.74713f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.1303f, 130.2582f, 287.9456f)
+worldEulerAngles = new Vector3(0.112642f, -94.45273f, 26.87233f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[071] Right_ThumbDistalEnd
+ownerPath = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_ThumbProximal/Right_ThumbIntermediate/Right_ThumbDistal/Right_ThumbDistalEnd
+relativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_ThumbProximal/Right_ThumbIntermediate/Right_ThumbDistal/Right_ThumbDistalEnd
+gameObject = Right_ThumbDistalEnd
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_ThumbProximal/Right_ThumbIntermediate/Right_ThumbDistal
+parentRelativePath = Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Right_ThumbProximal/Right_ThumbIntermediate/Right_ThumbDistal
+localPosition = new Vector3(0f, -0.029458f, 0.000001f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.1293f, 130.2319f, 287.9589f)
+worldEulerAngles = new Vector3(0.112642f, -94.45273f, 26.87233f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[072] SCF_CharacterVisual
+ownerPath = /SCF_Player/SCF_CharacterVisual
+relativePath = SCF_CharacterVisual
+gameObject = SCF_CharacterVisual
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player
+parentRelativePath = .
+localPosition = new Vector3(0f, 0f, 0f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8706f, 129.265f, 287.5638f)
+worldEulerAngles = new Vector3(0f, -30.53598f, 0f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[073] SCF_VisualFitOffset
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset
+gameObject = SCF_VisualFitOffset
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual
+parentRelativePath = SCF_CharacterVisual
+localPosition = new Vector3(0f, 0f, 0f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8706f, 129.265f, 287.5638f)
+worldEulerAngles = new Vector3(0f, -30.53598f, 0f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[074] SCF_Selected_Soldier
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier
+gameObject = SCF_Selected_Soldier
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset
+localPosition = new Vector3(0f, 0f, 0f)
+localEulerAngles = new Vector3(0f, -11.88995f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8706f, 129.265f, 287.5638f)
+worldEulerAngles = new Vector3(0f, -42.4259f, 0f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[075] Hips
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips
+gameObject = Hips
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier
+localPosition = new Vector3(-0.01835f, 0.856537f, -0.009606f)
+localEulerAngles = new Vector3(-18.19351f, 53.58399f, 5.690165f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8636f, 130.1215f, 287.5443f)
+worldEulerAngles = new Vector3(-18.19351f, 11.15808f, 5.690166f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[076] LeftUpLeg
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/LeftUpLeg
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/LeftUpLeg
+gameObject = LeftUpLeg
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips
+localPosition = new Vector3(-0.096334f, -0.032738f, -0.000005f)
+localEulerAngles = new Vector3(-22.85181f, -5.11438f, -23.0358f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.7752f, 130.0815f, 287.5751f)
+worldEulerAngles = new Vector3(-40.2373f, 2.095088f, -13.86615f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[077] LeftLeg
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/LeftUpLeg/LeftLeg
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/LeftUpLeg/LeftLeg
+gameObject = LeftLeg
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/LeftUpLeg
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/LeftUpLeg
+localPosition = new Vector3(-0.000002f, -0.467256f, -0.017299f)
+localEulerAngles = new Vector3(58.35814f, -14.00131f, -8.665558f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.6736f, 129.724f, 287.8588f)
+worldEulerAngles = new Vector3(16.19637f, -17.82935f, -9.932098f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[078] LeftFoot
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/LeftUpLeg/LeftLeg/LeftFoot
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/LeftUpLeg/LeftLeg/LeftFoot
+gameObject = LeftFoot
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/LeftUpLeg/LeftLeg
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/LeftUpLeg/LeftLeg
+localPosition = new Vector3(-0.000126f, -0.341943f, -0.008477f)
+localEulerAngles = new Vector3(-15.07391f, -6.840912f, 11.47362f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.6486f, 129.403f, 287.7436f)
+worldEulerAngles = new Vector3(0.135468f, -21.75342f, 0.072245f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[079] LeftToeBase
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/LeftUpLeg/LeftLeg/LeftFoot/LeftToeBase
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/LeftUpLeg/LeftLeg/LeftFoot/LeftToeBase
+gameObject = LeftToeBase
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/LeftUpLeg/LeftLeg/LeftFoot
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/LeftUpLeg/LeftLeg/LeftFoot
+localPosition = new Vector3(0.001833f, -0.12064f, 0.082823f)
+localEulerAngles = new Vector3(-0.208557f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.6198f, 129.2821f, 287.821f)
+worldEulerAngles = new Vector3(-0.07309f, -21.75369f, 0.072247f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[080] LeftFootToeBase_End
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/LeftUpLeg/LeftLeg/LeftFoot/LeftToeBase/LeftFootToeBase_End
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/LeftUpLeg/LeftLeg/LeftFoot/LeftToeBase/LeftFootToeBase_End
+gameObject = LeftFootToeBase_End
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/LeftUpLeg/LeftLeg/LeftFoot/LeftToeBase
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/LeftUpLeg/LeftLeg/LeftFoot/LeftToeBase
+localPosition = new Vector3(0f, 0.001809f, 0.103623f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.5814f, 129.2841f, 287.9172f)
+worldEulerAngles = new Vector3(-0.07309f, -21.75369f, 0.072247f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[081] RightUpLeg
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/RightUpLeg
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/RightUpLeg
+gameObject = RightUpLeg
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips
+localPosition = new Vector3(0.096342f, -0.032734f, 0.000014f)
+localEulerAngles = new Vector3(-10.25525f, 10.37949f, 14.00961f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.9622f, 130.0997f, 287.5322f)
+worldEulerAngles = new Vector3(-29.15741f, 21.63271f, 16.39834f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[082] RightLeg
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/RightUpLeg/RightLeg
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/RightUpLeg/RightLeg
+gameObject = RightLeg
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/RightUpLeg
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/RightUpLeg
+localPosition = new Vector3(0.000002f, -0.467249f, -0.017314f)
+localEulerAngles = new Vector3(59.57516f, 9.401576f, 1.255158f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.1597f, 129.6998f, 287.6725f)
+worldEulerAngles = new Vector3(27.2961f, 42.93223f, 11.86651f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[083] RightFoot
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/RightUpLeg/RightLeg/RightFoot
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/RightUpLeg/RightLeg/RightFoot
+gameObject = RightFoot
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/RightUpLeg/RightLeg
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/RightUpLeg/RightLeg
+localPosition = new Vector3(-0.000126f, -0.341943f, -0.008477f)
+localEulerAngles = new Vector3(-27.2233f, 2.93787f, -9.596436f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.1015f, 129.4063f, 287.5068f)
+worldEulerAngles = new Vector3(0.062694f, 40.09685f, 2.291546f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[084] RightToeBase
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/RightUpLeg/RightLeg/RightFoot/RightToeBase
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/RightUpLeg/RightLeg/RightFoot/RightToeBase
+gameObject = RightToeBase
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/RightUpLeg/RightLeg/RightFoot
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/RightUpLeg/RightLeg/RightFoot
+localPosition = new Vector3(0.001833f, -0.12064f, 0.082823f)
+localEulerAngles = new Vector3(1.437085f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.1598f, 129.2857f, 287.5658f)
+worldEulerAngles = new Vector3(1.498629f, 40.15432f, 2.292331f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[085] RightFootToeBase_End
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/RightUpLeg/RightLeg/RightFoot/RightToeBase/RightFootToeBase_End
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/RightUpLeg/RightLeg/RightFoot/RightToeBase/RightFootToeBase_End
+gameObject = RightFootToeBase_End
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/RightUpLeg/RightLeg/RightFoot/RightToeBase
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/RightUpLeg/RightLeg/RightFoot/RightToeBase
+localPosition = new Vector3(-0.000032f, 0.001809f, 0.103623f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.2266f, 129.2848f, 287.6451f)
+worldEulerAngles = new Vector3(1.498629f, 40.15432f, 2.292331f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[086] Spine
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine
+gameObject = Spine
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips
+localPosition = new Vector3(0f, 0.092263f, 0.015771f)
+localEulerAngles = new Vector3(13.83019f, 9.105286f, -4.790161f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8519f, 130.2137f, 287.5326f)
+worldEulerAngles = new Vector3(-5.0401f, 21.37007f, -2.28183f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[087] Spine1
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1
+gameObject = Spine1
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine
+localPosition = new Vector3(0f, 0.16254f, -0.001656f)
+localEulerAngles = new Vector3(4.016649f, 10.8906f, -1.167725f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8522f, 130.3753f, 287.5154f)
+worldEulerAngles = new Vector3(-0.507874f, 32.06264f, -4.35199f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[088] Spine2
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2
+gameObject = Spine2
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1
+localPosition = new Vector3(0f, 0.136396f, -0.012923f)
+localEulerAngles = new Vector3(5.578849f, 8.675519f, -1.312805f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8534f, 130.5112f, 287.498f)
+worldEulerAngles = new Vector3(5.716253f, 40.28559f, -5.71347f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[089] LeftShoulder
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder
+gameObject = LeftShoulder
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2
+localPosition = new Vector3(-0.061442f, 0.10187f, -0.037932f)
+localEulerAngles = new Vector3(-3.440399f, 29.9542f, 1.693689f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.797f, 130.6219f, 287.5103f)
+worldEulerAngles = new Vector3(4.364365f, 70.50849f, -0.380859f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[090] LeftArm
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm
+gameObject = LeftArm
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder
+localPosition = new Vector3(-0.123182f, -0.011126f, -0.017944f)
+localEulerAngles = new Vector3(-34.68408f, 11.0239f, 66.82796f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.7383f, 130.613f, 287.6203f)
+worldEulerAngles = new Vector3(-30.32635f, 81.25969f, 67.36205f)
+lossyScale = new Vector3(1.000001f, 1f, 1f)
+
+[091] LeftForeArm
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm
+gameObject = LeftForeArm
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm
+localPosition = new Vector3(-0.276876f, 0.000004f, -0.000005f)
+localEulerAngles = new Vector3(-60.73981f, 116.4038f, -70.75317f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8497f, 130.3924f, 287.7452f)
+worldEulerAngles = new Vector3(-31.92899f, -50.13373f, -178.8931f)
+lossyScale = new Vector3(1.000001f, 1.000001f, 1f)
+
+[092] LeftHand
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand
+gameObject = LeftHand
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm
+localPosition = new Vector3(-0.278792f, 0.000248f, 0.000044f)
+localEulerAngles = new Vector3(-63.90918f, -21.97632f, 9.818392f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.0304f, 130.3968f, 287.9575f)
+worldEulerAngles = new Vector3(32.9349f, -37.61658f, 177.2446f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[093] LeftHandIndex1
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftHandIndex1
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftHandIndex1
+gameObject = LeftHandIndex1
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand
+localPosition = new Vector3(-0.115739f, 0f, 0f)
+localEulerAngles = new Vector3(2.744279f, -8.186707f, 1.693673f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.1238f, 130.3922f, 288.0256f)
+worldEulerAngles = new Vector3(30.20727f, -27.99979f, -175.8204f)
+lossyScale = new Vector3(1.000001f, 1.000001f, 1f)
+
+[094] LeftHandIndex2
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftHandIndex1/LeftHandIndex2
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftHandIndex1/LeftHandIndex2
+gameObject = LeftHandIndex2
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftHandIndex1
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftHandIndex1
+localPosition = new Vector3(-0.040578f, 0f, 0f)
+localEulerAngles = new Vector3(0f, 0f, 46.13573f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.1588f, 130.3947f, 288.0459f)
+worldEulerAngles = new Vector3(30.20727f, -27.99979f, -129.6846f)
+lossyScale = new Vector3(1.000001f, 1.000001f, 1f)
+
+[095] LeftHandIndex3_End
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftHandIndex1/LeftHandIndex2/LeftHandIndex3_End
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftHandIndex1/LeftHandIndex2/LeftHandIndex3_End
+gameObject = LeftHandIndex3_End
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftHandIndex1/LeftHandIndex2
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftHandIndex1/LeftHandIndex2
+localPosition = new Vector3(-0.040431f, 0f, 0f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.1743f, 130.4216f, 288.0719f)
+worldEulerAngles = new Vector3(30.20727f, -27.99979f, -129.6846f)
+lossyScale = new Vector3(1.000001f, 1.000001f, 1f)
+
+[096] LeftInHandThumb
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftInHandThumb
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftInHandThumb
+gameObject = LeftInHandThumb
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand
+localPosition = new Vector3(-0.03146f, -0.010029f, 0.040023f)
+localEulerAngles = new Vector3(0.850787f, 0.685662f, 9.927956f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.0323f, 130.3822f, 288.0072f)
+worldEulerAngles = new Vector3(32.04982f, -38.37628f, -173.2407f)
+lossyScale = new Vector3(1.000001f, 1.000001f, 1f)
+
+[097] LeftHandThumb1
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftInHandThumb/LeftHandThumb1
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftInHandThumb/LeftHandThumb1
+gameObject = LeftHandThumb1
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftInHandThumb
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftInHandThumb
+localPosition = new Vector3(-0.043298f, -0.010029f, 0.020796f)
+localEulerAngles = new Vector3(-5.554138f, -2.683228f, -8.870605f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.0492f, 130.3839f, 288.0533f)
+worldEulerAngles = new Vector3(37.18585f, -34.22568f, -179.8804f)
+lossyScale = new Vector3(1.000001f, 1.000001f, 1f)
+
+[098] LeftHandThumb2_End
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftInHandThumb/LeftHandThumb1/LeftHandThumb2_End
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftInHandThumb/LeftHandThumb1/LeftHandThumb2_End
+gameObject = LeftHandThumb2_End
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftInHandThumb/LeftHandThumb1
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftInHandThumb/LeftHandThumb1
+localPosition = new Vector3(-0.037362f, -0.020137f, 0.017261f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.0655f, 130.3896f, 288.0957f)
+worldEulerAngles = new Vector3(37.18585f, -34.22568f, -179.8804f)
+lossyScale = new Vector3(1.000001f, 1.000001f, 1f)
+
+[099] Neck
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/Neck
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/Neck
+gameObject = Neck
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2
+localPosition = new Vector3(0f, 0.138774f, -0.043542f)
+localEulerAngles = new Vector3(12.98869f, -3.04071f, -7.354095f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8448f, 130.6529f, 287.4665f)
+worldEulerAngles = new Vector3(18.32018f, 35.82647f, -13.65594f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[100] Neck1
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/Neck/Neck1
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/Neck/Neck1
+gameObject = Neck1
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/Neck
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/Neck
+localPosition = new Vector3(0f, 0.0434f, 0.009269f)
+localEulerAngles = new Vector3(-2.453857f, -10.34763f, 9.40169f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8661f, 130.6901f, 287.4784f)
+worldEulerAngles = new Vector3(13.25088f, 26.11031f, -7.128082f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[101] Head
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/Neck/Neck1/Head
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/Neck/Neck1/Head
+gameObject = Head
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/Neck/Neck1
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/Neck/Neck1
+localPosition = new Vector3(0f, 0.040266f, 0.008585f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8783f, 130.727f, 287.4919f)
+worldEulerAngles = new Vector3(13.25088f, 26.11031f, -7.128082f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[102] HeadTop_End
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/Neck/Neck1/Head/HeadTop_End
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/Neck/Neck1/Head/HeadTop_End
+gameObject = HeadTop_End
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/Neck/Neck1/Head
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/Neck/Neck1/Head
+localPosition = new Vector3(0f, 0.178866f, 0.001231f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.9166f, 130.8995f, 287.5197f)
+worldEulerAngles = new Vector3(13.25088f, 26.11031f, -7.128082f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[103] RightShoulder
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder
+gameObject = RightShoulder
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2
+localPosition = new Vector3(0.061402f, 0.10187f, -0.037932f)
+localEulerAngles = new Vector3(-0.270081f, -8.191315f, 6.106634f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8895f, 130.6098f, 287.4304f)
+worldEulerAngles = new Vector3(4.57732f, 32.13633f, -0.35849f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[104] RightArm
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm
+gameObject = RightArm
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder
+localPosition = new Vector3(0.12323f, -0.011136f, -0.017936f)
+localEulerAngles = new Vector3(14.09497f, -9.555328f, -39.81781f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.9838f, 130.5993f, 287.3489f)
+worldEulerAngles = new Vector3(18.54637f, 22.26561f, -40.99017f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[105] RightForeArm
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm
+gameObject = RightForeArm
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm
+localPosition = new Vector3(0.276875f, 0.000006f, -0.000001f)
+localEulerAngles = new Vector3(-18.49564f, -145.3522f, -4.648682f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.1553f, 130.4271f, 287.2162f)
+worldEulerAngles = new Vector3(-54.14053f, -137.8867f, 29.72692f)
+lossyScale = new Vector3(1.000001f, 1f, 1.000001f)
+
+[106] RightHand
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand
+gameObject = RightHand
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm
+localPosition = new Vector3(0.278972f, -0.000046f, -0.000086f)
+localEulerAngles = new Vector3(-23.27917f, 25.8943f, 22.9921f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.0508f, 130.5081f, 287.4619f)
+worldEulerAngles = new Vector3(-80.86157f, -64.24011f, -12.68286f)
+lossyScale = new Vector3(1.000001f, 1.000001f, 1.000001f)
+
+[107] RightHandIndex1
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand/RightHandIndex1
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand/RightHandIndex1
+gameObject = RightHandIndex1
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand
+localPosition = new Vector3(0.115739f, 0f, 0f)
+localEulerAngles = new Vector3(0.422877f, 2.834774f, 4.047091f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.0772f, 130.5041f, 287.5745f)
+worldEulerAngles = new Vector3(-79.48419f, -49.43774f, -23.2348f)
+lossyScale = new Vector3(1.000001f, 1.000001f, 1.000001f)
+
+[108] RightHandIndex2
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand/RightHandIndex1/RightHandIndex2
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand/RightHandIndex1/RightHandIndex2
+gameObject = RightHandIndex2
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand/RightHandIndex1
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand/RightHandIndex1
+localPosition = new Vector3(0.040578f, 0f, 0f)
+localEulerAngles = new Vector3(0f, 0f, -3.425446f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.0895f, 130.5011f, 287.6131f)
+worldEulerAngles = new Vector3(-79.48425f, -49.43781f, -26.66019f)
+lossyScale = new Vector3(1.000001f, 1.000001f, 1.000001f)
+
+[109] RightHandIndex3_End
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand/RightHandIndex1/RightHandIndex2/RightHandIndex3_End
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand/RightHandIndex1/RightHandIndex2/RightHandIndex3_End
+gameObject = RightHandIndex3_End
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand/RightHandIndex1/RightHandIndex2
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand/RightHandIndex1/RightHandIndex2
+localPosition = new Vector3(0.040431f, 0f, 0f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.0995f, 130.4978f, 287.6521f)
+worldEulerAngles = new Vector3(-79.48425f, -49.43781f, -26.66019f)
+lossyScale = new Vector3(1.000001f, 1.000001f, 1.000001f)
+
+[110] RightInHandThumb
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand/RightInHandThumb
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand/RightInHandThumb
+gameObject = RightInHandThumb
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand
+localPosition = new Vector3(0.031758f, -0.010029f, 0.03982f)
+localEulerAngles = new Vector3(7.533771f, 4.284902f, -14.56949f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.0427f, 130.5447f, 287.4978f)
+worldEulerAngles = new Vector3(-72.39258f, -55.97632f, -35.59702f)
+lossyScale = new Vector3(1.000001f, 1.000001f, 1.000001f)
+
+[111] RightHandThumb1
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand/RightInHandThumb/RightHandThumb1
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand/RightInHandThumb/RightHandThumb1
+gameObject = RightHandThumb1
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand/RightInHandThumb
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand/RightInHandThumb
+localPosition = new Vector3(0.042938f, -0.010019f, 0.021232f)
+localEulerAngles = new Vector3(-2.725922f, 20.81f, 11.07916f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.0275f, 130.5549f, 287.5432f)
+worldEulerAngles = new Vector3(-57.05334f, -20.42227f, -56.62994f)
+lossyScale = new Vector3(1.000001f, 1.000001f, 1f)
+
+[112] RightHandThumb2_End
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand/RightInHandThumb/RightHandThumb1/RightHandThumb2_End
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand/RightInHandThumb/RightHandThumb1/RightHandThumb2_End
+gameObject = RightHandThumb2_End
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand/RightInHandThumb/RightHandThumb1
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand/RightInHandThumb/RightHandThumb1
+localPosition = new Vector3(0.037424f, -0.020137f, 0.017029f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.0154f, 130.5462f, 287.5864f)
+worldEulerAngles = new Vector3(-57.05334f, -20.42227f, -56.62994f)
+lossyScale = new Vector3(1.000001f, 1.000001f, 1f)
+
+[113] SCF_ChestWeaponSocket
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket
+gameObject = SCF_ChestWeaponSocket
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2
+localPosition = new Vector3(0.09301f, 0.063495f, 0.288997f)
+localEulerAngles = new Vector3(-3.624756f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.1183f, 130.5361f, 287.6575f)
+worldEulerAngles = new Vector3(2.109415f, 40.64645f, -5.688843f)
+lossyScale = new Vector3(1f, 1f, 1f)
+
+[114] SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+gameObject = SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket
+localPosition = new Vector3(0.021819f, -0.028958f, -0.128823f)
+localEulerAngles = new Vector3(0f, -126.9507f, -17.69623f)
+localScale = new Vector3(0.8f, 0.8f, 0.8f)
+worldPosition = new Vector3(140.048f, 130.5099f, 287.5467f)
+worldEulerAngles = new Vector3(-5.813416f, -86.28757f, -15.96063f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[115] SCF_RailgunModel
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel
+gameObject = SCF_RailgunModel
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+localPosition = new Vector3(0.04f, 0.03f, 0f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.0518f, 130.524f, 287.5839f)
+worldEulerAngles = new Vector3(-5.813416f, -86.28757f, -15.96063f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[116] Cube
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel/Cube
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel/Cube
+gameObject = Cube
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel
+localPosition = new Vector3(0f, 0f, 0f)
+localEulerAngles = new Vector3(-89.98022f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.0518f, 130.524f, 287.5839f)
+worldEulerAngles = new Vector3(-73.03952f, 23.21448f, -110.3177f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[117] Cube.001
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel/Cube.001
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel/Cube.001
+gameObject = Cube.001
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel
+localPosition = new Vector3(0f, 0f, 0f)
+localEulerAngles = new Vector3(-89.98022f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.0518f, 130.524f, 287.5839f)
+worldEulerAngles = new Vector3(-73.03952f, 23.21448f, -110.3177f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[118] Cube.002
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel/Cube.002
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel/Cube.002
+gameObject = Cube.002
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel
+localPosition = new Vector3(0f, 0f, 0f)
+localEulerAngles = new Vector3(-89.98022f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.0518f, 130.524f, 287.5839f)
+worldEulerAngles = new Vector3(-73.03952f, 23.21448f, -110.3177f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[119] Point.003
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel/Point.003
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel/Point.003
+gameObject = Point.003
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunModel
+localPosition = new Vector3(0.368024f, 0.032793f, 0.000664f)
+localEulerAngles = new Vector3(90f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.0645f, 130.4687f, 287.874f)
+worldEulerAngles = new Vector3(73.03953f, -156.7856f, -69.68237f)
+lossyScale = new Vector3(0.800001f, 0.800001f, 0.800001f)
+
+[120] SCF_RightPistolGrip
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RightPistolGrip
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RightPistolGrip
+gameObject = SCF_RightPistolGrip
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+localPosition = new Vector3(-0.1f, -0.03f, -0.01f)
+localEulerAngles = new Vector3(-30.5f, 95.7f, -77.81f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.0504f, 130.508f, 287.4628f)
+worldEulerAngles = new Vector3(-14.01947f, 10.26312f, -82.16171f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[121] SCF_LeftUnderbarrelGrip
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_LeftUnderbarrelGrip
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_LeftUnderbarrelGrip
+gameObject = SCF_LeftUnderbarrelGrip
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+localPosition = new Vector3(0.86f, -0.07f, -0.2f)
+localEulerAngles = new Vector3(-17.67001f, 124.98f, -132.4f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.2241f, 130.2519f, 288.1827f)
+worldEulerAngles = new Vector3(-1.228241f, 37.17391f, -128.1645f)
+lossyScale = new Vector3(0.800001f, 0.800001f, 0.8f)
+
+[122] SCF_RailgunMuzzleTarget
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunMuzzleTarget
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunMuzzleTarget
+gameObject = SCF_RailgunMuzzleTarget
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+localPosition = new Vector3(0.96f, 0.12f, 0f)
+localEulerAngles = new Vector3(0f, 90f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.0855f, 130.3916f, 288.3107f)
+worldEulerAngles = new Vector3(15.87636f, 2.053125f, -6.04483f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[123] SCF_RailgunMuzzleMarker
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunMuzzleTarget/SCF_RailgunMuzzleMarker
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunMuzzleTarget/SCF_RailgunMuzzleMarker
+gameObject = SCF_RailgunMuzzleMarker
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunMuzzleTarget
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunMuzzleTarget
+localPosition = new Vector3(0f, 0f, 0f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(0.055f, 0.055f, 0.055f)
+worldPosition = new Vector3(140.0855f, 130.3916f, 288.3107f)
+worldEulerAngles = new Vector3(15.87636f, 2.053125f, -6.04483f)
+lossyScale = new Vector3(0.044f, 0.044f, 0.044f)
+
+[124] SCF_RightElbowHint
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RightElbowHint
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RightElbowHint
+gameObject = SCF_RightElbowHint
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+localPosition = new Vector3(-3.03f, -0.9211f, -0.76f)
+localEulerAngles = new Vector3(37.30001f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(140.4833f, 130.4066f, 284.9799f)
+worldEulerAngles = new Vector3(29.93776f, -97.37402f, -18.40216f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[125] SCF_LeftElbowHint
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_LeftElbowHint
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_LeftElbowHint
+gameObject = SCF_LeftElbowHint
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant
+localPosition = new Vector3(0.39f, -0.23f, 0.17f)
+localEulerAngles = new Vector3(0f, 0f, 0f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.9025f, 130.2623f, 287.806f)
+worldEulerAngles = new Vector3(-5.813416f, -86.28757f, -15.96063f)
+lossyScale = new Vector3(0.8f, 0.8f, 0.8f)
+
+[126] soldier_Military_Male_Lod_1
+ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/soldier_Military_Male_Lod_1
+relativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/soldier_Military_Male_Lod_1
+gameObject = soldier_Military_Male_Lod_1
+activeSelf = True
+activeInHierarchy = True
+layer = 0
+tag = Untagged
+parent = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier
+parentRelativePath = SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier
+localPosition = new Vector3(0f, 0.892839f, 0.054379f)
+localEulerAngles = new Vector3(0f, 180f, 180f)
+localScale = new Vector3(1f, 1f, 1f)
+worldPosition = new Vector3(139.8339f, 130.1578f, 287.6039f)
+worldEulerAngles = new Vector3(0f, 137.5741f, 180f)
+lossyScale = new Vector3(1f, 1f, 1f)
+

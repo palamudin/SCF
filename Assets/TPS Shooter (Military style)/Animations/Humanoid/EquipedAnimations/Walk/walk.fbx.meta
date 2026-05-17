@@ -985,7 +985,7 @@ ModelImporter:
       name: walk_fwd
       takeName: Armature|walk_fwd
       firstFrame: 0
-      lastFrame: 19
+      lastFrame: 18
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
