@@ -120,6 +120,7 @@ namespace SCF.Gameplay
 
         public void SetPreviewAnimator(Animator animator)
         {
+            showPanel = false;
             if (previewAnimator == animator)
             {
                 return;
@@ -132,6 +133,7 @@ namespace SCF.Gameplay
         public void Configure(Animator animator, IEnumerable<AnimationClip> animationClips)
         {
             previewAnimator = animator;
+            showPanel = false;
             clips.Clear();
 
             if (animationClips != null)

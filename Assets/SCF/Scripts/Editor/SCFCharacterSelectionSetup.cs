@@ -15,6 +15,8 @@ namespace SCF.EditorTools
         private const string ControllerFolder = "Assets/SCF/Animation";
         private const string ControllerPath = ControllerFolder + "/SCF_MxMBaseTraversal.controller";
         private const string ParkourPlayerAnimationFolder = "Assets/RedNotRed/3D Adaptive Parkour System/Animations/Player";
+        private const string TpsAsphaltFootstep1Path = "Assets/TPS Shooter (Military style)/Sounds/FootstepSounds/Acphalt/FootstepAcphalt_1.ogg";
+        private const string TpsAsphaltFootstep2Path = "Assets/TPS Shooter (Military style)/Sounds/FootstepSounds/Acphalt/FootstepAcphalt_2.ogg";
 
         [MenuItem("SCF/Setup/Add Character Selection Panel")]
         public static void ApplyCharacterSelectionSetup()
@@ -103,6 +105,12 @@ namespace SCF.EditorTools
 
             SerializedObject serializedSlot = new SerializedObject(visualSlot);
             SetBool(serializedSlot, "fitVisualToController", false);
+            SetFloat(serializedSlot, "soldierFootstepVolume", 0.52f);
+            SetFloat(serializedSlot, "soldierLoadFootstepVolumeBoost", 0.35f);
+            SetFloat(serializedSlot, "frankFootstepVolume", 0.18f);
+            SetFloat(serializedSlot, "frankLoadFootstepVolumeBoost", 0f);
+            SetAudioClipArray(serializedSlot, "soldierFootstepClips", TpsAsphaltFootstep1Path, TpsAsphaltFootstep2Path);
+            SetAudioClipArray(serializedSlot, "frankFootstepClips", TpsAsphaltFootstep1Path, TpsAsphaltFootstep2Path);
             serializedSlot.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(visualSlot);
         }
@@ -182,6 +190,21 @@ namespace SCF.EditorTools
             if (property != null)
             {
                 property.floatValue = value;
+            }
+        }
+
+        private static void SetAudioClipArray(SerializedObject serializedObject, string propertyName, params string[] clipPaths)
+        {
+            SerializedProperty property = serializedObject.FindProperty(propertyName);
+            if (property == null)
+            {
+                return;
+            }
+
+            property.arraySize = clipPaths.Length;
+            for (int i = 0; i < clipPaths.Length; i++)
+            {
+                property.GetArrayElementAtIndex(i).objectReferenceValue = AssetDatabase.LoadAssetAtPath<AudioClip>(clipPaths[i]);
             }
         }
 
@@ -295,8 +318,8 @@ namespace SCF.EditorTools
         private static SCFCharacterCandidate[] FindCharacterCandidates()
         {
             List<SCFCharacterCandidate> candidates = new List<SCFCharacterCandidate>();
-            AddPrefabCandidates(candidates, "Assets/Fighters_(Pack)/Prefabs");
             AddCandidate(candidates, "TPS Soldier", "Assets/TPS Shooter (Military style)/Models/Soldiers/Player/Soldier.fbx");
+            AddCandidate(candidates, "soldierExp", "Assets/TPS Shooter (Military style)/Models/Soldiers/Player/Soldier.fbx");
             AddCandidate(candidates, "Parkour Frank", "Assets/RedNotRed/3D Adaptive Parkour System/Player/Frank.prefab", Vector3.zero, Vector3.zero, Vector3.one * 15f);
             return candidates.ToArray();
         }

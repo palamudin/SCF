@@ -111,7 +111,6 @@ localScale = new Vector3(1f, 1f, 1f)
 worldPosition = new Vector3(116.0648f, 130.2653f, 249.9891f)
 worldEulerAngles = new Vector3(-5.611572f, -66.1355f, -15.3949f)
 lossyScale = new Vector3(0.800001f, 0.8f, 0.800001f)
-
 [006] MUZZLE / SCF_RailgunMuzzleTarget
 ownerPath = /SCF_Player/SCF_CharacterVisual/SCF_VisualFitOffset/SCF_Selected_Soldier/Hips/Spine/Spine1/Spine2/SCF_ChestWeaponSocket/SCF_Selected_SCF_Railgun_Weapon_Fiddled_Variant/SCF_RailgunMuzzleTarget
 relativePath = SCF_RailgunMuzzleTarget
@@ -333,4 +332,3 @@ localScale = new Vector3(1f, 1f, 1f)
 worldPosition = new Vector3(116.0648f, 130.2653f, 249.9891f)
 worldEulerAngles = new Vector3(-5.611572f, -66.1355f, -15.3949f)
 lossyScale = new Vector3(0.800001f, 0.8f, 0.800001f)
-

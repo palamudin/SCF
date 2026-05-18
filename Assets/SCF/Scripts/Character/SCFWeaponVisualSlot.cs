@@ -115,6 +115,11 @@ namespace SCF.Gameplay
         [SerializeField] private string leftElbowHintName = LeftElbowHintTargetName;
         [SerializeField, Range(0f, 1f)] private float referencePoseSampleTime01 = 0f;
 
+        [Header("World Pickup")]
+        [SerializeField] private bool spawnDefaultRailgunPickup = true;
+        [SerializeField] private KeyCode dropWeaponKey = KeyCode.G;
+        [SerializeField, Min(0f)] private float droppedWeaponSelfPickupDelay = 0.75f;
+
         [Header("Body Socket")]
         [Tooltip("Chest-bone local weapon socket offset.")]
         [SerializeField] private Vector3 restSocketOffset = DefaultRailgunSocketLocalPosition;
@@ -849,6 +854,7 @@ namespace SCF.Gameplay
             EnsureAnimatorIkRelay();
             EnsureWeaponSelectionPanel();
             EnsureWeaponTuningPanel();
+            EnsureWorldWeaponPickupSpawner();
 
             if (ShouldEquipRailgun())
             {
@@ -890,6 +896,30 @@ namespace SCF.Gameplay
             ClearWeapon();
         }
 
+        public void DropActiveWeapon()
+        {
+            if (activeWeapon == null)
+            {
+                return;
+            }
+
+            GameObject prototype = ResolveWeaponPrototype();
+            Vector3 dropPosition = ResolveWeaponDropPosition();
+            Quaternion dropRotation = Quaternion.identity;
+            string dropName = prototype != null ? "SCF_Dropped_" + SanitizeObjectName(prototype.name) : "SCF_Dropped_Weapon";
+
+            if (prototype != null)
+            {
+                SCFWeaponPickup pickup = SCFWeaponPickup.SpawnPickup(prototype, dropPosition, dropRotation, dropName, true, false);
+                if (pickup != null)
+                {
+                    pickup.IgnorePicker(this, droppedWeaponSelfPickupDelay);
+                }
+            }
+
+            UnequipWeapon();
+        }
+
         public void ApplyAnimatorIK(int layerIndex, Animator sourceAnimator)
         {
             if (!useAnimatorIk)
@@ -922,6 +952,7 @@ namespace SCF.Gameplay
             ResolveReferences();
             TickAimRayDebugToggle();
             TickWeaponIkLiveLoggerInput();
+            TickWeaponDropInput();
 
             if (activeWeapon == null)
             {
@@ -955,6 +986,55 @@ namespace SCF.Gameplay
             TickAimRayDebug(true);
             TickAimFocusCursor(true);
             TickWeaponIkLiveLogger();
+        }
+
+        private void TickWeaponDropInput()
+        {
+            if (!Application.isPlaying || activeWeapon == null || !WasDropWeaponPressed())
+            {
+                return;
+            }
+
+            DropActiveWeapon();
+        }
+
+        private bool WasDropWeaponPressed()
+        {
+            if (dropWeaponKey == KeyCode.None)
+            {
+                return false;
+            }
+
+#if ENABLE_LEGACY_INPUT_MANAGER
+            if (UnityEngine.Input.GetKeyDown(dropWeaponKey))
+            {
+                return true;
+            }
+#endif
+
+#if ENABLE_INPUT_SYSTEM
+            Keyboard keyboard = Keyboard.current;
+            return dropWeaponKey == KeyCode.G && keyboard != null && keyboard.gKey.wasPressedThisFrame;
+#else
+            return false;
+#endif
+        }
+
+        private Vector3 ResolveWeaponDropPosition()
+        {
+            Vector3 source = activeWeapon != null ? activeWeapon.transform.position : transform.position;
+            Vector3 planarForward = motor != null && motor.BodyFacingDirection.sqrMagnitude > 0.0001f
+                ? motor.BodyFacingDirection
+                : transform.forward;
+            planarForward.y = 0f;
+            if (planarForward.sqrMagnitude <= 0.0001f)
+            {
+                planarForward = Vector3.forward;
+            }
+
+            Vector3 position = source + planarForward.normalized * 1.35f;
+            float groundY = SampleGroundY(position);
+            return new Vector3(position.x, groundY, position.z);
         }
 
         private void SolveWeaponTargetsForCurrentFrame()
@@ -1756,11 +1836,28 @@ namespace SCF.Gameplay
             panel.Configure(this);
         }
 
+        private void EnsureWorldWeaponPickupSpawner()
+        {
+            if (!spawnDefaultRailgunPickup)
+            {
+                return;
+            }
+
+            SCFWorldWeaponPickupSpawner spawner = GetComponent<SCFWorldWeaponPickupSpawner>();
+            if (spawner == null)
+            {
+                spawner = gameObject.AddComponent<SCFWorldWeaponPickupSpawner>();
+            }
+
+            spawner.Configure(ResolveRailgunPrototype());
+        }
+
         private bool ShouldEquipRailgun()
         {
             return autoEquipRailgunOnConfigure
                    && equipRailgunOnSoldier
                    && animator != null
+                   && !IsExperimentalSoldierCharacter(activeCharacterName)
                    && HasSoldierVisualIdentity()
                    && ResolveWeaponPrototype() != null;
         }
@@ -2633,8 +2730,11 @@ namespace SCF.Gameplay
             ApplyDefaultRailgunAnchorTransform(rightGripName, DefaultRailgunRightGripLocalPosition, DefaultRailgunRightGripLocalEulerAngles);
             ApplyDefaultRailgunAnchorTransform(leftGripName, DefaultRailgunLeftGripLocalPosition, DefaultRailgunLeftGripLocalEulerAngles);
             ApplyDefaultRailgunAnchorTransform(railgunMuzzleTransformName, DefaultRailgunMuzzleLocalPosition, DefaultRailgunMuzzleLocalEulerAngles);
-            ApplyDefaultRailgunAnchorTransform(rightElbowHintName, DefaultRailgunRightElbowHintLocalPosition, DefaultRailgunRightElbowHintLocalEulerAngles);
-            ApplyDefaultRailgunAnchorTransform(leftElbowHintName, DefaultRailgunLeftElbowHintLocalPosition, DefaultRailgunLeftElbowHintLocalEulerAngles);
+            if (ShouldUseElbowHintTargets())
+            {
+                ApplyDefaultRailgunAnchorTransform(rightElbowHintName, DefaultRailgunRightElbowHintLocalPosition, DefaultRailgunRightElbowHintLocalEulerAngles);
+                ApplyDefaultRailgunAnchorTransform(leftElbowHintName, DefaultRailgunLeftElbowHintLocalPosition, DefaultRailgunLeftElbowHintLocalEulerAngles);
+            }
         }
 
         private void ApplyDefaultRailgunAnchorTransform(string anchorName, Vector3 localPosition, Vector3 localEulerAngles)
@@ -2657,10 +2757,9 @@ namespace SCF.Gameplay
 
         private void EnsureElbowHints()
         {
-            if (!useElbowHints || weaponSocket == null)
+            if (!ShouldUseElbowHintTargets() || weaponSocket == null)
             {
-                rightElbowHint = null;
-                leftElbowHint = null;
+                ClearElbowHintTargets();
                 return;
             }
 
@@ -2680,6 +2779,57 @@ namespace SCF.Gameplay
             if (leftElbowHint != null)
             {
                 EnsureTuningHandle(leftElbowHint.gameObject);
+            }
+        }
+
+        private bool ShouldUseElbowHintTargets()
+        {
+            return useElbowHints && !IsExperimentalSoldierCharacter(activeCharacterName);
+        }
+
+        private void ClearElbowHintTargets()
+        {
+            DestroyRuntimeElbowHint(rightElbowHint);
+            DestroyRuntimeElbowHint(leftElbowHint);
+            DestroyNamedRuntimeElbowHint(rightElbowHintName);
+            DestroyNamedRuntimeElbowHint(leftElbowHintName);
+            rightElbowHint = null;
+            leftElbowHint = null;
+        }
+
+        private void DestroyNamedRuntimeElbowHint(string targetName)
+        {
+            if (string.IsNullOrWhiteSpace(targetName))
+            {
+                return;
+            }
+
+            Transform target = null;
+            if (activeWeapon != null)
+            {
+                target = FindDescendantByName(activeWeapon.transform, targetName);
+            }
+
+            if (target == null && weaponSocket != null)
+            {
+                target = FindDirectChild(weaponSocket, targetName);
+            }
+
+            DestroyRuntimeElbowHint(target);
+        }
+
+        private void DestroyRuntimeElbowHint(Transform target)
+        {
+            if (target == null)
+            {
+                return;
+            }
+
+            bool belongsToWeaponRig = (weaponSocket != null && target.IsChildOf(weaponSocket))
+                                      || (activeWeapon != null && target.IsChildOf(activeWeapon.transform));
+            if (belongsToWeaponRig)
+            {
+                DestroyUnityObject(target.gameObject);
             }
         }
 
@@ -3949,7 +4099,7 @@ namespace SCF.Gameplay
             targetAnimator.SetIKPosition(goal, targetPosition);
             targetAnimator.SetIKRotation(goal, grip.rotation);
 
-            if (useElbowHints && elbowHint != null)
+            if (ShouldUseElbowHintTargets() && elbowHint != null)
             {
                 targetAnimator.SetIKHintPositionWeight(hint, Mathf.Clamp01(finalPositionWeight * hintWeight));
                 targetAnimator.SetIKHintPosition(hint, elbowHint.position);
@@ -3987,7 +4137,7 @@ namespace SCF.Gameplay
 
         private void ApplyManualElbowHintAssist()
         {
-            if (!useManualElbowHintAssist || !useElbowHints || !CanApplyHandIk())
+            if (!useManualElbowHintAssist || !ShouldUseElbowHintTargets() || !CanApplyHandIk())
             {
                 return;
             }
@@ -4219,6 +4369,12 @@ namespace SCF.Gameplay
                    && characterName.IndexOf("soldier", StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
+        private static bool IsExperimentalSoldierCharacter(string characterName)
+        {
+            return !string.IsNullOrWhiteSpace(characterName)
+                   && characterName.IndexOf("soldierExp", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
         private bool HasSoldierVisualIdentity()
         {
             if (IsSoldierCharacter(activeCharacterName))
@@ -4254,6 +4410,23 @@ namespace SCF.Gameplay
         {
             color.a = alpha;
             return color;
+        }
+
+        private static float SampleGroundY(Vector3 position)
+        {
+            Terrain terrain = Terrain.activeTerrain;
+            if (terrain != null)
+            {
+                return terrain.SampleHeight(position) + terrain.transform.position.y;
+            }
+
+            Vector3 rayOrigin = position + Vector3.up * 8f;
+            if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, 30f, ~0, QueryTriggerInteraction.Ignore))
+            {
+                return hit.point.y;
+            }
+
+            return position.y;
         }
 
         private static void StripColliders(GameObject root)

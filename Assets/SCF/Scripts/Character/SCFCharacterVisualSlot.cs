@@ -55,6 +55,15 @@ namespace SCF.Gameplay
         [SerializeField] private bool fitVisualToController;
         [SerializeField] private bool disablePrefabBehaviours = true;
         [SerializeField] private bool hideCapsuleRenderers = true;
+
+        [Header("Footsteps")]
+        [SerializeField] private AudioClip[] soldierFootstepClips;
+        [SerializeField] private AudioClip[] frankFootstepClips;
+        [SerializeField, Range(0f, 1f)] private float soldierFootstepVolume = 0.52f;
+        [SerializeField, Range(0f, 1f)] private float soldierLoadFootstepVolumeBoost = 0.35f;
+        [SerializeField, Range(0f, 1f)] private float frankFootstepVolume = 0.18f;
+        [SerializeField, Range(0f, 1f)] private float frankLoadFootstepVolumeBoost;
+
         [SerializeField] private Animator activeAnimator;
         [SerializeField] private GameObject activeVisual;
         [SerializeField] private string activeCharacterName;
@@ -68,6 +77,11 @@ namespace SCF.Gameplay
 
         private Transform visualRoot;
         private Transform visualFitOffset;
+
+#if UNITY_EDITOR
+        private const string TpsAsphaltFootstep1Path = "Assets/TPS Shooter (Military style)/Sounds/FootstepSounds/Acphalt/FootstepAcphalt_1.ogg";
+        private const string TpsAsphaltFootstep2Path = "Assets/TPS Shooter (Military style)/Sounds/FootstepSounds/Acphalt/FootstepAcphalt_2.ogg";
+#endif
 
         private void Awake()
         {
@@ -619,11 +633,12 @@ namespace SCF.Gameplay
             animator.enabled = true;
             animator.applyRootMotion = false;
             animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
-            EnsureAnimationEventSink(gameObject);
-            EnsureAnimationEventSink(visualRoot != null ? visualRoot.gameObject : null);
-            EnsureAnimationEventSink(visualFitOffset != null ? visualFitOffset.gameObject : null);
-            EnsureAnimationEventSink(activeVisual);
-            EnsureAnimationEventSink(animator.gameObject);
+            bool useProceduralFootsteps = IsParkourCharacterActive();
+            ConfigureAnimationEventSink(gameObject, useProceduralFootsteps);
+            ConfigureAnimationEventSink(visualRoot != null ? visualRoot.gameObject : null, false);
+            ConfigureAnimationEventSink(visualFitOffset != null ? visualFitOffset.gameObject : null, false);
+            ConfigureAnimationEventSink(activeVisual, false);
+            ConfigureAnimationEventSink(animator.gameObject, false);
 
             if (animatorController != null)
             {
@@ -634,13 +649,82 @@ namespace SCF.Gameplay
             animator.Update(0f);
         }
 
-        private static void EnsureAnimationEventSink(GameObject target)
+        private void ConfigureAnimationEventSink(GameObject target, bool proceduralFootstepFallback)
         {
-            if (target != null && target.GetComponent<SCFAnimationEventSink>() == null)
+            if (target == null)
             {
-                target.AddComponent<SCFAnimationEventSink>();
+                return;
             }
+
+            SCFAnimationEventSink sink = target.GetComponent<SCFAnimationEventSink>();
+            if (sink == null)
+            {
+                sink = target.AddComponent<SCFAnimationEventSink>();
+            }
+
+            sink.enabled = true;
+            sink.Configure(
+                GetComponent<IsometricCharacterMotor>(),
+                activeCharacterName,
+                proceduralFootstepFallback,
+                ResolveSoldierFootstepClips(),
+                ResolveFrankFootstepClips(),
+                soldierFootstepVolume,
+                soldierLoadFootstepVolumeBoost,
+                frankFootstepVolume,
+                frankLoadFootstepVolumeBoost);
         }
+
+        private AudioClip[] ResolveSoldierFootstepClips()
+        {
+#if UNITY_EDITOR
+            if (!HasFootstepClips(soldierFootstepClips))
+            {
+                soldierFootstepClips = LoadDefaultAsphaltFootsteps();
+            }
+#endif
+            return soldierFootstepClips;
+        }
+
+        private AudioClip[] ResolveFrankFootstepClips()
+        {
+#if UNITY_EDITOR
+            if (!HasFootstepClips(frankFootstepClips))
+            {
+                frankFootstepClips = LoadDefaultAsphaltFootsteps();
+            }
+#endif
+            return HasFootstepClips(frankFootstepClips) ? frankFootstepClips : ResolveSoldierFootstepClips();
+        }
+
+        private static bool HasFootstepClips(AudioClip[] clips)
+        {
+            if (clips == null || clips.Length == 0)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < clips.Length; i++)
+            {
+                if (clips[i] != null)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+#if UNITY_EDITOR
+        private static AudioClip[] LoadDefaultAsphaltFootsteps()
+        {
+            return new[]
+            {
+                AssetDatabase.LoadAssetAtPath<AudioClip>(TpsAsphaltFootstep1Path),
+                AssetDatabase.LoadAssetAtPath<AudioClip>(TpsAsphaltFootstep2Path)
+            };
+        }
+#endif
 
 #if UNITY_EDITOR
         private static void RemoveMissingScripts(GameObject root)

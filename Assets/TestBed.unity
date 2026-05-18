@@ -1294,67 +1294,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SCF.Gameplay.SCFCharacterSelectionPanel
   visualSlot: {fileID: 348264567}
   candidates:
-  - displayName: Fighter_01
-    prefab: {fileID: 1280676089565844, guid: 1536126113fa3bc4ca2739312a659e58, type: 3}
-    localPosition: {x: 0, y: 0, z: 0}
-    localEulerAngles: {x: 0, y: 0, z: 0}
-    localScale: {x: 1, y: 1, z: 1}
-  - displayName: Fighter_02
-    prefab: {fileID: 1711327026283486, guid: 1a0347bf83c18864aba4f248e012d438, type: 3}
-    localPosition: {x: 0, y: 0, z: 0}
-    localEulerAngles: {x: 0, y: 0, z: 0}
-    localScale: {x: 1, y: 1, z: 1}
-  - displayName: Fighter_03
-    prefab: {fileID: 1148968185629546, guid: 135b18f831a404b41ad601598c8faedf, type: 3}
-    localPosition: {x: 0, y: 0, z: 0}
-    localEulerAngles: {x: 0, y: 0, z: 0}
-    localScale: {x: 1, y: 1, z: 1}
-  - displayName: Fighter_04
-    prefab: {fileID: 1000965131024424, guid: 1ba3545afa721cf408e9715ff89e5710, type: 3}
-    localPosition: {x: 0, y: 0, z: 0}
-    localEulerAngles: {x: 0, y: 0, z: 0}
-    localScale: {x: 1, y: 1, z: 1}
-  - displayName: Fighter_05
-    prefab: {fileID: 1708753829174032, guid: 8bcafe32d66ac5a49af4b77781de3ba3, type: 3}
-    localPosition: {x: 0, y: 0, z: 0}
-    localEulerAngles: {x: 0, y: 0, z: 0}
-    localScale: {x: 1, y: 1, z: 1}
-  - displayName: Fighter_06
-    prefab: {fileID: 1389624269249246, guid: 9fb5a4c636eabb04e8538a2a26d40478, type: 3}
-    localPosition: {x: 0, y: 0, z: 0}
-    localEulerAngles: {x: 0, y: 0, z: 0}
-    localScale: {x: 1, y: 1, z: 1}
-  - displayName: Fighter_07
-    prefab: {fileID: 1314981962982840, guid: 2267c9e4b1b2f404d8fff4eb9047209f, type: 3}
-    localPosition: {x: 0, y: 0, z: 0}
-    localEulerAngles: {x: 0, y: 0, z: 0}
-    localScale: {x: 1, y: 1, z: 1}
-  - displayName: Fighter_11
-    prefab: {fileID: 1476384235985068, guid: 9999434fe1d66c14181a9a4dc738a1b1, type: 3}
-    localPosition: {x: 0, y: 0, z: 0}
-    localEulerAngles: {x: 0, y: 0, z: 0}
-    localScale: {x: 1, y: 1, z: 1}
-  - displayName: Fighter_12
-    prefab: {fileID: 1801433199331058, guid: 9bdb8ac99a44444499cc4e55b96ec1d9, type: 3}
-    localPosition: {x: 0, y: 0, z: 0}
-    localEulerAngles: {x: 0, y: 0, z: 0}
-    localScale: {x: 1, y: 1, z: 1}
-  - displayName: Fighter_13
-    prefab: {fileID: 1130096747466988, guid: c9f62dcc7371d3849a8a56ee58f14e33, type: 3}
-    localPosition: {x: 0, y: 0, z: 0}
-    localEulerAngles: {x: 0, y: 0, z: 0}
-    localScale: {x: 1, y: 1, z: 1}
-  - displayName: Fighter_14
-    prefab: {fileID: 1937312542761180, guid: a5819ff97636f104eb727d60937919e6, type: 3}
-    localPosition: {x: 0, y: 0, z: 0}
-    localEulerAngles: {x: 0, y: 0, z: 0}
-    localScale: {x: 1, y: 1, z: 1}
-  - displayName: Fighter_15
-    prefab: {fileID: 1875539412281594, guid: f180597bcb91e4348b92b15eef4250ce, type: 3}
-    localPosition: {x: 0, y: 0, z: 0}
-    localEulerAngles: {x: 0, y: 0, z: 0}
-    localScale: {x: 1, y: 1, z: 1}
   - displayName: TPS Soldier
+    prefab: {fileID: 100070, guid: 177fbed452af99e48bbca8dfb88faddb, type: 3}
+    localPosition: {x: 0, y: 0, z: 0}
+    localEulerAngles: {x: 0, y: 0, z: 0}
+    localScale: {x: 1, y: 1, z: 1}
+  - displayName: soldierExp
     prefab: {fileID: 100070, guid: 177fbed452af99e48bbca8dfb88faddb, type: 3}
     localPosition: {x: 0, y: 0, z: 0}
     localEulerAngles: {x: 0, y: 0, z: 0}
@@ -1390,6 +1335,16 @@ MonoBehaviour:
   fitVisualToController: 0
   disablePrefabBehaviours: 1
   hideCapsuleRenderers: 1
+  soldierFootstepClips:
+  - {fileID: 8300000, guid: cbf7daaa78e3cc14096fad85e4327da5, type: 3}
+  - {fileID: 8300000, guid: 4aaac69f1c80f044697db0b535b41fbf, type: 3}
+  frankFootstepClips:
+  - {fileID: 8300000, guid: cbf7daaa78e3cc14096fad85e4327da5, type: 3}
+  - {fileID: 8300000, guid: 4aaac69f1c80f044697db0b535b41fbf, type: 3}
+  soldierFootstepVolume: 0.52
+  soldierLoadFootstepVolumeBoost: 0.35
+  frankFootstepVolume: 0.18
+  frankLoadFootstepVolumeBoost: 0
   activeAnimator: {fileID: 0}
   activeVisual: {fileID: 0}
   activeCharacterName: 

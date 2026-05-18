@@ -13,7 +13,7 @@ namespace SCF.Gameplay
         private const float ExpandedMaxPositionRange = 30f;
 
         [SerializeField] private SCFWeaponVisualSlot weaponSlot;
-        [SerializeField] private bool visible = true;
+        [SerializeField] private bool visible;
         [SerializeField] private Key toggleKey = Key.F7;
         [SerializeField] private Rect windowRect = new Rect(652f, 78f, 440f, 650f);
         [SerializeField] private Rect collapsedRect = new Rect(652f, 78f, 112f, 30f);
@@ -71,7 +71,7 @@ namespace SCF.Gameplay
         public void Configure(SCFWeaponVisualSlot slot)
         {
             weaponSlot = slot;
-            visible = true;
+            visible = false;
         }
 
         private void OnGUI()

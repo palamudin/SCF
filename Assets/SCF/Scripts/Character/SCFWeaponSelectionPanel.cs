@@ -23,7 +23,7 @@ namespace SCF.Gameplay
         [SerializeField] private SCFWeaponVisualSlot weaponSlot;
         [SerializeField] private SCFWeaponRuntimeCatalog runtimeWeaponCatalog;
         [SerializeField] private List<GameObject> weaponPrefabs = new List<GameObject>();
-        [SerializeField] private bool visible = true;
+        [SerializeField] private bool visible;
         [SerializeField] private Key toggleKey = Key.F6;
         [SerializeField] private Rect windowRect = new Rect(286f, 78f, 360f, 360f);
         [SerializeField] private Rect collapsedRect = new Rect(286f, 78f, 104f, 30f);
@@ -69,7 +69,7 @@ namespace SCF.Gameplay
         public void Configure(SCFWeaponVisualSlot slot)
         {
             weaponSlot = slot;
-            visible = true;
+            visible = false;
         }
 
         [ContextMenu("Load Weapon Prefabs")]
