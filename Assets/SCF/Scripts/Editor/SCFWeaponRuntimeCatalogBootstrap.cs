@@ -13,6 +13,7 @@ namespace SCF.Gameplay.Editor
         private const string CatalogPath = CatalogFolder + "/SCFWeaponRuntimeCatalog.asset";
         private const string RailgunProfilePath = ProfileFolder + "/SCF_RailgunRigProfile.asset";
         private const string RailgunPrefabPath = PrefabFolder + "/SCF_Railgun_Weapon_Fiddled Variant.prefab";
+        private const string CleanRailgunPrefabPath = PrefabFolder + "/SCF_RailgunNEW.prefab";
         private const string RailgunPath = "Assets/SCF/2.8 rail-gun prototype_Texture_Packed.blend";
         private const string RailgunFireClipPath = "Assets/SCF/Audio/kalsstockmedia-a-large-explosive-laser-gun-shot-scifi-410622.mp3";
 
@@ -42,12 +43,16 @@ namespace SCF.Gameplay.Editor
 
             GameObject railgun = AssetDatabase.LoadAssetAtPath<GameObject>(RailgunPath);
             GameObject railgunPrefab = EnsureRailgunWeaponPrefab(railgun);
+            GameObject cleanRailgunPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(CleanRailgunPrefabPath);
+            GameObject runtimeRailgunPrefab = cleanRailgunPrefab != null ? cleanRailgunPrefab : railgunPrefab;
             AudioClip fireClip = AssetDatabase.LoadAssetAtPath<AudioClip>(RailgunFireClipPath);
-            SCFWeaponRigProfile railgunProfile = EnsureRailgunRigProfile(railgunPrefab, fireClip);
+            SCFWeaponRigProfile railgunProfile = EnsureRailgunRigProfile(runtimeRailgunPrefab, fireClip);
 
             SerializedObject serializedCatalog = new SerializedObject(catalog);
             serializedCatalog.FindProperty("railgunPrototype").objectReferenceValue = railgun;
-            serializedCatalog.FindProperty("railgunWeaponPrefab").objectReferenceValue = railgunPrefab;
+            serializedCatalog.FindProperty("railgunWeaponPrefab").objectReferenceValue = runtimeRailgunPrefab;
+            serializedCatalog.FindProperty("cleanRailgunWeaponPrefab").objectReferenceValue = runtimeRailgunPrefab;
+            serializedCatalog.FindProperty("legacyTpsRailgunWeaponPrefab").objectReferenceValue = railgunPrefab;
             serializedCatalog.FindProperty("railgunRigProfile").objectReferenceValue = railgunProfile;
             serializedCatalog.FindProperty("railgunFireClip").objectReferenceValue = fireClip;
             serializedCatalog.ApplyModifiedPropertiesWithoutUndo();
@@ -80,12 +85,6 @@ namespace SCF.Gameplay.Editor
                 EnsureAnchor(prefabRoot.transform, "SCF_RailgunMuzzleTarget",
                     new Vector3(0.96f, 0.12f, 0f),
                     Quaternion.Euler(0f, 90f, 0f));
-                EnsureAnchor(prefabRoot.transform, "SCF_RightElbowHint",
-                    new Vector3(-3.03f, -0.9211f, -0.76f),
-                    Quaternion.Euler(37.30001f, 0f, 0f));
-                EnsureAnchor(prefabRoot.transform, "SCF_LeftElbowHint",
-                    new Vector3(0.39f, -0.23f, 0.17f),
-                    Quaternion.identity);
 
                 PrefabUtility.SaveAsPrefabAsset(prefabRoot, RailgunPrefabPath);
             }

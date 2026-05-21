@@ -25,15 +25,20 @@ namespace SCF.Gameplay
         [Header("Selection")]
         [SerializeField, Min(0.01f)] private float searchInterval = 0.05f;
         [SerializeField, Min(0f)] private float idleSpeedThreshold = 0.15f;
+        [SerializeField, Min(0f)] private float idleExitSpeedThreshold = 0.3f;
         [SerializeField, Min(0f)] private float currentClipBias = 0.08f;
         [SerializeField] private bool preferDirectionalLocomotionWhileAiming = true;
         [SerializeField] private bool useDedicatedAimLocomotion = true;
         [SerializeField] private bool useAimFrameForAimLocomotion = true;
+        [SerializeField] private bool useMotorFacingFrameForFreeLocomotion = true;
 
         [Header("Blending")]
         [SerializeField, Min(0.01f)] private float locomotionBlendTime = 0.18f;
         [SerializeField, Min(0.01f)] private float actionBlendTime = 0.08f;
         [SerializeField] private bool applyFootIK = true;
+        [SerializeField] private bool preserveLoopPhaseOnLocomotionSwitch = true;
+        [SerializeField, Range(0.25f, 2f)] private float minLocomotionPlaybackSpeed = 0.85f;
+        [SerializeField, Range(0.25f, 2f)] private float maxLocomotionPlaybackSpeed = 1f;
         [SerializeField] private bool syncActionsToMotorTime = true;
         [SerializeField] private bool drawDebugTrajectory = true;
 
@@ -54,6 +59,7 @@ namespace SCF.Gameplay
         [SerializeField, Min(0.01f)] private float weaponUpperBodyPlaybackSpeed = 1f;
         [SerializeField, Min(0.1f)] private float weaponUpperBodyBlendSharpness = 12f;
         [SerializeField] private bool freezeWeaponUpperBodyWhenIdle = true;
+        [SerializeField] private bool freezeUnaimedCarryUpperBodyWhileMoving = true;
         [SerializeField, Range(0f, 1f)] private float weaponUpperBodyIdlePoseTime = 0.08f;
         [SerializeField] private bool suppressWeaponLayerDuringTraversal = true;
 
@@ -73,6 +79,9 @@ namespace SCF.Gameplay
         [SerializeField] private int selectedMotionIndex = -1;
         [SerializeField] private string selectedMotionName;
         [SerializeField] private float lastSelectionCost;
+        [SerializeField] private Vector2 lastLocalMotionDirection;
+        [SerializeField] private Vector3 lastMotionReferenceDirection;
+        [SerializeField, Range(0f, 1f)] private float lastPreservedLoopPhase;
         [SerializeField, Range(0f, 1f)] private float currentWeaponUpperBodyWeight;
 
         private readonly Playable[] slotPlayables = new Playable[2];
@@ -89,6 +98,7 @@ namespace SCF.Gameplay
         private float fadeDuration;
         private float searchTimer;
         private int lastCombatRollSequence = -1;
+        private int lastSlideSequence = -1;
         private int lastJumpSequence = -1;
         private int lastWallRunSequence = -1;
         private int lastVaultSequence = -1;
@@ -429,6 +439,7 @@ namespace SCF.Gameplay
                 || !HasAnyWeaponUpperBodyClip()
                 || weaponVisualSlot == null
                 || !weaponVisualSlot.HasActiveWeapon
+                || weaponVisualSlot.SuppressWeaponUpperBodyPoseLayer
                 || animator == null
                 || animator.avatar == null
                 || !animator.avatar.isHuman
@@ -453,7 +464,7 @@ namespace SCF.Gameplay
             }
 
             bool moving = ShouldPlayWeaponUpperBodyMotion();
-            if (moving && weaponMoveClip != null)
+            if (moving && weaponMoveClip != null && ShouldUseMovingWeaponUpperBodyClip())
             {
                 return weaponMoveClip;
             }
@@ -479,7 +490,14 @@ namespace SCF.Gameplay
         {
             return activeWeaponUpperBodyClip != null
                    && (activeWeaponUpperBodyClip == weaponMoveClip
+                       && ShouldUseMovingWeaponUpperBodyClip()
                        || (IsAimRunUpperBodySplitActive() && activeWeaponUpperBodyClip == aimRunUpperBodyClip));
+        }
+
+        private bool ShouldUseMovingWeaponUpperBodyClip()
+        {
+            return !freezeUnaimedCarryUpperBodyWhileMoving
+                   || (motor != null && motor.AimHeld);
         }
 
         private float ResolveActiveWeaponUpperBodyPlaybackSpeed()
@@ -506,6 +524,7 @@ namespace SCF.Gameplay
             }
 
             return !motor.IsCombatRolling
+                   && !motor.IsSliding
                    && !motor.IsVaulting
                    && !motor.IsClimbing
                    && !motor.IsWallRunning;
@@ -605,6 +624,17 @@ namespace SCF.Gameplay
                     return ChooseActionMotion(SCFMotionType.CombatRoll, ResolveLocalMotionDirection(), out cost);
                 }
 
+                if (motor.IsSliding)
+                {
+                    int slide = database.FindBestByType(SCFMotionType.VaultSlide, ResolveLocalMotionDirection(), selectedMotionIndex, currentClipBias, out cost);
+                    if (slide >= 0)
+                    {
+                        return slide;
+                    }
+
+                    return ChooseActionMotion(SCFMotionType.CombatRoll, ResolveLocalMotionDirection(), out cost);
+                }
+
                 if (motor.IsWallRunning)
                 {
                     return ChooseWallRunLocomotion(out cost);
@@ -626,7 +656,7 @@ namespace SCF.Gameplay
                 }
 
                 float speed = motor.PlanarVelocity.magnitude;
-                if (speed <= idleSpeedThreshold)
+                if (ShouldUseIdleMotion(speed))
                 {
                     int idle = database.FindFirst(SCFMotionType.Idle);
                     if (idle >= 0)
@@ -635,8 +665,10 @@ namespace SCF.Gameplay
                     }
                 }
 
-                Vector2 localMotionDirection = ResolveLocalMotionDirection(motor.AimHeld && useAimFrameForAimLocomotion);
-                if (useDedicatedAimLocomotion && motor.AimHeld)
+                bool hasWeapon = weaponVisualSlot != null && weaponVisualSlot.HasActiveWeapon;
+                bool aimLocomotionActive = hasWeapon && motor.AimHeld;
+                Vector2 localMotionDirection = ResolveLocalMotionDirection(aimLocomotionActive && useAimFrameForAimLocomotion);
+                if (useDedicatedAimLocomotion && aimLocomotionActive)
                 {
                     int aimMotion = ChooseAimLocomotion(localMotionDirection, speed, out cost);
                     if (aimMotion >= 0)
@@ -645,12 +677,27 @@ namespace SCF.Gameplay
                     }
                 }
 
-                if (preferDirectionalLocomotionWhileAiming && motor.AimHeld)
+                if (preferDirectionalLocomotionWhileAiming && aimLocomotionActive)
                 {
                     int directionalMotion = database.FindBestByType(SCFMotionType.Locomotion, localMotionDirection, selectedMotionIndex, currentClipBias, out cost);
                     if (directionalMotion >= 0)
                     {
                         return directionalMotion;
+                    }
+                }
+
+                if (!aimLocomotionActive)
+                {
+                    int unarmedMotion = database.FindBestLocomotionExcludingTags(
+                        localMotionDirection,
+                        speed,
+                        selectedMotionIndex,
+                        currentClipBias,
+                        SCFMotionTags.Aim,
+                        out cost);
+                    if (unarmedMotion >= 0)
+                    {
+                        return unarmedMotion;
                     }
                 }
 
@@ -777,8 +824,8 @@ namespace SCF.Gameplay
 
             AnimationClipPlayable clipPlayable = AnimationClipPlayable.Create(graph, clipData.Clip);
             clipPlayable.SetApplyFootIK(applyFootIK);
-            clipPlayable.SetTime(0d);
-            clipPlayable.SetDuration(Mathf.Max(0.01f, clipData.Duration));
+            clipPlayable.SetTime(ResolveSwitchStartTime(clipData));
+            clipPlayable.SetDuration(ResolvePlaybackDuration(clipData));
 
             mixer.ConnectInput(nextSlot, clipPlayable, 0);
             mixer.SetInputWeight(nextSlot, activeSlot < 0 ? 1f : 0f);
@@ -798,6 +845,66 @@ namespace SCF.Gameplay
             }
 
             SyncActiveMotionSpeed();
+        }
+
+        private double ResolveSwitchStartTime(SCFMotionClipData nextClip)
+        {
+            if (!preserveLoopPhaseOnLocomotionSwitch
+                || activeSlot < 0
+                || !IsPhaseCompatibleLoop(nextClip)
+                || database == null)
+            {
+                lastPreservedLoopPhase = 0f;
+                return 0d;
+            }
+
+            Playable currentPlayable = slotPlayables[activeSlot];
+            if (!currentPlayable.IsValid()
+                || !database.TryGetClip(slotMotionIndices[activeSlot], out SCFMotionClipData currentClip)
+                || !IsPhaseCompatibleLoop(currentClip))
+            {
+                lastPreservedLoopPhase = 0f;
+                return 0d;
+            }
+
+            double currentDuration = ResolvePlaybackDuration(currentClip);
+            double nextDuration = ResolvePlaybackDuration(nextClip);
+            double phase = currentPlayable.GetTime() / currentDuration;
+            phase -= System.Math.Floor(phase);
+            lastPreservedLoopPhase = (float)phase;
+            return phase * nextDuration;
+        }
+
+        private static double ResolvePlaybackDuration(SCFMotionClipData clipData)
+        {
+            if (clipData != null && clipData.Clip != null && clipData.Clip.length > 0.01f)
+            {
+                return clipData.Clip.length;
+            }
+
+            return clipData != null ? Mathf.Max(0.01f, clipData.Duration) : 0.01d;
+        }
+
+        private static bool IsPhaseCompatibleLoop(SCFMotionClipData clipData)
+        {
+            return clipData != null
+                   && clipData.Looping
+                   && (clipData.MotionType == SCFMotionType.Locomotion || clipData.MotionType == SCFMotionType.Idle);
+        }
+
+        private bool ShouldUseIdleMotion(float speed)
+        {
+            float enterThreshold = Mathf.Max(0f, idleSpeedThreshold);
+            float exitThreshold = Mathf.Max(enterThreshold, idleExitSpeedThreshold);
+            if (database != null
+                && selectedMotionIndex >= 0
+                && database.TryGetClip(selectedMotionIndex, out SCFMotionClipData currentClip)
+                && currentClip.MotionType == SCFMotionType.Idle)
+            {
+                return speed <= exitThreshold;
+            }
+
+            return speed <= enterThreshold;
         }
 
         private void ClearSlot(int slot)
@@ -873,7 +980,9 @@ namespace SCF.Gameplay
                 }
                 else if (clipData.MotionType == SCFMotionType.Locomotion && clipData.AveragePlanarSpeed > 0.1f)
                 {
-                    speed = Mathf.Clamp(motor.PlanarVelocity.magnitude / clipData.AveragePlanarSpeed, 0.75f, 1.35f);
+                    float minSpeed = Mathf.Min(minLocomotionPlaybackSpeed, maxLocomotionPlaybackSpeed);
+                    float maxSpeed = Mathf.Max(minLocomotionPlaybackSpeed, maxLocomotionPlaybackSpeed);
+                    speed = Mathf.Clamp(motor.PlanarVelocity.magnitude / clipData.AveragePlanarSpeed, minSpeed, maxSpeed);
                 }
             }
 
@@ -890,7 +999,7 @@ namespace SCF.Gameplay
                     continue;
                 }
 
-                double duration = Mathf.Max(0.01f, clipData.Duration);
+                double duration = ResolvePlaybackDuration(clipData);
                 if (clipData.Looping)
                 {
                     double time = playable.GetTime();
@@ -982,7 +1091,7 @@ namespace SCF.Gameplay
             return (motionType == SCFMotionType.CombatRoll && motor.IsCombatRolling)
                 || (motionType == SCFMotionType.Jump && motor.IsAirborne)
                 || (motionType == SCFMotionType.Vault && motor.IsVaulting)
-                || (motionType == SCFMotionType.VaultSlide && motor.IsVaulting && motor.IsVaultSliding)
+                || (motionType == SCFMotionType.VaultSlide && (motor.IsSliding || motor.IsVaulting && motor.IsVaultSliding))
                 || (motionType == SCFMotionType.Climb && motor.IsClimbing);
         }
 
@@ -1011,21 +1120,46 @@ namespace SCF.Gameplay
                 : Vector3.zero;
             if (planarAim.sqrMagnitude > 0.0001f)
             {
-                localVelocity = Quaternion.Inverse(Quaternion.LookRotation(planarAim.normalized, Vector3.up)) * velocity.normalized;
+                Vector3 aimReference = planarAim.normalized;
+                lastMotionReferenceDirection = aimReference;
+                localVelocity = Quaternion.Inverse(Quaternion.LookRotation(aimReference, Vector3.up)) * velocity.normalized;
             }
             else
             {
-                Transform reference = animator != null ? animator.transform : transform;
-                localVelocity = reference.InverseTransformDirection(velocity.normalized);
+                Vector3 referenceDirection = ResolveFreeLocomotionReferenceDirection();
+                lastMotionReferenceDirection = referenceDirection;
+                localVelocity = Quaternion.Inverse(Quaternion.LookRotation(referenceDirection, Vector3.up)) * velocity.normalized;
             }
 
             Vector2 localDirection = new Vector2(localVelocity.x, localVelocity.z);
-            return localDirection.sqrMagnitude > 0.0001f ? localDirection.normalized : Vector2.zero;
+            lastLocalMotionDirection = localDirection.sqrMagnitude > 0.0001f ? localDirection.normalized : Vector2.zero;
+            return lastLocalMotionDirection;
+        }
+
+        private Vector3 ResolveFreeLocomotionReferenceDirection()
+        {
+            if (useMotorFacingFrameForFreeLocomotion && motor != null)
+            {
+                Vector3 motorFacing = Vector3.ProjectOnPlane(motor.BodyFacingDirection, Vector3.up);
+                if (motorFacing.sqrMagnitude > 0.0001f)
+                {
+                    return motorFacing.normalized;
+                }
+            }
+
+            Transform reference = animator != null ? animator.transform : transform;
+            Vector3 forward = reference != null ? Vector3.ProjectOnPlane(reference.forward, Vector3.up) : Vector3.forward;
+            if (forward.sqrMagnitude <= 0.0001f)
+            {
+                forward = Vector3.forward;
+            }
+
+            return forward.normalized;
         }
 
         private bool IsActionStateActive()
         {
-            return motor != null && (motor.IsCombatRolling || motor.IsWallRunning || motor.IsVaulting || motor.IsClimbing || motor.IsJumpCharging || motor.IsAirborne);
+            return motor != null && (motor.IsCombatRolling || motor.IsSliding || motor.IsWallRunning || motor.IsVaulting || motor.IsClimbing || motor.IsJumpCharging || motor.IsAirborne);
         }
 
         private void CaptureActionSequences()
@@ -1036,6 +1170,7 @@ namespace SCF.Gameplay
             }
 
             lastCombatRollSequence = motor.CombatRollSequence;
+            lastSlideSequence = motor.SlideSequence;
             lastJumpSequence = motor.JumpSequence;
             lastWallRunSequence = motor.WallRunSequence;
             lastVaultSequence = motor.VaultSequence;
@@ -1060,6 +1195,12 @@ namespace SCF.Gameplay
             {
                 changed |= motor.IsCombatRolling;
                 lastCombatRollSequence = motor.CombatRollSequence;
+            }
+
+            if (lastSlideSequence != motor.SlideSequence)
+            {
+                changed |= motor.IsSliding;
+                lastSlideSequence = motor.SlideSequence;
             }
 
             if (lastJumpSequence != motor.JumpSequence)

@@ -114,9 +114,9 @@ namespace SCF.Gameplay
         public void Configure(RuntimeAnimatorController controller)
         {
             animatorController = controller;
-            if (activeAnimator != null && animatorController != null)
+            if (activeAnimator != null)
             {
-                activeAnimator.runtimeAnimatorController = animatorController;
+                ConfigureAnimator(activeAnimator);
             }
 
             NormalizeActiveVisual();
@@ -184,6 +184,7 @@ namespace SCF.Gameplay
 #endif
             StripUnwantedVisualPieces(activeVisual);
             StripGameplayFromVisual(activeVisual);
+            StripBakedWeaponRuntimeFromVisual(activeVisual);
             activeAnimator = ResolveAnimator(activeVisual);
             ConfigureAnimator(activeAnimator);
 
@@ -213,6 +214,12 @@ namespace SCF.Gameplay
 
         private GameObject ResolveVisualSource(GameObject prefab)
         {
+            GameObject nestedVisual = ResolveNestedVisualSource(prefab);
+            if (nestedVisual != null)
+            {
+                return nestedVisual;
+            }
+
             Animator[] animators = prefab.GetComponentsInChildren<Animator>(true);
             Animator bestAnimator = null;
             int bestScore = int.MinValue;
@@ -246,6 +253,23 @@ namespace SCF.Gameplay
             }
 
             return prefab;
+        }
+
+        private GameObject ResolveNestedVisualSource(GameObject prefab)
+        {
+            if (prefab == null)
+            {
+                return null;
+            }
+
+            Transform root = prefab.transform.Find(visualRootName);
+            Transform fitOffset = root != null ? root.Find(visualFitOffsetName) : null;
+            if (fitOffset == null || fitOffset.childCount == 0)
+            {
+                return null;
+            }
+
+            return fitOffset.GetChild(0).gameObject;
         }
 
         private static int ResolveDepth(Transform root, Transform child)
@@ -595,6 +619,46 @@ namespace SCF.Gameplay
                    || lowerName.Contains("toe");
         }
 
+        private static void StripBakedWeaponRuntimeFromVisual(GameObject visual)
+        {
+            if (visual == null)
+            {
+                return;
+            }
+
+            Transform[] transforms = visual.GetComponentsInChildren<Transform>(true);
+            for (int i = transforms.Length - 1; i >= 0; i--)
+            {
+                Transform candidate = transforms[i];
+                if (candidate == null || candidate == visual.transform)
+                {
+                    continue;
+                }
+
+                if (ShouldStripBakedWeaponRuntime(candidate.name))
+                {
+                    DestroyVisualPiece(candidate.gameObject);
+                }
+            }
+        }
+
+        private static bool ShouldStripBakedWeaponRuntime(string objectName)
+        {
+            if (string.IsNullOrWhiteSpace(objectName))
+            {
+                return false;
+            }
+
+            if (string.Equals(objectName, "SCF_ChestWeaponSocket", StringComparison.Ordinal)
+                || string.Equals(objectName, "SCF_RightHandWeaponSocket", StringComparison.Ordinal))
+            {
+                return true;
+            }
+
+            return objectName.StartsWith("SCF_Selected_", StringComparison.Ordinal)
+                   && objectName.IndexOf("Railgun", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
         private static void DestroyVisualPiece(GameObject target)
         {
             if (target == null)
@@ -645,8 +709,73 @@ namespace SCF.Gameplay
                 animator.runtimeAnimatorController = animatorController;
             }
 
+            ResetAnimatorToUnarmedIdle(animator);
+        }
+
+        private static void ResetAnimatorToUnarmedIdle(Animator animator)
+        {
+            if (animator == null)
+            {
+                return;
+            }
+
             animator.Rebind();
+            ApplyUnarmedIdleParameters(animator);
             animator.Update(0f);
+        }
+
+        private static void ApplyUnarmedIdleParameters(Animator animator)
+        {
+            if (animator == null || animator.runtimeAnimatorController == null)
+            {
+                return;
+            }
+
+            AnimatorControllerParameter[] parameters = animator.parameters;
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                AnimatorControllerParameter parameter = parameters[i];
+                switch (parameter.type)
+                {
+                    case AnimatorControllerParameterType.Bool:
+                        animator.SetBool(parameter.nameHash, IsDefaultTrueBool(parameter.name));
+                        break;
+                    case AnimatorControllerParameterType.Float:
+                        animator.SetFloat(parameter.nameHash, ResolveDefaultFloat(parameter.name));
+                        break;
+                    case AnimatorControllerParameterType.Int:
+                        animator.SetInteger(parameter.nameHash, ResolveDefaultInt(parameter.name));
+                        break;
+                    case AnimatorControllerParameterType.Trigger:
+                        animator.ResetTrigger(parameter.nameHash);
+                        break;
+                }
+            }
+        }
+
+        private static bool IsDefaultTrueBool(string parameterName)
+        {
+            return string.Equals(parameterName, "Grounded", StringComparison.Ordinal);
+        }
+
+        private static float ResolveDefaultFloat(string parameterName)
+        {
+            if (string.Equals(parameterName, "AimZ", StringComparison.Ordinal))
+            {
+                return 1f;
+            }
+
+            return 0f;
+        }
+
+        private static int ResolveDefaultInt(string parameterName)
+        {
+            if (string.Equals(parameterName, "MobilityState", StringComparison.Ordinal))
+            {
+                return (int)CharacterMobilityState.Locomotion;
+            }
+
+            return 0;
         }
 
         private void ConfigureAnimationEventSink(GameObject target, bool proceduralFootstepFallback)

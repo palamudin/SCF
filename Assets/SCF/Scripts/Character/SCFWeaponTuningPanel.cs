@@ -114,12 +114,11 @@ namespace SCF.Gameplay
             DrawTransformBlock("WEAPON / SCF_Selected_Railgun", weaponSlot.ActiveWeaponTransform, true, true);
             DrawTransformBlock("RIGHT HAND GRIP / SCF_RightPistolGrip", weaponSlot.RightGripTransform, true, false);
             DrawTransformBlock("LEFT HAND GRIP / SCF_LeftUnderbarrelGrip", weaponSlot.LeftGripTransform, true, false);
-            DrawTransformBlock("RIGHT ELBOW ORIENTATOR / SCF_RightElbowHint", weaponSlot.RightElbowHintTransform, true, false);
-            DrawTransformBlock("LEFT ELBOW ORIENTATOR / SCF_LeftElbowHint", weaponSlot.LeftElbowHintTransform, true, false);
 
             if (showMuzzle)
             {
                 DrawTransformBlock("MUZZLE / SCF_RailgunMuzzleTarget", weaponSlot.RailgunMuzzleTransform, true, false);
+                DrawTransformBlock("BUTTSTOCK / SCF_RailgunButtstock", weaponSlot.RailgunButtstockTransform, true, false);
             }
 
             GUILayout.EndScrollView();
@@ -143,6 +142,7 @@ namespace SCF.Gameplay
         private void DrawToolbar()
         {
             DrawPoseToolbar();
+            DrawPoseClayToolbar();
 
             using (new GUILayout.HorizontalScope())
             {
@@ -213,6 +213,27 @@ namespace SCF.Gameplay
             }
 
             SyncPoseTuningMode(false);
+        }
+
+        private void DrawPoseClayToolbar()
+        {
+            GUILayout.Space(4f);
+            GUILayout.Label("Pose Clay", GUI.skin.box);
+            using (new GUILayout.HorizontalScope())
+            {
+                bool active = weaponSlot != null && weaponSlot.ExperimentalPoseAuthoringMode;
+                bool nextActive = GUILayout.Toggle(active, "Hands off solvers", GUILayout.Height(26f));
+                if (weaponSlot != null && nextActive != active)
+                {
+                    weaponSlot.SetExperimentalPoseAuthoringMode(nextActive);
+                }
+
+                if (GUILayout.Button("Clay File", GUILayout.Height(26f)))
+                {
+                    string path = weaponSlot != null ? weaponSlot.RecordExperimentalPoseClaySnapshot() : string.Empty;
+                    Debug.Log("SCF experimental pose clay snapshot saved: " + path);
+                }
+            }
         }
 
         private void DrawPoseSlotButton(SCFWeaponFitPoseSlot slot, string label)
@@ -357,9 +378,8 @@ namespace SCF.Gameplay
             AppendTransform(builder, "WEAPON / SCF_Selected_Railgun", weaponSlot != null ? weaponSlot.ActiveWeaponTransform : null);
             AppendTransform(builder, "RIGHT HAND GRIP / SCF_RightPistolGrip", weaponSlot != null ? weaponSlot.RightGripTransform : null);
             AppendTransform(builder, "LEFT HAND GRIP / SCF_LeftUnderbarrelGrip", weaponSlot != null ? weaponSlot.LeftGripTransform : null);
-            AppendTransform(builder, "RIGHT ELBOW ORIENTATOR / SCF_RightElbowHint", weaponSlot != null ? weaponSlot.RightElbowHintTransform : null);
-            AppendTransform(builder, "LEFT ELBOW ORIENTATOR / SCF_LeftElbowHint", weaponSlot != null ? weaponSlot.LeftElbowHintTransform : null);
             AppendTransform(builder, "MUZZLE / SCF_RailgunMuzzleTarget", weaponSlot != null ? weaponSlot.RailgunMuzzleTransform : null);
+            AppendTransform(builder, "BUTTSTOCK / SCF_RailgunButtstock", weaponSlot != null ? weaponSlot.RailgunButtstockTransform : null);
             return builder.ToString();
         }
 

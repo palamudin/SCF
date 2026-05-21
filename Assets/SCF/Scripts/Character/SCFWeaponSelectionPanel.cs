@@ -93,7 +93,7 @@ namespace SCF.Gameplay
                 return;
             }
 
-            AddWeaponPrefab(catalog.RailgunWeaponPrefab);
+            AddWeaponPrefab(catalog.CleanRailgunWeaponPrefab);
         }
 
 #if UNITY_EDITOR
@@ -226,7 +226,8 @@ namespace SCF.Gameplay
         private static bool ShouldShowWeaponPrefab(GameObject prefab)
         {
             return prefab != null
-                   && !string.Equals(prefab.name, HiddenBaseRailgunPrefabName, StringComparison.OrdinalIgnoreCase);
+                   && !string.Equals(prefab.name, HiddenBaseRailgunPrefabName, StringComparison.OrdinalIgnoreCase)
+                   && prefab.name.IndexOf("Fiddled", StringComparison.OrdinalIgnoreCase) < 0;
         }
 
         private void AddWeaponPrefab(GameObject prefab)

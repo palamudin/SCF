@@ -20,6 +20,13 @@ namespace SCF.Gameplay
         AimRun
     }
 
+    public enum SCFRearAimGateMode
+    {
+        None,
+        RightHandRearShot,
+        InwardTwoHandTurn
+    }
+
     public readonly struct SCFRailgunShot
     {
         public readonly Vector3 Muzzle;
@@ -49,9 +56,16 @@ namespace SCF.Gameplay
         private const string ReferenceShotgunPath = "Assets/SCF/MovementAni/NVoperatorsoldier.glb";
         private const string DefaultRailgunRigProfilePath = "SCF/Weapons/SCF_RailgunRigProfile";
         private const string RuntimeWeaponCatalogPath = "SCF/SCFWeaponRuntimeCatalog";
+        private const string CleanRailgunPrefabPath = "Assets/SCF/Prefabs/Weapons/SCF_RailgunNEW.prefab";
         private const string Pose3RightGripTargetName = "SCF_Pose3RightGripTarget";
         private const string Pose3LeftGripTargetName = "SCF_Pose3LeftGripTarget";
+        private const string RightHandWeaponSocketName = "SCF_RightHandWeaponSocket";
         private const string RailgunMuzzleTargetName = "SCF_RailgunMuzzleTarget";
+        private const string RailgunButtstockAnchorName = "SCF_RailgunButtstock";
+        private const string RailgunButtstockTargetName = "SCF_RailgunButtstockTarget";
+        private const string RailgunButtstockTypoAliasName = "Butstock";
+        private const string RailgunButtstockPlainAliasName = "Buttstock";
+        private const string RailgunModelRootName = "SCF_RailgunModel";
         private const string RailgunMuzzleMarkerName = "SCF_RailgunMuzzleMarker";
         private const string AimRayDebugRootName = "SCF_AimRayDebug";
         private const string AimRayFaceLineName = "SCF_AimRay_FaceOrigin";
@@ -60,9 +74,18 @@ namespace SCF.Gameplay
         private const string AimRayMuzzleForwardLineName = "SCF_AimRay_MuzzleForward";
         private const string AimRayMouseColumnLineName = "SCF_AimRay_MouseVertical";
         private const string AimFocusCursorName = "SCF_AimFocusCursor";
-        private const string RightElbowHintTargetName = "SCF_RightElbowHint";
-        private const string LeftElbowHintTargetName = "SCF_LeftElbowHint";
-        private const float MaxElbowHintLocalDistance = 150f;
+        private const string IdleRightGripCarryPointName = "SCF_RightGrip_Idle";
+        private const string HipAimRightGripCarryPointName = "SCF_RightGrip_HipAim";
+        private const string ShoulderAimRightGripCarryPointName = "SCF_RightGrip_ShoulderAim";
+        private const string RunRightGripCarryPointName = "SCF_RightGrip_Run";
+        private const string SprintRightGripCarryPointName = "SCF_RightGrip_Sprint";
+        private const string OneHandRightGripCarryPointName = "SCF_RightGrip_OneHand";
+        private const string IdleWeaponPlacementPointName = "Idle";
+        private const string HipAimWeaponPlacementPointName = "HipGun";
+        private const string ShoulderAimWeaponPlacementPointName = "ShoulderGun";
+        private const string RunWeaponPlacementPointName = "RunGun";
+        private const string SprintWeaponPlacementPointName = "SprintGun";
+        private const string OneHandWeaponPlacementPointName = "Gun";
         private static readonly Vector3 LegacyWeaponEulerAngles = new Vector3(0f, 90f, 90f);
         private static readonly Vector3 DefaultWeaponEulerAngles = new Vector3(170f, 90f, 180f);
         private static readonly Vector3 LegacyRightGripPosition = new Vector3(0.02f, -0.05f, 0.15f);
@@ -81,12 +104,10 @@ namespace SCF.Gameplay
         private static readonly Vector3 DefaultRailgunRightGripLocalEulerAngles = new Vector3(-30.5f, 95.7f, -77.81f);
         private static readonly Vector3 DefaultRailgunLeftGripLocalPosition = new Vector3(0.86f, -0.07f, -0.2f);
         private static readonly Vector3 DefaultRailgunLeftGripLocalEulerAngles = new Vector3(-17.67001f, 124.98f, -132.4f);
-        private static readonly Vector3 DefaultRailgunRightElbowHintLocalPosition = new Vector3(-3.03f, -0.9211f, -0.76f);
-        private static readonly Vector3 DefaultRailgunRightElbowHintLocalEulerAngles = Vector3.zero;
-        private static readonly Vector3 DefaultRailgunLeftElbowHintLocalPosition = new Vector3(0.39f, -0.23f, 0.17f);
-        private static readonly Vector3 DefaultRailgunLeftElbowHintLocalEulerAngles = Vector3.zero;
         private static readonly Vector3 DefaultRailgunMuzzleLocalPosition = new Vector3(0.96f, 0.12f, 0f);
         private static readonly Vector3 DefaultRailgunMuzzleLocalEulerAngles = new Vector3(0f, 90f, 0f);
+        private static readonly Vector3 DefaultRailgunButtstockLocalPosition = new Vector3(-0.36f, 0.06f, 0f);
+        private static readonly Vector3 DefaultRailgunButtstockLocalEulerAngles = Vector3.zero;
 
         [Header("References")]
         [SerializeField] private IsometricPlayerInput input;
@@ -104,15 +125,15 @@ namespace SCF.Gameplay
         [SerializeField] private bool useReferenceShotgunPrototype;
         [SerializeField] private int railgunProfileRevision;
         [SerializeField] private string torsoSocketName = "SCF_ChestWeaponSocket";
+        [SerializeField] private string experimentalRightHandSocketName = RightHandWeaponSocketName;
         [SerializeField] private string rightGripName = "SCF_RightPistolGrip";
         [SerializeField] private string leftGripName = "SCF_LeftUnderbarrelGrip";
+        [SerializeField] private string buttstockName = RailgunButtstockAnchorName;
         [SerializeField] private string referenceShotgunMeshName = "SHOTGUN";
         [SerializeField] private string referenceShotgunAnchorName = "SHOTGUNbone";
         [SerializeField] private string referenceRightGripName = "HandWrist.R";
         [SerializeField] private string referenceLeftGripName = "HandWrist.L";
         [SerializeField] private string referencePoseClipName = "SHOTGUNpose3";
-        [SerializeField] private string rightElbowHintName = RightElbowHintTargetName;
-        [SerializeField] private string leftElbowHintName = LeftElbowHintTargetName;
         [SerializeField, Range(0f, 1f)] private float referencePoseSampleTime01 = 0f;
 
         [Header("World Pickup")]
@@ -176,6 +197,10 @@ namespace SCF.Gameplay
         [SerializeField] private bool preserveTunedRailgunMuzzleTarget = true;
         [SerializeField] private Vector3 railgunMuzzleLocalPosition = DefaultRailgunMuzzleLocalPosition;
         [SerializeField] private Vector3 railgunMuzzleLocalEulerAngles = DefaultRailgunMuzzleLocalEulerAngles;
+        [SerializeField] private bool createRailgunButtstockTarget = true;
+        [SerializeField] private bool preserveTunedRailgunButtstockTarget = true;
+        [SerializeField] private Vector3 railgunButtstockLocalPosition = DefaultRailgunButtstockLocalPosition;
+        [SerializeField] private Vector3 railgunButtstockLocalEulerAngles = DefaultRailgunButtstockLocalEulerAngles;
         [SerializeField] private bool showRailgunMuzzleDebugMarker = true;
         [SerializeField, Min(0.005f)] private float railgunMuzzleDebugMarkerSize = 0.055f;
         [SerializeField, Min(0f)] private float railgunRaycastStartOffset = 0.1f;
@@ -206,18 +231,33 @@ namespace SCF.Gameplay
         [SerializeField] private bool aimMuzzleAroundRightGripPivot = true;
         [SerializeField, Range(0f, 1.5f)] private float muzzleSidePressure = 1f;
         [SerializeField, Range(0f, 1.5f)] private float muzzleVerticalPressure = 0.62f;
+        [SerializeField] private bool clampMuzzleYawAroundRightGrip;
+        [SerializeField, Range(5f, 135f)] private float muzzleGripYawLimit = 72f;
         [Tooltip("Aim at the face-height point on the mouse vertical column. This matches the eye/intent crossover instead of flattening to the muzzle.")]
         [SerializeField] private bool useFaceMouseColumnAimFocus = true;
-        [SerializeField] private bool flattenMuzzleAimToMuzzleHeight = true;
+        [SerializeField] private bool flattenMuzzleAimToMuzzleHeight;
         [SerializeField] private float muzzleAimTargetHeightOffset;
         [SerializeField] private bool useEyeCarryDirectionForBehindMuzzleTargets = true;
         [Tooltip("When the mouse target is inside/behind the muzzle safety zone, keep the current weapon pose instead of switching to the eye-carry fallback.")]
-        [SerializeField] private bool holdWeaponPoseForSelfAimProtection = true;
+        [SerializeField] private bool holdWeaponPoseForSelfAimProtection;
         [SerializeField, Min(0f)] private float behindMuzzleTargetSlack = 0.02f;
         [SerializeField] private bool drawMuzzleAimDebug;
 
+        [Header("Action Rear Aim Gate")]
+        [SerializeField] private bool useActionRearAimGate;
+        [SerializeField, Range(90f, 180f)] private float actionRearAimYawThreshold = 115f;
+        [SerializeField] private bool rightSideRearAimUsesOneHand = true;
+        [SerializeField, Range(0f, 1f)] private float rightSideRearAimLeftHandWeight = 0f;
+        [SerializeField, Range(0f, 1f)] private float inwardRearAimLeftHandWeight = 0.92f;
+        [SerializeField] private bool useExperimentalDominantSideAimGate;
+        [SerializeField, Range(0f, 90f)] private float dominantSideAimYawThreshold = 15f;
+        [SerializeField] private bool dominantGripSideIsRight = true;
+        [SerializeField] private bool dominantSideAimUsesOneHand = true;
+        [SerializeField] private SCFRearAimGateMode activeRearAimGateMode;
+        [SerializeField] private float activeRearAimYaw;
+
         [Header("Weapon Local X Clamp")]
-        [SerializeField] private bool clampSelectedWeaponLocalX = true;
+        [SerializeField] private bool clampSelectedWeaponLocalX;
         [SerializeField] private float selectedWeaponNeutralLocalX;
         [SerializeField, Range(0f, 150f)] private float selectedWeaponMovingLocalXLimit = 3f;
         [SerializeField, Min(0f)] private float selectedWeaponXMovingThreshold = 0.2f;
@@ -250,6 +290,7 @@ namespace SCF.Gameplay
         [Header("Hand IK")]
         [SerializeField] private bool enableHandIk = true;
         [SerializeField] private bool preferWeaponPrefabAnchors = true;
+        [SerializeField] private bool lockWeaponPrefabGripAnchors = true;
         [SerializeField] private bool useAnimatorIk;
         [SerializeField, Range(0f, 1f)] private float rightHandIkWeight = 0.95f;
         [SerializeField, Range(0f, 1f)] private float leftHandIkWeight = 1f;
@@ -261,21 +302,90 @@ namespace SCF.Gameplay
         [SerializeField, Range(0f, 1f)] private float finalGripPositionWeight = 0.72f;
         [SerializeField, Range(0f, 1f)] private float finalGripRotationWeight = 0.9f;
         [SerializeField, Min(0.1f)] private float handIkBlendSharpness = 16f;
+        [SerializeField] private bool useExperimentalIndexFingerGripContacts = true;
+        [SerializeField] private bool rotateExperimentalIndexFingerGripContacts;
+        [SerializeField, Range(0f, 1f)] private float experimentalIndexFingerGripPositionWeight = 0.85f;
+        [SerializeField, Range(0f, 1f)] private float experimentalIndexFingerGripRotationWeight = 0.15f;
+        [SerializeField] private string experimentalRightIndexGripContactName = "RightHandIndex1";
+        [SerializeField] private string experimentalLeftIndexGripContactName = "LeftHandIndex1";
+        [SerializeField] private string experimentalRightThumbGripContactName = "RightHandThumb1";
+
+        [Header("Experimental Fire Solution")]
+        [SerializeField] private bool useExperimentalFireSolutionAuthority = true;
+        [Tooltip("For soldierExp, the weapon is translated so its pistol grip stays on the right index/root contact instead of letting the gun float ahead of the hand.")]
+        [SerializeField] private bool experimentalRightGripOwnsWeapon = true;
+        [SerializeField, Range(0f, 1f)] private float experimentalRightGripOwnershipWeight = 1f;
+        [SerializeField] private bool experimentalParentWeaponSocketToRightHand = true;
+        [SerializeField] private Vector3 experimentalRightHandSocketLocalPosition = Vector3.zero;
+        [SerializeField] private Vector3 experimentalRightHandSocketLocalEulerAngles = Vector3.zero;
+        [SerializeField] private bool experimentalRightPalmOwnsWeaponRotation = true;
+        [SerializeField, Range(0f, 1f)] private float experimentalRightPalmRotationOwnershipWeight = 1f;
+        [SerializeField] private bool experimentalRightPalmPointsAtTarget = true;
+        [SerializeField, Range(0f, 1f)] private float experimentalRightPalmAimWeight = 1f;
+        [SerializeField] private Vector3 experimentalRightPalmToPistolGripEulerOffset;
+        [SerializeField, Range(0f, 1f)] private float experimentalWristOnlyGripRotationWeight = 1f;
+        [SerializeField] private bool alignRightHandSocketToFingerPocket = true;
+        [SerializeField, Range(0f, 1f)] private float rightHandGripPocketFingerWeight = 0.68f;
+        [SerializeField, Range(0f, 1f)] private float rightHandGripPocketBlend = 1f;
+        [SerializeField] private Vector3 rightHandGripPocketLocalOffset = Vector3.zero;
+        [SerializeField] private bool experimentalWrapRightFingersAroundGrip = true;
+        [SerializeField, Range(0f, 1f)] private float experimentalRightFingerWrapWeight = 0.45f;
+        [SerializeField] private Vector3 experimentalRightIndexWrapLocalOffset = Vector3.zero;
+        [SerializeField] private Vector3 experimentalRightThumbWrapLocalOffset = new Vector3(0.035f, 0f, 0f);
+        [SerializeField] private bool experimentalHardLockRightGripContact = true;
+        [SerializeField] private bool experimentalHardLockLeftGripContact = true;
+        [SerializeField, Range(0f, 1f)] private float experimentalRightGripContactLockWeight = 1f;
+        [SerializeField, Range(0f, 1f)] private float experimentalLeftGripContactLockWeight = 0.96f;
+        [SerializeField, Range(0f, 1f)] private float experimentalOneHandLeftGripContactLockWeight = 0f;
+        [SerializeField] private bool experimentalPreserveGripOwnershipDuringMuzzleAim = true;
+
+        [Header("Experimental Body Carry Points")]
+        [SerializeField] private bool useDynamicCharacterBodyRig = true;
+        [SerializeField] private bool useGeneratedCharacterCarryPoints = true;
+        [SerializeField] private bool useCharacterWeaponPlacementPoints;
+        [SerializeField] private bool characterWeaponPlacementTargetsRightGrip = true;
+        [SerializeField, Range(0f, 1f)] private float generatedBodyContactPlacementWeight = 0.65f;
+        [SerializeField, Range(0f, 1f)] private float generatedBodyContactPostAimWeight = 0.35f;
+        [SerializeField] private bool suppressExperimentalWeaponPoseAnimations = true;
+        [SerializeField] private bool allowWeaponUpperBodyPoseLayerDuringArmedJump = true;
+        [SerializeField] private bool suppressExperimentalWeaponFitPoseSlots = true;
+        [SerializeField] private string idleWeaponPlacementPointName = IdleWeaponPlacementPointName;
+        [SerializeField] private string hipAimWeaponPlacementPointName = HipAimWeaponPlacementPointName;
+        [SerializeField] private string shoulderAimWeaponPlacementPointName = ShoulderAimWeaponPlacementPointName;
+        [SerializeField] private string runWeaponPlacementPointName = RunWeaponPlacementPointName;
+        [SerializeField] private string sprintWeaponPlacementPointName = SprintWeaponPlacementPointName;
+        [SerializeField] private string oneHandWeaponPlacementPointName = OneHandWeaponPlacementPointName;
+        [SerializeField, Min(0.1f)] private float characterWeaponPlacementSharpness = 26f;
+        [SerializeField] private string activeCharacterWeaponPlacementPointName;
+        [SerializeField] private bool useCharacterRightGripCarryPoints;
+        [SerializeField] private string idleRightGripCarryPointName = IdleRightGripCarryPointName;
+        [SerializeField] private string hipAimRightGripCarryPointName = HipAimRightGripCarryPointName;
+        [SerializeField] private string shoulderAimRightGripCarryPointName = ShoulderAimRightGripCarryPointName;
+        [SerializeField] private string runRightGripCarryPointName = RunRightGripCarryPointName;
+        [SerializeField] private string sprintRightGripCarryPointName = SprintRightGripCarryPointName;
+        [SerializeField] private string oneHandRightGripCarryPointName = OneHandRightGripCarryPointName;
+        [SerializeField, Min(0.1f)] private float characterRightGripCarrySharpness = 26f;
+        [SerializeField] private string activeCharacterRightGripCarryPointName;
 
         [Header("Anatomy Guardrails")]
         [SerializeField] private bool useAnatomyAwareIk = true;
-        [SerializeField] private bool useElbowHints = true;
-        [SerializeField] private bool useManualElbowHintAssist = true;
-        [SerializeField] private Vector3 rightElbowHintLocalPosition = new Vector3(0.28f, -0.1f, -0.08f);
-        [SerializeField] private Vector3 leftElbowHintLocalPosition = new Vector3(-0.32f, -0.06f, 0.14f);
-        [SerializeField, Range(0f, 1f)] private float rightElbowHintWeight = 0.9f;
-        [SerializeField, Range(0f, 1f)] private float leftElbowHintWeight = 0.95f;
-        [SerializeField, Range(0f, 1f)] private float manualElbowHintAssistWeight = 0.85f;
-        [SerializeField, Range(1, 4)] private int manualArmSolveIterations = 2;
-        [SerializeField, Range(0f, 1f)] private float manualArmHandLockWeight = 0.55f;
+        [SerializeField] private bool useDynamicBodyKeepoutZones = true;
         [SerializeField, Range(0.5f, 1.05f)] private float maxArmReachMultiplier = 0.94f;
         [SerializeField, Range(0f, 0.5f)] private float armReachSoftZone = 0.16f;
         [SerializeField, Range(0f, 1f)] private float unreachableRotationWeight = 0.35f;
+        [SerializeField] private bool constrainGripTargetsAgainstBody = true;
+        [SerializeField] private bool constrainForearmJointAgainstBody = true;
+        [SerializeField, Range(0f, 0.75f)] private float gripTargetBodyCrossAllowance = 0.32f;
+        [SerializeField, Range(0f, 0.75f)] private float gripTargetBehindBodyAllowance = 0.12f;
+        [SerializeField, Range(0f, 1f)] private float unreachableGripWeightFloor = 0.35f;
+        [SerializeField, Range(0f, 1f)] private float forearmJointGuardrailWeight = 0.85f;
+        [SerializeField] private bool solveGripContactLocksThroughArmChain = true;
+        [SerializeField, Range(0f, 2f)] private float gripContactArmSolveWeight = 1.1f;
+        [SerializeField] private bool limitWristContactTranslation;
+        [SerializeField, Range(0.01f, 0.5f)] private float maxWristContactTranslation = 0.12f;
+        [SerializeField] private bool constrainWristRotation;
+        [SerializeField, Range(0f, 90f)] private float maxWristRotationFromAnimatedPose = 32f;
+        [SerializeField, Range(0f, 1f)] private float wristRotationLimitWeight = 1f;
 
         [Header("Carry State Weights")]
         [SerializeField] private bool useStateBasedCarryWeights = true;
@@ -289,15 +399,26 @@ namespace SCF.Gameplay
 
         [Header("Traversal Weapon Handling")]
         [SerializeField] private bool detachLeftHandDuringVault = true;
+        [SerializeField] private bool detachLeftHandDuringWallRun = true;
         [SerializeField] private bool detachBothHandsDuringClimb = true;
         [SerializeField] private bool suspendMuzzleAimDuringClimb = true;
         [SerializeField] private bool lowerWeaponDuringClimb = true;
         [SerializeField] private bool blockRailgunFireDuringClimb = true;
         [SerializeField] private bool snapWeaponFitAfterMobilityAction = true;
         [SerializeField] private bool blockLiveTuningDuringMobilityAction = true;
-        [SerializeField, Range(0f, 1f)] private float vaultRightHandCarryWeight = 0.82f;
+        [SerializeField, Range(0f, 1f)] private float vaultRightHandCarryWeight = 1f;
         [SerializeField, Range(0f, 1f)] private float vaultLeftHandCarryWeight = 0f;
+        [SerializeField, Range(0f, 1f)] private float wallRunRightHandCarryWeight = 1f;
+        [SerializeField, Range(0f, 1f)] private float wallRunLeftHandCarryWeight = 0f;
+        [SerializeField, Range(0f, 1f)] private float climbRightHandCarryWeight = 1f;
         [SerializeField, Range(0f, 1f)] private float climbHandCarryWeight = 0f;
+
+        [Header("Experimental Pose Authoring")]
+        [SerializeField] private bool experimentalPoseAuthoringMode;
+        [SerializeField] private KeyCode experimentalPoseAuthoringToggleKey = KeyCode.F6;
+        [SerializeField] private bool poseAuthoringDisablesAnimator = true;
+        [SerializeField] private bool poseAuthoringDisablesPoseScripts = true;
+        [SerializeField] private bool poseAuthoringRecordsFullCharacterHierarchy = true;
 
         [Header("Debug")]
         [SerializeField] private string activeCharacterName;
@@ -318,14 +439,26 @@ namespace SCF.Gameplay
         private Transform weaponSocket;
         private Transform rightGrip;
         private Transform leftGrip;
+        private Transform buttstockTarget;
         private Transform chestAnchor;
         private Transform faceAnchor;
         private Transform referenceWeaponAnchor;
         private Transform pose3RightGripTarget;
         private Transform pose3LeftGripTarget;
         private Transform railgunMuzzleTarget;
-        private Transform rightElbowHint;
-        private Transform leftElbowHint;
+        private Transform idleWeaponPlacementPoint;
+        private Transform hipAimWeaponPlacementPoint;
+        private Transform shoulderAimWeaponPlacementPoint;
+        private Transform runWeaponPlacementPoint;
+        private Transform sprintWeaponPlacementPoint;
+        private Transform oneHandWeaponPlacementPoint;
+        private Transform idleRightGripCarryPoint;
+        private Transform hipAimRightGripCarryPoint;
+        private Transform shoulderAimRightGripCarryPoint;
+        private Transform runRightGripCarryPoint;
+        private Transform sprintRightGripCarryPoint;
+        private Transform oneHandRightGripCarryPoint;
+        private SCFBodyKeepoutSolver bodyKeepoutSolver;
         private ArmRig rightArm;
         private ArmRig leftArm;
         private float nextRailgunFireTime;
@@ -349,6 +482,10 @@ namespace SCF.Gameplay
         private float nextWeaponIkLiveLogTime;
         private int lastWeaponTargetSolveFrame = -1;
         private int lastHandWeightUpdateFrame = -1;
+        private Behaviour[] poseAuthoringDisabledBehaviours = new Behaviour[0];
+        private bool poseAuthoringAnimatorStateCaptured;
+        private bool poseAuthoringAnimatorWasEnabled;
+        private float poseAuthoringAnimatorSpeed = 1f;
 
         public bool HasActiveWeapon => activeWeapon != null;
         public string ActiveWeaponName => activeWeapon != null ? activeWeapon.name.Replace("SCF_Selected_", string.Empty) : "none";
@@ -357,12 +494,15 @@ namespace SCF.Gameplay
         public Transform ActiveWeaponTransform => activeWeapon != null ? activeWeapon.transform : null;
         public Transform RightGripTransform => rightGrip;
         public Transform LeftGripTransform => leftGrip;
-        public Transform RightElbowHintTransform => rightElbowHint;
-        public Transform LeftElbowHintTransform => leftElbowHint;
         public Transform RailgunMuzzleTransform => railgunMuzzleTarget;
+        public Transform RailgunButtstockTransform => buttstockTarget;
         public float Raised01 => raised01;
+        public bool SuppressWeaponUpperBodyPoseLayer => suppressExperimentalWeaponPoseAnimations
+                                                       && UsesExperimentalFireSolutionAuthority()
+                                                       && !ShouldAllowWeaponUpperBodyPoseLayerDuringArmedJump();
         public SCFWeaponFitPoseSlot TuningWeaponFitPoseSlot => tuningWeaponFitPoseSlot;
         public bool WeaponFitPoseTuningMode => weaponFitPoseTuningMode;
+        public bool ExperimentalPoseAuthoringMode => experimentalPoseAuthoringMode;
 
         [Serializable]
         private struct SCFLocalTransformPose
@@ -381,9 +521,8 @@ namespace SCF.Gameplay
             public SCFLocalTransformPose weapon;
             public SCFLocalTransformPose rightGrip;
             public SCFLocalTransformPose leftGrip;
-            public SCFLocalTransformPose rightElbowHint;
-            public SCFLocalTransformPose leftElbowHint;
             public SCFLocalTransformPose muzzle;
+            public SCFLocalTransformPose buttstock;
         }
 
         private struct ArmRig
@@ -392,14 +531,21 @@ namespace SCF.Gameplay
             public Transform UpperArm;
             public Transform Forearm;
             public Transform Hand;
+            public Transform GripContact;
+            public Transform IndexContact;
+            public Transform ThumbContact;
+
+            public Transform EndEffector => GripContact != null ? GripContact : Hand;
         }
 
         private void Awake()
         {
             ApplyRailgunProfileDefaultsIfNeeded();
             ApplyRigProfileDefaultsIfPresent();
+            DisableLegacyRailgunRotationGuards();
             ResolveRailgunFireClip();
             ResolveReferences();
+            EnsureDynamicBodyRig();
             CacheBones();
             EnsureAnimatorIkRelay();
             EnsureWeaponSelectionPanel();
@@ -409,6 +555,7 @@ namespace SCF.Gameplay
         private void OnValidate()
         {
             ApplyRailgunProfileDefaultsIfNeeded();
+            DisableLegacyRailgunRotationGuards();
             ResolveRailgunFireClip();
 
             if (NearlyEqual(weaponLocalEulerAngles, LegacyWeaponEulerAngles))
@@ -441,6 +588,14 @@ namespace SCF.Gameplay
             maxArmReachMultiplier = Mathf.Clamp(maxArmReachMultiplier, 0.5f, 1.05f);
             armReachSoftZone = Mathf.Max(0f, armReachSoftZone);
             unreachableRotationWeight = Mathf.Clamp01(unreachableRotationWeight);
+            gripTargetBodyCrossAllowance = Mathf.Clamp(gripTargetBodyCrossAllowance, 0f, 0.75f);
+            gripTargetBehindBodyAllowance = Mathf.Clamp(gripTargetBehindBodyAllowance, 0f, 0.75f);
+            unreachableGripWeightFloor = Mathf.Clamp01(unreachableGripWeightFloor);
+            gripContactArmSolveWeight = Mathf.Max(0f, gripContactArmSolveWeight);
+            maxWristContactTranslation = Mathf.Clamp(maxWristContactTranslation, 0.01f, 0.5f);
+            maxWristRotationFromAnimatedPose = Mathf.Clamp(maxWristRotationFromAnimatedPose, 0f, 90f);
+            wristRotationLimitWeight = Mathf.Clamp01(wristRotationLimitWeight);
+            experimentalWristOnlyGripRotationWeight = Mathf.Clamp01(experimentalWristOnlyGripRotationWeight);
         }
 
         private void ApplyRailgunProfileDefaultsIfNeeded()
@@ -484,16 +639,6 @@ namespace SCF.Gameplay
             if (string.IsNullOrWhiteSpace(referenceLeftGripName))
             {
                 referenceLeftGripName = "HandWrist.L";
-            }
-
-            if (string.IsNullOrWhiteSpace(rightElbowHintName))
-            {
-                rightElbowHintName = RightElbowHintTargetName;
-            }
-
-            if (string.IsNullOrWhiteSpace(leftElbowHintName))
-            {
-                leftElbowHintName = LeftElbowHintTargetName;
             }
 
             if (railgunProfileRevision >= CurrentRailgunProfileRevision)
@@ -649,7 +794,7 @@ namespace SCF.Gameplay
         private void ApplyRailgunGripTargetDefaults()
         {
             useReferenceShotgunPrototype = false;
-            useShotgunPose3GripReplica = true;
+            useShotgunPose3GripReplica = false;
             anchorWeaponByRightGrip = true;
             restRightGripSocketOffset = Vector3.zero;
             raisedRightGripSocketOffset = Vector3.zero;
@@ -667,6 +812,8 @@ namespace SCF.Gameplay
             weaponLocalScale = DefaultRailgunWeaponLocalScale;
             railgunMuzzleLocalPosition = DefaultRailgunMuzzleLocalPosition;
             railgunMuzzleLocalEulerAngles = DefaultRailgunMuzzleLocalEulerAngles;
+            railgunButtstockLocalPosition = DefaultRailgunButtstockLocalPosition;
+            railgunButtstockLocalEulerAngles = DefaultRailgunButtstockLocalEulerAngles;
             selectedWeaponNeutralLocalX = 0f;
         }
 
@@ -675,21 +822,19 @@ namespace SCF.Gameplay
             preferWeaponPrefabAnchors = true;
             useAnimatorIk = true;
             useAnatomyAwareIk = true;
-            useElbowHints = true;
-            useManualElbowHintAssist = true;
             applyBoneFallbackForHumanoids = false;
             maxArmReachMultiplier = 0.94f;
             armReachSoftZone = 0.16f;
             unreachableRotationWeight = 0.35f;
-            rightElbowHintWeight = 0.9f;
-            leftElbowHintWeight = 0.95f;
-            manualElbowHintAssistWeight = 0.85f;
-            manualArmSolveIterations = 2;
-            manualArmHandLockWeight = 0.28f;
+            solveGripContactLocksThroughArmChain = true;
+            gripContactArmSolveWeight = 1.1f;
+            limitWristContactTranslation = false;
+            maxWristContactTranslation = 0.12f;
+            constrainWristRotation = false;
+            maxWristRotationFromAnimatedPose = 32f;
+            wristRotationLimitWeight = 1f;
             rightArmReachWeight = 0.95f;
             leftArmReachWeight = 0.95f;
-            rightElbowHintLocalPosition = DefaultRailgunRightElbowHintLocalPosition;
-            leftElbowHintLocalPosition = DefaultRailgunLeftElbowHintLocalPosition;
             useStateBasedCarryWeights = true;
             locomotionCarryWeight = 0.95f;
             aimedCarryWeight = 1f;
@@ -699,6 +844,41 @@ namespace SCF.Gameplay
             wallRunCarryWeight = 0.58f;
             rollCarryWeight = 0.18f;
             ApplyDefaultWeaponFitPoses();
+        }
+
+        private void DisableLegacyRailgunRotationGuards()
+        {
+            useReferenceShotgunPrototype = false;
+            useShotgunPose3GripReplica = false;
+            useWeaponFitPoseSlots = false;
+            anchorWeaponByRightGrip = false;
+            enableHandIk = false;
+            useAnimatorIk = false;
+            genericBoneFallbackWeight = 0f;
+            applyBoneFallbackForHumanoids = false;
+            useExperimentalIndexFingerGripContacts = false;
+            useExperimentalFireSolutionAuthority = false;
+            rotateExperimentalIndexFingerGripContacts = false;
+            muzzleDrivesWeaponAim = false;
+            clampMuzzleYawAroundRightGrip = false;
+            flattenMuzzleAimToMuzzleHeight = false;
+            holdWeaponPoseForSelfAimProtection = false;
+            useActionRearAimGate = false;
+            useExperimentalDominantSideAimGate = false;
+            clampSelectedWeaponLocalX = false;
+            experimentalRightGripOwnsWeapon = true;
+            experimentalParentWeaponSocketToRightHand = true;
+            experimentalRightHandSocketLocalPosition = Vector3.zero;
+            experimentalRightHandSocketLocalEulerAngles = Vector3.zero;
+            alignRightHandSocketToFingerPocket = true;
+            useCharacterWeaponPlacementPoints = false;
+            useCharacterRightGripCarryPoints = false;
+            experimentalRightPalmOwnsWeaponRotation = false;
+            experimentalRightPalmPointsAtTarget = false;
+            experimentalRightPalmAimWeight = 0f;
+            experimentalRightPalmRotationOwnershipWeight = 0f;
+            limitWristContactTranslation = false;
+            constrainWristRotation = false;
         }
 
         private void EnsureDefaultWeaponFitPosesIfMissing()
@@ -719,8 +899,6 @@ namespace SCF.Gameplay
                 new Vector3(0f, -126.9507f, -17.69623f),
                 DefaultRailgunLeftGripLocalPosition,
                 DefaultRailgunLeftGripLocalEulerAngles,
-                DefaultRailgunLeftElbowHintLocalPosition,
-                DefaultRailgunLeftElbowHintLocalEulerAngles,
                 DefaultRailgunMuzzleLocalPosition);
 
             aimWalkWeaponFitPose = BuildWeaponFitPose(
@@ -728,8 +906,6 @@ namespace SCF.Gameplay
                 new Vector3(0.000002f, -150.3324f, -6.163818f),
                 new Vector3(0.59f, -0.12f, 0.07f),
                 new Vector3(-54.20001f, 149.32f, 172.71f),
-                new Vector3(0.494302f, -17.19069f, 12.4537f),
-                DefaultRailgunLeftElbowHintLocalEulerAngles,
                 new Vector3(0.96f, 0.14f, 0f));
 
             aimRunWeaponFitPose = BuildWeaponFitPose(
@@ -737,8 +913,6 @@ namespace SCF.Gameplay
                 new Vector3(0f, -152.81f, -0.378998f),
                 new Vector3(0.61f, -0.18f, 0.04f),
                 new Vector3(-90f, -28.00943f, 0f),
-                new Vector3(17.05f, -32.18f, 0f),
-                DefaultRailgunLeftElbowHintLocalEulerAngles,
                 new Vector3(0.96f, 0.14f, 0f));
         }
 
@@ -747,8 +921,6 @@ namespace SCF.Gameplay
             Vector3 weaponEulerAngles,
             Vector3 leftGripPosition,
             Vector3 leftGripEulerAngles,
-            Vector3 leftElbowPosition,
-            Vector3 leftElbowEulerAngles,
             Vector3 muzzlePosition)
         {
             return new SCFWeaponFitPose
@@ -758,9 +930,8 @@ namespace SCF.Gameplay
                 weapon = LocalPose(weaponPosition, weaponEulerAngles, DefaultRailgunWeaponLocalScale),
                 rightGrip = LocalPose(DefaultRailgunRightGripLocalPosition, DefaultRailgunRightGripLocalEulerAngles, Vector3.one),
                 leftGrip = LocalPose(leftGripPosition, leftGripEulerAngles, Vector3.one),
-                rightElbowHint = LocalPose(DefaultRailgunRightElbowHintLocalPosition, DefaultRailgunRightElbowHintLocalEulerAngles, Vector3.one),
-                leftElbowHint = LocalPose(leftElbowPosition, leftElbowEulerAngles, Vector3.one),
-                muzzle = LocalPose(muzzlePosition, DefaultRailgunMuzzleLocalEulerAngles, Vector3.one)
+                muzzle = LocalPose(muzzlePosition, DefaultRailgunMuzzleLocalEulerAngles, Vector3.one),
+                buttstock = LocalPose(DefaultRailgunButtstockLocalPosition, DefaultRailgunButtstockLocalEulerAngles, Vector3.one)
             };
         }
 
@@ -781,11 +952,6 @@ namespace SCF.Gameplay
             if (profile == null)
             {
                 return;
-            }
-
-            if (profile.WeaponPrefab != null && preferWeaponPrefabAnchors)
-            {
-                railgunPrototype = profile.WeaponPrefab;
             }
 
             if (profile.FireClip != null)
@@ -809,14 +975,9 @@ namespace SCF.Gameplay
                 railgunMuzzleTransformName = anchors.muzzle;
             }
 
-            if (!string.IsNullOrWhiteSpace(anchors.rightElbowHint))
+            if (!string.IsNullOrWhiteSpace(anchors.buttstock))
             {
-                rightElbowHintName = anchors.rightElbowHint;
-            }
-
-            if (!string.IsNullOrWhiteSpace(anchors.leftElbowHint))
-            {
-                leftElbowHintName = anchors.leftElbowHint;
+                buttstockName = anchors.buttstock;
             }
 
             SCFWeaponCarryWeights weights = profile.CarryWeights;
@@ -837,8 +998,6 @@ namespace SCF.Gameplay
                 maxArmReachMultiplier = limits.maxReachMultiplier;
                 armReachSoftZone = limits.reachSoftZone;
                 unreachableRotationWeight = limits.unreachableRotationWeight;
-                rightElbowHintWeight = limits.rightElbowHintWeight;
-                leftElbowHintWeight = limits.leftElbowHintWeight;
             }
         }
 
@@ -846,10 +1005,12 @@ namespace SCF.Gameplay
         {
             ApplyRailgunProfileDefaultsIfNeeded();
             ApplyRigProfileDefaultsIfPresent();
+            DisableLegacyRailgunRotationGuards();
             motor = characterMotor;
             animator = targetAnimator;
             activeCharacterName = characterName ?? string.Empty;
             ResolveReferences();
+            EnsureDynamicBodyRig();
             CacheBones();
             EnsureAnimatorIkRelay();
             EnsureWeaponSelectionPanel();
@@ -933,6 +1094,12 @@ namespace SCF.Gameplay
                 return;
             }
 
+            if (experimentalPoseAuthoringMode)
+            {
+                ClearAnimatorIkGoals(targetAnimator);
+                return;
+            }
+
             ResolveReferences();
             SolveWeaponTargetsForCurrentFrame();
             UpdateHandIkWeightsForCurrentFrame();
@@ -943,8 +1110,14 @@ namespace SCF.Gameplay
                 return;
             }
 
-            ApplyHumanoidArmIk(targetAnimator, AvatarIKGoal.RightHand, AvatarIKHint.RightElbow, rightGrip, rightElbowHint, rightArm, currentRightHandWeight, rightArmReachWeight, rightElbowHintWeight);
-            ApplyHumanoidArmIk(targetAnimator, AvatarIKGoal.LeftHand, AvatarIKHint.LeftElbow, leftGrip, leftElbowHint, leftArm, currentLeftHandWeight, leftArmReachWeight, leftElbowHintWeight);
+            if (ShouldUseExperimentalIndexGripContacts())
+            {
+                ClearAnimatorIkGoals(targetAnimator);
+                return;
+            }
+
+            ApplyHumanoidArmIk(targetAnimator, AvatarIKGoal.RightHand, rightGrip, rightArm, currentRightHandWeight, rightArmReachWeight);
+            ApplyHumanoidArmIk(targetAnimator, AvatarIKGoal.LeftHand, leftGrip, leftArm, currentLeftHandWeight, leftArmReachWeight);
         }
 
         private void LateUpdate()
@@ -953,6 +1126,7 @@ namespace SCF.Gameplay
             TickAimRayDebugToggle();
             TickWeaponIkLiveLoggerInput();
             TickWeaponDropInput();
+            TickExperimentalPoseAuthoringInput();
 
             if (activeWeapon == null)
             {
@@ -970,16 +1144,33 @@ namespace SCF.Gameplay
                 CacheBones();
             }
 
+            if (experimentalPoseAuthoringMode)
+            {
+                currentRightHandWeight = 0f;
+                currentLeftHandWeight = 0f;
+                lastWeaponTargetSolveFrame = -1;
+                lastHandWeightUpdateFrame = -1;
+                TickRailgunLiveTuningCapture();
+                TickRailgunFire();
+                TickAimRayDebug(true);
+                TickAimFocusCursor(true);
+                TickWeaponIkLiveLogger();
+                return;
+            }
+
+            bodyKeepoutSolver?.RefreshFromBones();
             SolveWeaponTargetsForCurrentFrame();
             UpdateHandIkWeightsForCurrentFrame();
 
             if (ShouldApplyBoneFallback())
             {
-                ApplyGenericArmToGrip(rightArm, rightGrip, currentRightHandWeight, rightArmReachWeight);
-                ApplyGenericArmToGrip(leftArm, leftGrip, currentLeftHandWeight, leftArmReachWeight);
+                ApplyGenericArmToGrip(rightArm, rightGrip, currentRightHandWeight, rightArmReachWeight, true);
+                ApplyGenericArmToGrip(leftArm, leftGrip, currentLeftHandWeight, leftArmReachWeight, false);
             }
 
-            ApplyManualElbowHintAssist();
+            ApplyExperimentalWeaponGripOwnership();
+            ApplyExperimentalGripContactLocks();
+            ApplyExperimentalWeaponGripOwnership();
 
             TickRailgunLiveTuningCapture();
             TickRailgunFire();
@@ -996,6 +1187,148 @@ namespace SCF.Gameplay
             }
 
             DropActiveWeapon();
+        }
+
+        private void TickExperimentalPoseAuthoringInput()
+        {
+            if (!Application.isPlaying || !WasExperimentalPoseAuthoringTogglePressed())
+            {
+                return;
+            }
+
+            SetExperimentalPoseAuthoringMode(!experimentalPoseAuthoringMode);
+        }
+
+        private bool WasExperimentalPoseAuthoringTogglePressed()
+        {
+            if (experimentalPoseAuthoringToggleKey == KeyCode.None)
+            {
+                return false;
+            }
+
+#if ENABLE_LEGACY_INPUT_MANAGER
+            if (UnityEngine.Input.GetKeyDown(experimentalPoseAuthoringToggleKey))
+            {
+                return true;
+            }
+#endif
+
+#if ENABLE_INPUT_SYSTEM
+            Keyboard keyboard = Keyboard.current;
+            return keyboard != null
+                   && experimentalPoseAuthoringToggleKey == KeyCode.F6
+                   && keyboard.f6Key.wasPressedThisFrame;
+#else
+            return false;
+#endif
+        }
+
+        public void SetExperimentalPoseAuthoringMode(bool enabled)
+        {
+            if (experimentalPoseAuthoringMode == enabled)
+            {
+                return;
+            }
+
+            experimentalPoseAuthoringMode = enabled;
+            if (enabled)
+            {
+                EnterExperimentalPoseAuthoringMode();
+            }
+            else
+            {
+                ExitExperimentalPoseAuthoringMode();
+            }
+
+            Debug.Log("SCF experimental pose clay " + (experimentalPoseAuthoringMode ? "enabled" : "disabled") + " (" + experimentalPoseAuthoringToggleKey + ")");
+        }
+
+        private void EnterExperimentalPoseAuthoringMode()
+        {
+            ResolveReferences();
+            CacheBones();
+            RefreshWeaponTuningTargets();
+            currentRightHandWeight = 0f;
+            currentLeftHandWeight = 0f;
+            lastWeaponTargetSolveFrame = -1;
+            lastHandWeightUpdateFrame = -1;
+
+            if (poseAuthoringDisablesAnimator && animator != null && !poseAuthoringAnimatorStateCaptured)
+            {
+                poseAuthoringAnimatorWasEnabled = animator.enabled;
+                poseAuthoringAnimatorSpeed = animator.speed;
+                poseAuthoringAnimatorStateCaptured = true;
+                animator.speed = 0f;
+                animator.enabled = false;
+            }
+
+            if (poseAuthoringDisablesPoseScripts)
+            {
+                poseAuthoringDisabledBehaviours = CollectPoseAuthoringBehavioursToDisable();
+                for (int i = 0; i < poseAuthoringDisabledBehaviours.Length; i++)
+                {
+                    Behaviour behaviour = poseAuthoringDisabledBehaviours[i];
+                    if (behaviour != null)
+                    {
+                        behaviour.enabled = false;
+                    }
+                }
+            }
+        }
+
+        private void ExitExperimentalPoseAuthoringMode()
+        {
+            for (int i = 0; i < poseAuthoringDisabledBehaviours.Length; i++)
+            {
+                Behaviour behaviour = poseAuthoringDisabledBehaviours[i];
+                if (behaviour != null)
+                {
+                    behaviour.enabled = true;
+                }
+            }
+
+            poseAuthoringDisabledBehaviours = new Behaviour[0];
+
+            if (poseAuthoringAnimatorStateCaptured && animator != null)
+            {
+                animator.enabled = poseAuthoringAnimatorWasEnabled;
+                animator.speed = poseAuthoringAnimatorSpeed;
+            }
+
+            poseAuthoringAnimatorStateCaptured = false;
+            lastWeaponTargetSolveFrame = -1;
+            lastHandWeightUpdateFrame = -1;
+        }
+
+        private Behaviour[] CollectPoseAuthoringBehavioursToDisable()
+        {
+            Behaviour[] behaviours = GetComponentsInChildren<Behaviour>(true);
+            ArrayList result = new ArrayList();
+            for (int i = 0; i < behaviours.Length; i++)
+            {
+                Behaviour behaviour = behaviours[i];
+                if (behaviour == null
+                    || behaviour == this
+                    || !behaviour.enabled
+                    || !ShouldDisableForPoseAuthoring(behaviour))
+                {
+                    continue;
+                }
+
+                result.Add(behaviour);
+            }
+
+            return (Behaviour[])result.ToArray(typeof(Behaviour));
+        }
+
+        private static bool ShouldDisableForPoseAuthoring(Behaviour behaviour)
+        {
+            string typeName = behaviour.GetType().Name;
+            return string.Equals(typeName, "MovementAnimatorBridge", StringComparison.Ordinal)
+                   || string.Equals(typeName, "SCFAimBodyDifferentiator", StringComparison.Ordinal)
+                   || string.Equals(typeName, "SCFBodyKeepoutSolver", StringComparison.Ordinal)
+                   || string.Equals(typeName, "SCFClimbHandContactIK", StringComparison.Ordinal)
+                   || string.Equals(typeName, "SCFMxMCombatDriver", StringComparison.Ordinal);
         }
 
         private bool WasDropWeaponPressed()
@@ -1063,17 +1396,22 @@ namespace SCF.Gameplay
             {
                 EnsureGrips();
                 EnsureRailgunMuzzleTarget();
+                EnsureRailgunButtstockTarget();
                 if (!UseShotgunPose3GripReplica())
                 {
                     AlignWeaponByRightGrip();
                 }
             }
 
-            EnsureElbowHints();
+            AlignRightHandSocketToFingerPocket();
+            UpdateActionRearAimGateState();
             ApplyRuntimeWeaponFitPoseToTargets();
-            ZeroElbowHintTargetRotations();
+            ApplyExperimentalWeaponGripOwnership();
             ApplyMuzzleAimAuthority();
-            ClampSelectedWeaponLocalXAxis();
+            if (experimentalPreserveGripOwnershipDuringMuzzleAim)
+            {
+                ApplyExperimentalWeaponGripOwnership();
+            }
         }
 
         private void UpdateHandIkWeightsForCurrentFrame()
@@ -1088,8 +1426,30 @@ namespace SCF.Gameplay
             bool canApplyIk = CanApplyHandIk();
             float rightCarryWeight = ResolveHandCarryStateWeight(true);
             float leftCarryWeight = ResolveHandCarryStateWeight(false);
-            currentRightHandWeight = Mathf.Lerp(currentRightHandWeight, canApplyIk ? rightHandIkWeight * rightCarryWeight : 0f, blend);
-            currentLeftHandWeight = Mathf.Lerp(currentLeftHandWeight, canApplyIk ? leftHandIkWeight * leftCarryWeight : 0f, blend);
+            float rightTarget = canApplyIk ? rightHandIkWeight * rightCarryWeight : 0f;
+            float leftTarget = canApplyIk ? leftHandIkWeight * leftCarryWeight : 0f;
+
+            if (canApplyIk && UsesExperimentalFireSolutionAuthority())
+            {
+                rightTarget = Mathf.Max(rightTarget, ResolveExperimentalGripContactLockWeight(true));
+                leftTarget = Mathf.Max(leftTarget, ResolveExperimentalGripContactLockWeight(false));
+            }
+
+            currentRightHandWeight = Mathf.Lerp(currentRightHandWeight, rightTarget, blend);
+            currentLeftHandWeight = Mathf.Lerp(currentLeftHandWeight, leftTarget, blend);
+
+            if (canApplyIk && UsesExperimentalFireSolutionAuthority())
+            {
+                currentRightHandWeight = Mathf.Max(currentRightHandWeight, rightTarget);
+                currentLeftHandWeight = Mathf.Max(currentLeftHandWeight, leftTarget);
+            }
+        }
+
+        private bool ShouldExperimentalRightPalmOwnWeaponRotation()
+        {
+            return ShouldUseRightHandWeaponOwnership()
+                   && experimentalRightPalmOwnsWeaponRotation
+                   && experimentalRightPalmRotationOwnershipWeight > 0.001f;
         }
 
         [ContextMenu("SCF/Record Weapon IK Live Snapshot")]
@@ -1195,13 +1555,23 @@ namespace SCF.Gameplay
             builder.AppendLine("RuntimePoseSlotValid: " + hasRuntimeWeaponFitPoseSlot);
             builder.AppendLine("RuntimePoseSlot: " + lastRuntimeWeaponFitPoseSlot);
             builder.AppendLine("SelfAimPoseHold: " + ShouldHoldWeaponPoseForSelfAimProtection());
+            builder.AppendLine("RearAimGateMode: " + activeRearAimGateMode);
+            builder.AppendLine("RearAimYaw: " + FormatLiveFloat(activeRearAimYaw));
             builder.AppendLine("Raised01: " + FormatLiveFloat(raised01));
             builder.AppendLine("RightHandWeight: " + FormatLiveFloat(currentRightHandWeight));
             builder.AppendLine("LeftHandWeight: " + FormatLiveFloat(currentLeftHandWeight));
+            builder.AppendLine("ExpFireSolutionAuthority: " + UsesExperimentalFireSolutionAuthority());
+            builder.AppendLine("ExpRightGripOwnershipWeight: " + FormatLiveFloat(ResolveExperimentalGripOwnershipWeight()));
+            builder.AppendLine("ExpRightGripContactLock: " + FormatLiveFloat(ResolveExperimentalGripContactLockWeight(true)));
+            builder.AppendLine("ExpLeftGripContactLock: " + FormatLiveFloat(ResolveExperimentalGripContactLockWeight(false)));
+            builder.AppendLine("CharacterWeaponPlacementPoint: " + activeCharacterWeaponPlacementPointName);
+            builder.AppendLine("CharacterRightGripCarryPoint: " + activeCharacterRightGripCarryPointName);
             builder.AppendLine("LeftReachWeight: " + FormatLiveFloat(leftArmReachWeight));
-            builder.AppendLine("LeftElbowHintWeight: " + FormatLiveFloat(leftElbowHintWeight));
-            builder.AppendLine("ManualElbowAssistWeight: " + FormatLiveFloat(manualElbowHintAssistWeight));
-            builder.AppendLine("ManualArmHandLockWeight: " + FormatLiveFloat(manualArmHandLockWeight));
+            builder.AppendLine("ConstrainWristRotation: " + constrainWristRotation);
+            builder.AppendLine("MaxWristRotationFromAnimatedPose: " + FormatLiveFloat(maxWristRotationFromAnimatedPose));
+            builder.AppendLine("LimitWristContactTranslation: " + limitWristContactTranslation);
+            builder.AppendLine("MaxWristContactTranslation: " + FormatLiveFloat(maxWristContactTranslation));
+            builder.AppendLine("GripContactArmSolveWeight: " + FormatLiveFloat(gripContactArmSolveWeight));
             AppendMotorLiveState(builder);
             AppendMotionSelectorLiveState(builder);
             AppendMuzzleLiveState(builder);
@@ -1209,13 +1579,12 @@ namespace SCF.Gameplay
             AppendTransformLiveState(builder, "ACTIVE_WEAPON", activeWeapon != null ? activeWeapon.transform : null);
             AppendTransformLiveState(builder, "RIGHT_GRIP", rightGrip);
             AppendTransformLiveState(builder, "LEFT_GRIP", leftGrip);
-            AppendTransformLiveState(builder, "RIGHT_ELBOW_HINT", rightElbowHint);
-            AppendTransformLiveState(builder, "LEFT_ELBOW_HINT", leftElbowHint);
             AppendTransformLiveState(builder, "MUZZLE", railgunMuzzleTarget);
+            AppendTransformLiveState(builder, "BUTTSTOCK", buttstockTarget);
             AppendTransformLiveState(builder, "CHEST_ANCHOR", chestAnchor);
             AppendTransformLiveState(builder, "FACE_ANCHOR", faceAnchor);
-            AppendArmLiveState(builder, "RIGHT_ARM", rightArm, rightGrip, rightElbowHint, currentRightHandWeight, rightArmReachWeight, rightElbowHintWeight);
-            AppendArmLiveState(builder, "LEFT_ARM", leftArm, leftGrip, leftElbowHint, currentLeftHandWeight, leftArmReachWeight, leftElbowHintWeight);
+            AppendArmLiveState(builder, "RIGHT_ARM", rightArm, rightGrip, currentRightHandWeight, rightArmReachWeight);
+            AppendArmLiveState(builder, "LEFT_ARM", leftArm, leftGrip, currentLeftHandWeight, leftArmReachWeight);
             return builder.ToString();
         }
 
@@ -1296,22 +1665,23 @@ namespace SCF.Gameplay
             string label,
             ArmRig rig,
             Transform grip,
-            Transform elbowHint,
             float handWeight,
-            float reachWeight,
-            float hintWeight)
+            float reachWeight)
         {
             builder.AppendLine();
             builder.AppendLine("[" + label + "]");
             builder.AppendLine("HandWeight: " + FormatLiveFloat(handWeight));
             builder.AppendLine("ReachWeight: " + FormatLiveFloat(reachWeight));
-            builder.AppendLine("HintWeight: " + FormatLiveFloat(hintWeight));
             AppendTransformLiveState(builder, label + "_SHOULDER", rig.Shoulder);
             AppendTransformLiveState(builder, label + "_UPPER_ARM", rig.UpperArm);
             AppendTransformLiveState(builder, label + "_FOREARM", rig.Forearm);
             AppendTransformLiveState(builder, label + "_HAND", rig.Hand);
+            AppendTransformLiveState(builder, label + "_GRIP_CONTACT", rig.GripContact);
+            AppendTransformLiveState(builder, label + "_INDEX_CONTACT", rig.IndexContact);
+            AppendTransformLiveState(builder, label + "_THUMB_CONTACT", rig.ThumbContact);
 
-            if (rig.Hand == null || grip == null)
+            Transform effector = rig.EndEffector;
+            if (effector == null || grip == null)
             {
                 builder.AppendLine("ReachDiagnostics: unavailable");
                 return;
@@ -1334,27 +1704,12 @@ namespace SCF.Gameplay
             builder.AppendLine("ArmLength: " + FormatLiveFloat(armLength));
             builder.AppendLine("HardReach: " + FormatLiveFloat(hardReach));
             builder.AppendLine("SoftReach: " + FormatLiveFloat(softReach));
+            builder.AppendLine("EndEffector: " + effector.name);
+            builder.AppendLine("EffectorToGripDistance: " + FormatLiveFloat(Vector3.Distance(effector.position, grip.position)));
             builder.AppendLine("RawRootToGripDistance: " + FormatLiveFloat(rawToGrip.magnitude));
             builder.AppendLine("LimitedRootToTargetDistance: " + FormatLiveFloat(rootToTarget.magnitude));
             builder.AppendLine("Reach01: " + FormatLiveFloat(reach01));
             builder.AppendLine("GripLocalToWeapon: " + FormatLocalTo(activeWeapon != null ? activeWeapon.transform : null, grip));
-            builder.AppendLine("ElbowHintLocalToWeapon: " + FormatLocalTo(activeWeapon != null ? activeWeapon.transform : null, elbowHint));
-
-            if (rig.Forearm == null || elbowHint == null || rootToTarget.sqrMagnitude <= 0.0001f)
-            {
-                builder.AppendLine("PoleDiagnostics: unavailable");
-                return;
-            }
-
-            Vector3 aimDirection = rootToTarget.normalized;
-            Vector3 currentPole = Vector3.ProjectOnPlane(rig.Forearm.position - root.position, aimDirection);
-            Vector3 desiredPole = Vector3.ProjectOnPlane(elbowHint.position - root.position, aimDirection);
-            builder.AppendLine("CurrentPole: " + FormatLiveVector(currentPole) + " mag=" + FormatLiveFloat(currentPole.magnitude));
-            builder.AppendLine("DesiredPole: " + FormatLiveVector(desiredPole) + " mag=" + FormatLiveFloat(desiredPole.magnitude));
-            if (currentPole.sqrMagnitude > 0.0001f && desiredPole.sqrMagnitude > 0.0001f)
-            {
-                builder.AppendLine("PoleAngle: " + FormatLiveFloat(Vector3.SignedAngle(currentPole.normalized, desiredPole.normalized, aimDirection)));
-            }
         }
 
         private static void AppendTransformLiveState(StringBuilder builder, string label, Transform target)
@@ -1409,8 +1764,18 @@ namespace SCF.Gameplay
             DrawGripGizmo(weaponSocket, Color.yellow, 0.04f);
             DrawGripGizmo(rightGrip, Color.cyan, 0.03f);
             DrawGripGizmo(leftGrip, Color.green, 0.03f);
-            DrawGripGizmo(rightElbowHint, new Color(0.2f, 0.55f, 1f, 1f), 0.025f);
-            DrawGripGizmo(leftElbowHint, new Color(1f, 0.65f, 0.1f, 1f), 0.025f);
+            DrawGripGizmo(buttstockTarget, Color.magenta, 0.035f);
+        }
+
+        private void OnDisable()
+        {
+            if (!experimentalPoseAuthoringMode)
+            {
+                return;
+            }
+
+            experimentalPoseAuthoringMode = false;
+            ExitExperimentalPoseAuthoringMode();
         }
 
         private void OnDestroy()
@@ -1542,10 +1907,6 @@ namespace SCF.Gameplay
             else
             {
                 targetPoint.y += muzzleAimTargetHeightOffset;
-                if (flattenMuzzleAimToMuzzleHeight && muzzle != null)
-                {
-                    targetPoint.y = muzzle.position.y + muzzleAimTargetHeightOffset;
-                }
             }
 
             return targetPoint;
@@ -1797,6 +2158,27 @@ namespace SCF.Gameplay
             }
         }
 
+        private void EnsureDynamicBodyRig()
+        {
+            if (!useDynamicCharacterBodyRig)
+            {
+                bodyKeepoutSolver = null;
+                return;
+            }
+
+            if (bodyKeepoutSolver == null)
+            {
+                bodyKeepoutSolver = GetComponent<SCFBodyKeepoutSolver>();
+            }
+
+            if (bodyKeepoutSolver == null)
+            {
+                bodyKeepoutSolver = gameObject.AddComponent<SCFBodyKeepoutSolver>();
+            }
+
+            bodyKeepoutSolver.Configure(animator);
+        }
+
         private void EnsureAnimatorIkRelay()
         {
             if (animator == null)
@@ -1857,7 +2239,6 @@ namespace SCF.Gameplay
             return autoEquipRailgunOnConfigure
                    && equipRailgunOnSoldier
                    && animator != null
-                   && !IsExperimentalSoldierCharacter(activeCharacterName)
                    && HasSoldierVisualIdentity()
                    && ResolveWeaponPrototype() != null;
         }
@@ -1921,6 +2302,29 @@ namespace SCF.Gameplay
                 return selectedWeaponPrototype;
             }
 
+            SCFWeaponRuntimeCatalog catalog = ResolveRuntimeWeaponCatalog();
+            GameObject cleanPrefab = catalog != null ? catalog.CleanRailgunWeaponPrefab : null;
+            if (cleanPrefab != null)
+            {
+                railgunPrototype = cleanPrefab;
+                return cleanPrefab;
+            }
+
+#if UNITY_EDITOR
+            cleanPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(CleanRailgunPrefabPath);
+            if (cleanPrefab != null)
+            {
+                railgunPrototype = cleanPrefab;
+                return cleanPrefab;
+            }
+#endif
+
+            if (catalog != null && catalog.RailgunWeaponPrefab != null)
+            {
+                railgunPrototype = catalog.RailgunWeaponPrefab;
+                return railgunPrototype;
+            }
+
             SCFWeaponRigProfile rigProfile = ResolveRailgunRigProfile();
             if (preferWeaponPrefabAnchors && rigProfile != null && rigProfile.WeaponPrefab != null)
             {
@@ -1930,13 +2334,6 @@ namespace SCF.Gameplay
 
             if (railgunPrototype != null)
             {
-                return railgunPrototype;
-            }
-
-            SCFWeaponRuntimeCatalog catalog = ResolveRuntimeWeaponCatalog();
-            if (catalog != null && catalog.RailgunWeaponPrefab != null)
-            {
-                railgunPrototype = catalog.RailgunWeaponPrefab;
                 return railgunPrototype;
             }
 
@@ -2155,8 +2552,24 @@ namespace SCF.Gameplay
                 return railgunMuzzleTarget;
             }
 
-            railgunMuzzleTarget = FindDescendantByName(activeWeapon.transform, railgunMuzzleTransformName);
+            railgunMuzzleTarget = FindWeaponPrefabAnchor(railgunMuzzleTransformName);
             return railgunMuzzleTarget;
+        }
+
+        private Transform ResolveRailgunButtstockTransform()
+        {
+            if (activeWeapon == null)
+            {
+                return null;
+            }
+
+            if (buttstockTarget != null && buttstockTarget.IsChildOf(activeWeapon.transform))
+            {
+                return buttstockTarget;
+            }
+
+            buttstockTarget = FindRailgunButtstockAnchor(false);
+            return buttstockTarget;
         }
 
         private bool TryFindRailgunHit(Vector3 muzzle, Vector3 direction, out RaycastHit hit)
@@ -2480,6 +2893,8 @@ namespace SCF.Gameplay
                 return;
             }
 
+            EnsureDynamicBodyRig();
+
             if (animator.avatar != null && animator.isHuman)
             {
                 chestAnchor = FirstNonNull(
@@ -2504,6 +2919,9 @@ namespace SCF.Gameplay
                 leftArm.UpperArm = animator.GetBoneTransform(HumanBodyBones.LeftUpperArm);
                 leftArm.Forearm = animator.GetBoneTransform(HumanBodyBones.LeftLowerArm);
                 leftArm.Hand = animator.GetBoneTransform(HumanBodyBones.LeftHand);
+                AssignGripContactBones(animator.transform);
+                CacheCharacterWeaponPlacementPoints();
+                CacheCharacterRightGripCarryPoints();
                 return;
             }
 
@@ -2529,6 +2947,148 @@ namespace SCF.Gameplay
             leftArm.UpperArm = FindFirstBone(root, "leftupperarm", "lupperarm", "upperarm_l", "l_upperarm", "ccbaselupperarm", "leftarm");
             leftArm.Forearm = FindFirstBone(root, "leftforearm", "leftlowerarm", "lforearm", "llowerarm", "forearm_l", "lowerarm_l", "l_forearm", "l_lowerarm", "ccbaselforearm");
             leftArm.Hand = FindFirstBone(root, "lefthand", "lhand", "hand_l", "l_hand", "ccbaselhand");
+            AssignGripContactBones(root);
+            CacheCharacterWeaponPlacementPoints();
+            CacheCharacterRightGripCarryPoints();
+        }
+
+        private void CacheCharacterWeaponPlacementPoints()
+        {
+            idleWeaponPlacementPoint = null;
+            hipAimWeaponPlacementPoint = null;
+            shoulderAimWeaponPlacementPoint = null;
+            runWeaponPlacementPoint = null;
+            sprintWeaponPlacementPoint = null;
+            oneHandWeaponPlacementPoint = null;
+
+            if (!useCharacterWeaponPlacementPoints || animator == null)
+            {
+                return;
+            }
+
+            if (useGeneratedCharacterCarryPoints && bodyKeepoutSolver != null)
+            {
+                idleWeaponPlacementPoint = bodyKeepoutSolver.IdleWeaponPoint;
+                hipAimWeaponPlacementPoint = bodyKeepoutSolver.HipWeaponPoint;
+                shoulderAimWeaponPlacementPoint = bodyKeepoutSolver.ChestWeaponPoint;
+                runWeaponPlacementPoint = bodyKeepoutSolver.RunWeaponPoint;
+                sprintWeaponPlacementPoint = bodyKeepoutSolver.SprintWeaponPoint;
+                oneHandWeaponPlacementPoint = bodyKeepoutSolver.OneHandWeaponPoint;
+                if (HasAnyCharacterWeaponPlacementPoint())
+                {
+                    return;
+                }
+            }
+
+            Transform root = animator.transform;
+            idleWeaponPlacementPoint = FindCarryPoint(root, idleWeaponPlacementPointName);
+            hipAimWeaponPlacementPoint = FindCarryPoint(root, hipAimWeaponPlacementPointName);
+            shoulderAimWeaponPlacementPoint = FindCarryPoint(root, shoulderAimWeaponPlacementPointName);
+            runWeaponPlacementPoint = FindCarryPoint(root, runWeaponPlacementPointName);
+            sprintWeaponPlacementPoint = FindCarryPoint(root, sprintWeaponPlacementPointName);
+            oneHandWeaponPlacementPoint = FindCarryPoint(root, oneHandWeaponPlacementPointName);
+        }
+
+        private void CacheCharacterRightGripCarryPoints()
+        {
+            idleRightGripCarryPoint = null;
+            hipAimRightGripCarryPoint = null;
+            shoulderAimRightGripCarryPoint = null;
+            runRightGripCarryPoint = null;
+            sprintRightGripCarryPoint = null;
+            oneHandRightGripCarryPoint = null;
+
+            if (!useCharacterRightGripCarryPoints || animator == null)
+            {
+                return;
+            }
+
+            if (useGeneratedCharacterCarryPoints && bodyKeepoutSolver != null)
+            {
+                idleRightGripCarryPoint = bodyKeepoutSolver.IdleRightGripPoint;
+                hipAimRightGripCarryPoint = bodyKeepoutSolver.HipRightGripPoint;
+                shoulderAimRightGripCarryPoint = bodyKeepoutSolver.ChestRightGripPoint;
+                runRightGripCarryPoint = bodyKeepoutSolver.RunRightGripPoint;
+                sprintRightGripCarryPoint = bodyKeepoutSolver.SprintRightGripPoint;
+                oneHandRightGripCarryPoint = bodyKeepoutSolver.OneHandRightGripPoint;
+                if (HasAnyCharacterRightGripCarryPoint())
+                {
+                    return;
+                }
+            }
+
+            Transform root = animator.transform;
+            idleRightGripCarryPoint = FindCarryPoint(root, idleRightGripCarryPointName);
+            hipAimRightGripCarryPoint = FindCarryPoint(root, hipAimRightGripCarryPointName);
+            shoulderAimRightGripCarryPoint = FindCarryPoint(root, shoulderAimRightGripCarryPointName);
+            runRightGripCarryPoint = FindCarryPoint(root, runRightGripCarryPointName);
+            sprintRightGripCarryPoint = FindCarryPoint(root, sprintRightGripCarryPointName);
+            oneHandRightGripCarryPoint = FindCarryPoint(root, oneHandRightGripCarryPointName);
+        }
+
+        private Transform FindCarryPoint(Transform root, string targetName)
+        {
+            return FirstNonNull(
+                FindDescendantByName(root, targetName),
+                FindDescendantByName(transform, targetName),
+                FindDescendantByCompactName(root, targetName),
+                FindDescendantByCompactName(transform, targetName));
+        }
+
+        private void AssignGripContactBones(Transform root)
+        {
+            rightArm.GripContact = rightArm.Hand;
+            leftArm.GripContact = leftArm.Hand;
+            rightArm.IndexContact = null;
+            rightArm.ThumbContact = null;
+            leftArm.IndexContact = null;
+            leftArm.ThumbContact = null;
+
+            if (root == null)
+            {
+                return;
+            }
+
+            Transform rightIndex = FirstNonNull(
+                FindExactBone(root, experimentalRightIndexGripContactName),
+                FindExactBone(root, "RightHandIndex1"),
+                FindFirstBone(
+                    root,
+                    "Right_IndexProximal",
+                    "RightIndexProximal",
+                    "RightIndex1",
+                    "Index1_R",
+                    "index_01_r"));
+            Transform rightThumb = FirstNonNull(
+                FindExactBone(root, experimentalRightThumbGripContactName),
+                FindExactBone(root, "RightHandThumb1"),
+                FindFirstBone(
+                    root,
+                    "Right_ThumbProximal",
+                    "RightThumbProximal",
+                    "RightThumb1",
+                    "Thumb1_R",
+                    "thumb_01_r"));
+            Transform leftIndex = FirstNonNull(
+                FindExactBone(root, experimentalLeftIndexGripContactName),
+                FindExactBone(root, "LeftHandIndex1"),
+                FindFirstBone(
+                    root,
+                    "Left_IndexProximal",
+                    "LeftIndexProximal",
+                    "LeftIndex1",
+                    "Index1_L",
+                    "index_01_l"));
+
+            rightArm.IndexContact = rightIndex;
+            rightArm.ThumbContact = rightThumb;
+            leftArm.IndexContact = leftIndex;
+
+            if (ShouldUseExperimentalIndexGripContacts())
+            {
+                rightArm.GripContact = rightIndex != null ? rightIndex : rightArm.Hand;
+                leftArm.GripContact = leftIndex != null ? leftIndex : leftArm.Hand;
+            }
         }
 
         private void EnsureWeaponSocket()
@@ -2540,6 +3100,7 @@ namespace SCF.Gameplay
                 return;
             }
 
+            string socketName = ResolveWeaponSocketName();
             if (weaponSocket != null)
             {
                 if (weaponSocket.parent != socketParent)
@@ -2547,16 +3108,22 @@ namespace SCF.Gameplay
                     weaponSocket.SetParent(socketParent, false);
                 }
 
+                if (!string.Equals(weaponSocket.name, socketName, StringComparison.Ordinal))
+                {
+                    weaponSocket.name = socketName;
+                }
+
+                UpdateWeaponSocket();
                 return;
             }
 
-            Transform existing = FindDirectChild(socketParent, torsoSocketName);
-            if (existing == null)
+            Transform existing = FindDirectChild(socketParent, socketName);
+            if (existing == null && !ShouldParentWeaponSocketToRightHand())
             {
-                existing = FindDescendantByName(transform, torsoSocketName);
+                existing = FindDescendantByName(transform, socketName);
             }
 
-            weaponSocket = existing != null ? existing : new GameObject(torsoSocketName).transform;
+            weaponSocket = existing != null ? existing : new GameObject(socketName).transform;
             weaponSocket.SetParent(socketParent, false);
             weaponSocket.localScale = Vector3.one;
             UpdateWeaponSocket();
@@ -2573,6 +3140,13 @@ namespace SCF.Gameplay
 
             if (TryUseWeaponPrefabGripAnchors())
             {
+                return;
+            }
+
+            if (UsesAuthoredWeaponPrefabAnchorsOnly())
+            {
+                rightGrip = null;
+                leftGrip = null;
                 return;
             }
 
@@ -2604,17 +3178,17 @@ namespace SCF.Gameplay
                 return false;
             }
 
-            Transform right = FindDescendantByName(activeWeapon.transform, rightGripName);
-            Transform left = FindDescendantByName(activeWeapon.transform, leftGripName);
+            Transform right = FindWeaponPrefabAnchor(rightGripName);
+            Transform left = FindWeaponPrefabAnchor(leftGripName);
 
             if (right == null)
             {
-                right = FindDescendantByName(activeWeapon.transform, Pose3RightGripTargetName);
+                right = FindWeaponPrefabAnchor(Pose3RightGripTargetName);
             }
 
             if (left == null)
             {
-                left = FindDescendantByName(activeWeapon.transform, Pose3LeftGripTargetName);
+                left = FindWeaponPrefabAnchor(Pose3LeftGripTargetName);
             }
 
             if (right == null || left == null)
@@ -2626,6 +3200,8 @@ namespace SCF.Gameplay
             EnsureTuningHandle(left.gameObject);
             rightGrip = right;
             leftGrip = left;
+            PruneDuplicateWeaponAnchorInstances(rightGripName, rightGrip);
+            PruneDuplicateWeaponAnchorInstances(leftGripName, leftGrip);
             return true;
         }
 
@@ -2651,12 +3227,12 @@ namespace SCF.Gameplay
             bool wasMissing = railgunMuzzleTarget == null || !railgunMuzzleTarget.IsChildOf(activeWeapon.transform);
             if (wasMissing)
             {
-                railgunMuzzleTarget = FindDescendantByName(activeWeapon.transform, railgunMuzzleTransformName);
+                railgunMuzzleTarget = FindWeaponPrefabAnchor(railgunMuzzleTransformName);
             }
 
             if (railgunMuzzleTarget == null)
             {
-                if (!createRailgunMuzzleTarget)
+                if (!createRailgunMuzzleTarget || UsesAuthoredWeaponPrefabAnchorsOnly())
                 {
                     return;
                 }
@@ -2674,7 +3250,11 @@ namespace SCF.Gameplay
 
             railgunMuzzleTarget.localScale = Vector3.one;
             EnsureTuningHandle(railgunMuzzleTarget.gameObject);
-            EnsureRailgunMuzzleDebugMarker(railgunMuzzleTarget);
+            PruneDuplicateWeaponAnchorInstances(railgunMuzzleTransformName, railgunMuzzleTarget);
+            if (!UsesAuthoredWeaponPrefabAnchorsOnly())
+            {
+                EnsureRailgunMuzzleDebugMarker(railgunMuzzleTarget);
+            }
         }
 
         private void EnsureRailgunMuzzleDebugMarker(Transform target)
@@ -2719,9 +3299,91 @@ namespace SCF.Gameplay
             }
         }
 
+        private void EnsureRailgunButtstockTarget()
+        {
+            if (activeWeapon == null)
+            {
+                buttstockTarget = null;
+                return;
+            }
+
+            bool wasMissing = buttstockTarget == null || !buttstockTarget.IsChildOf(activeWeapon.transform);
+            if (wasMissing)
+            {
+                buttstockTarget = FindRailgunButtstockAnchor(true);
+            }
+
+            if (buttstockTarget == null)
+            {
+                if (!createRailgunButtstockTarget || UsesAuthoredWeaponPrefabAnchorsOnly())
+                {
+                    return;
+                }
+
+                buttstockTarget = new GameObject(ResolveButtstockCreationName()).transform;
+                buttstockTarget.SetParent(activeWeapon.transform, false);
+                buttstockTarget.localPosition = railgunButtstockLocalPosition;
+                buttstockTarget.localRotation = Quaternion.Euler(railgunButtstockLocalEulerAngles);
+            }
+            else if (!preserveTunedRailgunButtstockTarget && (wasMissing || Application.isPlaying))
+            {
+                buttstockTarget.localPosition = railgunButtstockLocalPosition;
+                buttstockTarget.localRotation = Quaternion.Euler(railgunButtstockLocalEulerAngles);
+            }
+
+            buttstockTarget.localScale = Vector3.one;
+            EnsureTuningHandle(buttstockTarget.gameObject);
+            PruneDuplicateWeaponAnchorInstances(ResolveButtstockCreationName(), buttstockTarget);
+            PruneDuplicateWeaponAnchorInstances(RailgunButtstockAnchorName, buttstockTarget);
+            PruneDuplicateWeaponAnchorInstances(RailgunButtstockTargetName, buttstockTarget);
+            PruneDuplicateWeaponAnchorInstances(RailgunButtstockTypoAliasName, buttstockTarget);
+            PruneDuplicateWeaponAnchorInstances(RailgunButtstockPlainAliasName, buttstockTarget);
+        }
+
+        private Transform FindRailgunButtstockAnchor(bool cleanupDuplicateTarget)
+        {
+            if (activeWeapon == null)
+            {
+                return null;
+            }
+
+            Transform preferred = FindWeaponPrefabAnchor(RailgunButtstockAnchorName);
+            Transform configured = !string.IsNullOrWhiteSpace(buttstockName)
+                                   && !string.Equals(buttstockName, RailgunButtstockAnchorName, StringComparison.Ordinal)
+                ? FindWeaponPrefabAnchor(buttstockName)
+                : null;
+            Transform legacyTarget = !string.Equals(buttstockName, RailgunButtstockTargetName, StringComparison.Ordinal)
+                ? FindWeaponPrefabAnchor(RailgunButtstockTargetName)
+                : configured;
+            Transform typoAlias = FindWeaponPrefabAnchor(RailgunButtstockTypoAliasName);
+            Transform plainAlias = FindWeaponPrefabAnchor(RailgunButtstockPlainAliasName);
+
+            if (preferred != null)
+            {
+                if (cleanupDuplicateTarget && legacyTarget != null && legacyTarget != preferred)
+                {
+                    DestroyUnityObject(legacyTarget.gameObject);
+                }
+
+                return preferred;
+            }
+
+            return configured != null ? configured : (typoAlias != null ? typoAlias : (plainAlias != null ? plainAlias : legacyTarget));
+        }
+
+        private string ResolveButtstockCreationName()
+        {
+            if (string.IsNullOrWhiteSpace(buttstockName) || string.Equals(buttstockName, RailgunButtstockTargetName, StringComparison.Ordinal))
+            {
+                return RailgunButtstockAnchorName;
+            }
+
+            return buttstockName;
+        }
+
         private void ApplyRailgunPrefabAnchorDefaults(bool force)
         {
-            if (!force || activeWeapon == null || IsReferenceShotgunInstance())
+            if (!force || activeWeapon == null || IsReferenceShotgunInstance() || UsesAuthoredWeaponPrefabAnchorsOnly())
             {
                 return;
             }
@@ -2729,11 +3391,14 @@ namespace SCF.Gameplay
             ApplyDefaultRailgunAnchorTransform("SCF_RailgunModel", DefaultRailgunModelLocalPosition, Vector3.zero);
             ApplyDefaultRailgunAnchorTransform(rightGripName, DefaultRailgunRightGripLocalPosition, DefaultRailgunRightGripLocalEulerAngles);
             ApplyDefaultRailgunAnchorTransform(leftGripName, DefaultRailgunLeftGripLocalPosition, DefaultRailgunLeftGripLocalEulerAngles);
-            ApplyDefaultRailgunAnchorTransform(railgunMuzzleTransformName, DefaultRailgunMuzzleLocalPosition, DefaultRailgunMuzzleLocalEulerAngles);
-            if (ShouldUseElbowHintTargets())
+            if (!preserveTunedRailgunMuzzleTarget)
             {
-                ApplyDefaultRailgunAnchorTransform(rightElbowHintName, DefaultRailgunRightElbowHintLocalPosition, DefaultRailgunRightElbowHintLocalEulerAngles);
-                ApplyDefaultRailgunAnchorTransform(leftElbowHintName, DefaultRailgunLeftElbowHintLocalPosition, DefaultRailgunLeftElbowHintLocalEulerAngles);
+                ApplyDefaultRailgunAnchorTransform(railgunMuzzleTransformName, DefaultRailgunMuzzleLocalPosition, DefaultRailgunMuzzleLocalEulerAngles);
+            }
+
+            if (!preserveTunedRailgunButtstockTarget)
+            {
+                ApplyDefaultRailgunAnchorTransform(buttstockName, DefaultRailgunButtstockLocalPosition, DefaultRailgunButtstockLocalEulerAngles);
             }
         }
 
@@ -2750,112 +3415,20 @@ namespace SCF.Gameplay
                 return;
             }
 
+            if (lockWeaponPrefabGripAnchors && IsGripAnchorName(anchorName))
+            {
+                return;
+            }
+
             anchor.localPosition = localPosition;
             anchor.localRotation = Quaternion.Euler(localEulerAngles);
             anchor.localScale = Vector3.one;
-        }
-
-        private void EnsureElbowHints()
-        {
-            if (!ShouldUseElbowHintTargets() || weaponSocket == null)
-            {
-                ClearElbowHintTargets();
-                return;
-            }
-
-            if (preferWeaponPrefabAnchors && activeWeapon != null)
-            {
-                rightElbowHint = FindDescendantByName(activeWeapon.transform, rightElbowHintName);
-                leftElbowHint = FindDescendantByName(activeWeapon.transform, leftElbowHintName);
-            }
-
-            rightElbowHint = EnsureSocketHint(rightElbowHint, rightElbowHintName, rightElbowHintLocalPosition);
-            leftElbowHint = EnsureSocketHint(leftElbowHint, leftElbowHintName, leftElbowHintLocalPosition);
-            if (rightElbowHint != null)
-            {
-                EnsureTuningHandle(rightElbowHint.gameObject);
-            }
-
-            if (leftElbowHint != null)
-            {
-                EnsureTuningHandle(leftElbowHint.gameObject);
-            }
-        }
-
-        private bool ShouldUseElbowHintTargets()
-        {
-            return useElbowHints && !IsExperimentalSoldierCharacter(activeCharacterName);
-        }
-
-        private void ClearElbowHintTargets()
-        {
-            DestroyRuntimeElbowHint(rightElbowHint);
-            DestroyRuntimeElbowHint(leftElbowHint);
-            DestroyNamedRuntimeElbowHint(rightElbowHintName);
-            DestroyNamedRuntimeElbowHint(leftElbowHintName);
-            rightElbowHint = null;
-            leftElbowHint = null;
-        }
-
-        private void DestroyNamedRuntimeElbowHint(string targetName)
-        {
-            if (string.IsNullOrWhiteSpace(targetName))
-            {
-                return;
-            }
-
-            Transform target = null;
-            if (activeWeapon != null)
-            {
-                target = FindDescendantByName(activeWeapon.transform, targetName);
-            }
-
-            if (target == null && weaponSocket != null)
-            {
-                target = FindDirectChild(weaponSocket, targetName);
-            }
-
-            DestroyRuntimeElbowHint(target);
-        }
-
-        private void DestroyRuntimeElbowHint(Transform target)
-        {
-            if (target == null)
-            {
-                return;
-            }
-
-            bool belongsToWeaponRig = (weaponSocket != null && target.IsChildOf(weaponSocket))
-                                      || (activeWeapon != null && target.IsChildOf(activeWeapon.transform));
-            if (belongsToWeaponRig)
-            {
-                DestroyUnityObject(target.gameObject);
-            }
-        }
-
-        private Transform EnsureSocketHint(Transform current, string targetName, Vector3 localPosition)
-        {
-            if (current != null)
-            {
-                return current;
-            }
-
-            Transform existing = FindDirectChild(weaponSocket, targetName);
-            Transform target = existing != null ? existing : new GameObject(targetName).transform;
-            target.SetParent(weaponSocket, false);
-            target.localPosition = localPosition;
-            target.localRotation = Quaternion.identity;
-            target.localScale = Vector3.one;
-            EnsureTuningHandle(target.gameObject);
-            return target;
         }
 
         private void ResetWeaponTransform()
         {
             if (activeWeapon == null)
             {
-                rightElbowHint = null;
-                leftElbowHint = null;
                 return;
             }
 
@@ -2872,54 +3445,79 @@ namespace SCF.Gameplay
             {
                 EnsureGrips();
                 EnsureRailgunMuzzleTarget();
+                EnsureRailgunButtstockTarget();
                 if (!UseShotgunPose3GripReplica())
                 {
                     AlignWeaponByRightGrip();
                 }
             }
 
-            EnsureElbowHints();
-            TryApplyWeaponFitPose(SCFWeaponFitPoseSlot.Neutral, false);
+            AlignRightHandSocketToFingerPocket();
         }
 
         private void ApplyWeaponLocalFit(bool force = false)
         {
-            if (activeWeapon == null)
-            {
-                return;
-            }
-
-            if (!force && ShouldPreserveTunedRailgunTransform())
-            {
-                return;
-            }
-
-            if (IsReferenceShotgunInstance())
-            {
-                activeWeapon.transform.localPosition = Vector3.zero;
-                activeWeapon.transform.localRotation = Quaternion.identity;
-                activeWeapon.transform.localScale = Vector3.one;
-                return;
-            }
-
-            activeWeapon.transform.localPosition = UseShotgunPose3GripReplica()
-                ? weaponLocalPosition + ResolvePose3WeaponAnchorSocketOffset()
-                : weaponLocalPosition;
-            activeWeapon.transform.localRotation = Quaternion.Euler(weaponLocalEulerAngles);
-            activeWeapon.transform.localScale = SanitizedScale(weaponLocalScale);
         }
 
         private void AlignWeaponByRightGrip()
         {
-            if (!anchorWeaponByRightGrip || activeWeapon == null || weaponSocket == null || rightGrip == null)
+        }
+
+        private void AlignRightHandSocketToFingerPocket()
+        {
+            if (!alignRightHandSocketToFingerPocket
+                || !ShouldParentWeaponSocketToRightHand()
+                || weaponSocket == null
+                || activeWeapon == null
+                || rightGrip == null
+                || rightArm.Hand == null)
             {
                 return;
             }
 
-            Vector3 socketOffset = Vector3.Lerp(restRightGripSocketOffset, raisedRightGripSocketOffset, raised01);
-            Vector3 target = weaponSocket.TransformPoint(socketOffset);
-            Vector3 delta = target - rightGrip.position;
-            activeWeapon.transform.position += delta;
+            if (!TryResolveRightHandGripPocket(out Vector3 pocketWorld))
+            {
+                return;
+            }
+
+            Vector3 delta = pocketWorld - rightGrip.position;
+            if (delta.sqrMagnitude <= 0.0000001f)
+            {
+                return;
+            }
+
+            weaponSocket.position += delta * Mathf.Clamp01(rightHandGripPocketBlend);
+        }
+
+        private bool TryResolveRightHandGripPocket(out Vector3 pocketWorld)
+        {
+            pocketWorld = Vector3.zero;
+            if (rightArm.Hand == null)
+            {
+                return false;
+            }
+
+            Vector3 handWorld = rightArm.Hand.position;
+            bool hasIndex = rightArm.IndexContact != null;
+            bool hasThumb = rightArm.ThumbContact != null;
+            Vector3 fingerPocket = handWorld;
+
+            if (hasIndex && hasThumb)
+            {
+                fingerPocket = Vector3.Lerp(rightArm.IndexContact.position, rightArm.ThumbContact.position, 0.5f);
+            }
+            else if (hasIndex)
+            {
+                fingerPocket = rightArm.IndexContact.position;
+            }
+            else if (hasThumb)
+            {
+                fingerPocket = rightArm.ThumbContact.position;
+            }
+
+            pocketWorld = Vector3.Lerp(handWorld, fingerPocket, Mathf.Clamp01(rightHandGripPocketFingerWeight));
+            pocketWorld += rightArm.Hand.TransformVector(rightHandGripPocketLocalOffset);
+            return true;
         }
 
         private void PrepareReferenceShotgunInstance()
@@ -3035,33 +3633,11 @@ namespace SCF.Gameplay
 
         private void AlignReferenceShotgunToSocket()
         {
-            if (activeWeapon == null || weaponSocket == null)
-            {
-                return;
-            }
-
-            if (referenceWeaponAnchor == null)
-            {
-                referenceWeaponAnchor = FindDescendantByName(activeWeapon.transform, referenceShotgunAnchorName);
-            }
-
-            if (referenceWeaponAnchor == null)
-            {
-                return;
-            }
-
-            Quaternion rotationDelta = weaponSocket.rotation * Quaternion.Inverse(referenceWeaponAnchor.rotation);
-            activeWeapon.transform.rotation = rotationDelta * activeWeapon.transform.rotation;
-            Vector3 socketOffset = UseShotgunPose3GripReplica()
-                ? ResolvePose3WeaponAnchorSocketOffset()
-                : Vector3.Lerp(restRightGripSocketOffset, raisedRightGripSocketOffset, raised01);
-            Vector3 target = weaponSocket.TransformPoint(socketOffset);
-            activeWeapon.transform.position += target - referenceWeaponAnchor.position;
         }
 
         private bool UseShotgunPose3GripReplica()
         {
-            return useShotgunPose3GripReplica && activeWeapon != null;
+            return useShotgunPose3GripReplica && activeWeapon != null && UsesLegacyTpsWeaponFit();
         }
 
         private Vector3 ResolvePose3RightGripSocketOffset()
@@ -3098,6 +3674,7 @@ namespace SCF.Gameplay
             return enableRailgunLiveTuning
                    && preserveTunedRailgunTransform
                    && activeWeapon != null
+                   && UsesLegacyTpsWeaponFit()
                    && !IsReferenceShotgunInstance()
                    && !ShouldReturnSelectedWeaponToNeutralFit();
         }
@@ -3161,9 +3738,18 @@ namespace SCF.Gameplay
                 return;
             }
 
+            if (!UsesLegacyTpsWeaponFit())
+            {
+                EnsureWeaponSocket();
+                ApplyWeaponLocalFit(true);
+                EnsureGrips();
+                EnsureRailgunMuzzleTarget();
+                EnsureRailgunButtstockTarget();
+                return;
+            }
+
             if (TryApplyWeaponFitPose(ResolveRuntimeWeaponFitPoseSlot(), true))
             {
-                ClampSelectedWeaponLocalXAxis(true);
                 return;
             }
 
@@ -3171,8 +3757,7 @@ namespace SCF.Gameplay
             ApplyRailgunPrefabAnchorDefaults(true);
             ApplyWeaponLocalFit(true);
             EnsureRailgunMuzzleTarget();
-            EnsureElbowHints();
-            ClampSelectedWeaponLocalXAxis(true);
+            EnsureRailgunButtstockTarget();
             bool oldPreserveTunedGripTargets = preserveTunedGripTargets;
             preserveTunedGripTargets = false;
             EnsureShotgunPose3GripTargets();
@@ -3219,13 +3804,21 @@ namespace SCF.Gameplay
 
             EnsureGrips();
             EnsureRailgunMuzzleTarget();
-            EnsureElbowHints();
+            EnsureRailgunButtstockTarget();
         }
 
         public string RecordWeaponFitSnapshot(string snapshotName = "SCF_WeaponFit")
         {
             RefreshWeaponTuningTargets();
             return SCFTransformSnapshotRecorder.CaptureHierarchy(snapshotName, ActiveWeaponTransform, BuildWeaponFitSnapshotTargets());
+        }
+
+        public string RecordExperimentalPoseClaySnapshot()
+        {
+            RefreshWeaponTuningTargets();
+            CacheBones();
+            Transform root = poseAuthoringRecordsFullCharacterHierarchy ? transform : ActiveWeaponTransform;
+            return SCFTransformSnapshotRecorder.CaptureHierarchy("SCF_ExperimentalPoseClay", root, BuildExperimentalPoseClaySnapshotTargets());
         }
 
         public SCFTransformSnapshotTarget[] BuildWeaponFitSnapshotTargets()
@@ -3236,10 +3829,44 @@ namespace SCF.Gameplay
                 new SCFTransformSnapshotTarget("WEAPON ROOT / SCF_Selected_Railgun", ActiveWeaponTransform),
                 new SCFTransformSnapshotTarget("RIGHT HAND GRIP / SCF_RightPistolGrip", rightGrip),
                 new SCFTransformSnapshotTarget("LEFT HAND GRIP / SCF_LeftUnderbarrelGrip", leftGrip),
-                new SCFTransformSnapshotTarget("RIGHT ELBOW ORIENTATOR / SCF_RightElbowHint", rightElbowHint),
-                new SCFTransformSnapshotTarget("LEFT ELBOW ORIENTATOR / SCF_LeftElbowHint", leftElbowHint),
-                new SCFTransformSnapshotTarget("MUZZLE / SCF_RailgunMuzzleTarget", railgunMuzzleTarget)
+                new SCFTransformSnapshotTarget("MUZZLE / SCF_RailgunMuzzleTarget", railgunMuzzleTarget),
+                new SCFTransformSnapshotTarget("BUTTSTOCK / SCF_RailgunButtstock", buttstockTarget)
             };
+        }
+
+        private SCFTransformSnapshotTarget[] BuildExperimentalPoseClaySnapshotTargets()
+        {
+            return new[]
+            {
+                new SCFTransformSnapshotTarget("CHARACTER ROOT", transform),
+                new SCFTransformSnapshotTarget("ANIMATOR ROOT", animator != null ? animator.transform : null),
+                new SCFTransformSnapshotTarget("WEAPON SOCKET / SCF_ChestWeaponSocket", weaponSocket),
+                new SCFTransformSnapshotTarget("WEAPON ROOT / SCF_Selected_Railgun", ActiveWeaponTransform),
+                new SCFTransformSnapshotTarget("RIGHT HAND GRIP / SCF_RightPistolGrip", rightGrip),
+                new SCFTransformSnapshotTarget("LEFT HAND GRIP / SCF_LeftUnderbarrelGrip", leftGrip),
+                new SCFTransformSnapshotTarget("MUZZLE / SCF_RailgunMuzzleTarget", railgunMuzzleTarget),
+                new SCFTransformSnapshotTarget("BUTTSTOCK / SCF_RailgunButtstock", buttstockTarget),
+                new SCFTransformSnapshotTarget("CHEST ANCHOR", chestAnchor),
+                new SCFTransformSnapshotTarget("FACE ANCHOR", faceAnchor),
+                new SCFTransformSnapshotTarget("RIGHT SHOULDER", rightArm.Shoulder),
+                new SCFTransformSnapshotTarget("RIGHT UPPER ARM", rightArm.UpperArm),
+                new SCFTransformSnapshotTarget("RIGHT FOREARM", rightArm.Forearm),
+                new SCFTransformSnapshotTarget("RIGHT HAND", rightArm.Hand),
+                new SCFTransformSnapshotTarget("RIGHT GRIP CONTACT", rightArm.GripContact),
+                new SCFTransformSnapshotTarget("RIGHT INDEX CONTACT", rightArm.IndexContact),
+                new SCFTransformSnapshotTarget("RIGHT THUMB CONTACT", rightArm.ThumbContact),
+                new SCFTransformSnapshotTarget("LEFT SHOULDER", leftArm.Shoulder),
+                new SCFTransformSnapshotTarget("LEFT UPPER ARM", leftArm.UpperArm),
+                new SCFTransformSnapshotTarget("LEFT FOREARM", leftArm.Forearm),
+                new SCFTransformSnapshotTarget("LEFT HAND", leftArm.Hand),
+                new SCFTransformSnapshotTarget("LEFT GRIP CONTACT", leftArm.GripContact)
+            };
+        }
+
+        [ContextMenu("SCF/Record Experimental Pose Clay Snapshot")]
+        private void RecordExperimentalPoseClaySnapshotFromContext()
+        {
+            RecordExperimentalPoseClaySnapshot();
         }
 
         [ContextMenu("SCF/Capture Current Railgun Tuning")]
@@ -3262,7 +3889,7 @@ namespace SCF.Gameplay
 
         private void ApplyRuntimeWeaponFitPoseToTargets()
         {
-            if (weaponFitPoseTuningMode || !useWeaponFitPoseSlots || activeWeapon == null)
+            if (weaponFitPoseTuningMode || !useWeaponFitPoseSlots || activeWeapon == null || ShouldSuppressExperimentalWeaponFitPoseSlots())
             {
                 return;
             }
@@ -3275,8 +3902,7 @@ namespace SCF.Gameplay
             SCFWeaponFitPoseSlot slot = ResolveRuntimeWeaponFitPoseSlot();
             bool includeRootPose = !hasRuntimeWeaponFitPoseSlot
                                    || lastRuntimeWeaponFitPoseSlot != slot
-                                   || motor == null
-                                   || !motor.AimHeld;
+                                   || ShouldRefreshRuntimeWeaponRootPoseEveryFrame();
             if (TryApplyWeaponFitPose(slot, true, false, includeRootPose))
             {
                 lastRuntimeWeaponFitPoseSlot = slot;
@@ -3284,11 +3910,32 @@ namespace SCF.Gameplay
             }
         }
 
+        private bool ShouldSuppressExperimentalWeaponFitPoseSlots()
+        {
+            return !UsesLegacyTpsWeaponFit()
+                   || (suppressExperimentalWeaponFitPoseSlots && UsesExperimentalFireSolutionAuthority());
+        }
+
+        private bool ShouldRefreshRuntimeWeaponRootPoseEveryFrame()
+        {
+            if (UsesExperimentalFireSolutionAuthority())
+            {
+                return false;
+            }
+
+            return motor == null || !motor.AimHeld;
+        }
+
         private SCFWeaponFitPoseSlot ResolveRuntimeWeaponFitPoseSlot()
         {
             if (weaponFitPoseTuningMode)
             {
                 return tuningWeaponFitPoseSlot;
+            }
+
+            if (motor != null && (motor.IsAirborne || motor.IsJumpCharging))
+            {
+                return motor.AimHeld ? SCFWeaponFitPoseSlot.AimWalk : SCFWeaponFitPoseSlot.Neutral;
             }
 
             if (motor != null && motor.AimHeld)
@@ -3311,6 +3958,11 @@ namespace SCF.Gameplay
 
         private bool TryApplyWeaponFitPose(SCFWeaponFitPoseSlot slot, bool allowNeutralFallback, bool ensureTargets, bool includeRootPose)
         {
+            if (!UsesLegacyTpsWeaponFit())
+            {
+                return false;
+            }
+
             if (!TryGetWeaponFitPose(slot, out SCFWeaponFitPose pose)
                 && (!allowNeutralFallback || slot == SCFWeaponFitPoseSlot.Neutral || !TryGetWeaponFitPose(SCFWeaponFitPoseSlot.Neutral, out pose)))
             {
@@ -3341,27 +3993,38 @@ namespace SCF.Gameplay
             if (includeRootPose)
             {
                 ApplyLocalPose(weaponSocket, pose.socket);
-                ApplyLocalPose(activeWeapon.transform, pose.weapon);
             }
 
             if (ensureTargets)
             {
                 EnsureGrips();
                 EnsureRailgunMuzzleTarget();
-                EnsureElbowHints();
+                EnsureRailgunButtstockTarget();
             }
 
-            ApplyLocalPose(rightGrip, pose.rightGrip);
-            ApplyLocalPose(leftGrip, pose.leftGrip);
-            ApplyLocalPose(rightElbowHint, SanitizeElbowHintPose(pose.rightElbowHint, DefaultRailgunRightElbowHintLocalPosition));
-            ApplyLocalPose(leftElbowHint, SanitizeElbowHintPose(pose.leftElbowHint, DefaultRailgunLeftElbowHintLocalPosition));
-            ZeroElbowHintTargetRotations();
+            if (!ShouldLockWeaponPrefabGripAnchor(rightGrip))
+            {
+                ApplyLocalPose(rightGrip, pose.rightGrip);
+            }
+
+            if (!ShouldLockWeaponPrefabGripAnchor(leftGrip))
+            {
+                ApplyLocalPose(leftGrip, pose.leftGrip);
+            }
+
             ApplyLocalPose(railgunMuzzleTarget, pose.muzzle);
+            ApplyLocalPose(buttstockTarget, pose.buttstock);
 
             if (pose.muzzle.captured)
             {
                 railgunMuzzleLocalPosition = pose.muzzle.localPosition;
                 railgunMuzzleLocalEulerAngles = pose.muzzle.localEulerAngles;
+            }
+
+            if (pose.buttstock.captured)
+            {
+                railgunButtstockLocalPosition = pose.buttstock.localPosition;
+                railgunButtstockLocalEulerAngles = pose.buttstock.localEulerAngles;
             }
         }
 
@@ -3372,12 +4035,40 @@ namespace SCF.Gameplay
                 captured = activeWeapon != null,
                 socket = CaptureLocalPose(weaponSocket),
                 weapon = CaptureLocalPose(activeWeapon != null ? activeWeapon.transform : null),
-                rightGrip = CaptureLocalPose(rightGrip),
-                leftGrip = CaptureLocalPose(leftGrip),
-                rightElbowHint = CaptureLocalPose(rightElbowHint),
-                leftElbowHint = CaptureLocalPose(leftElbowHint),
-                muzzle = CaptureLocalPose(railgunMuzzleTarget)
+                rightGrip = CaptureLocalPoseUnlessLockedGrip(rightGrip),
+                leftGrip = CaptureLocalPoseUnlessLockedGrip(leftGrip),
+                muzzle = CaptureLocalPose(railgunMuzzleTarget),
+                buttstock = CaptureLocalPose(buttstockTarget)
             };
+        }
+
+        private SCFLocalTransformPose CaptureLocalPoseUnlessLockedGrip(Transform target)
+        {
+            return ShouldLockWeaponPrefabGripAnchor(target)
+                ? default
+                : CaptureLocalPose(target);
+        }
+
+        private bool ShouldLockWeaponPrefabGripAnchor(Transform target)
+        {
+            return lockWeaponPrefabGripAnchors
+                   && IsWeaponPrefabGripAnchor(target);
+        }
+
+        private bool IsWeaponPrefabGripAnchor(Transform target)
+        {
+            if (target == null || activeWeapon == null || !target.IsChildOf(activeWeapon.transform))
+            {
+                return false;
+            }
+
+            return IsGripAnchorName(target.name);
+        }
+
+        private bool IsGripAnchorName(string targetName)
+        {
+            return string.Equals(targetName, rightGripName, StringComparison.Ordinal)
+                   || string.Equals(targetName, leftGripName, StringComparison.Ordinal);
         }
 
         private bool TryGetWeaponFitPose(SCFWeaponFitPoseSlot slot, out SCFWeaponFitPose pose)
@@ -3451,32 +4142,6 @@ namespace SCF.Gameplay
             target.localScale = pose.localScale;
         }
 
-        private static SCFLocalTransformPose SanitizeElbowHintPose(SCFLocalTransformPose pose, Vector3 fallbackPosition)
-        {
-            if (!pose.captured || pose.localPosition.sqrMagnitude <= MaxElbowHintLocalDistance * MaxElbowHintLocalDistance)
-            {
-                return pose;
-            }
-
-            pose.localPosition = fallbackPosition;
-            pose.localEulerAngles = Vector3.zero;
-            pose.localScale = Vector3.one;
-            return pose;
-        }
-
-        private void ZeroElbowHintTargetRotations()
-        {
-            if (rightElbowHint != null)
-            {
-                rightElbowHint.localRotation = Quaternion.identity;
-            }
-
-            if (leftElbowHint != null)
-            {
-                leftElbowHint.localRotation = Quaternion.identity;
-            }
-        }
-
         private void CaptureCurrentRailgunTuningInternal(bool announce)
         {
             if (activeWeapon == null)
@@ -3508,6 +4173,12 @@ namespace SCF.Gameplay
             {
                 railgunMuzzleLocalPosition = railgunMuzzleTarget.localPosition;
                 railgunMuzzleLocalEulerAngles = NormalizeEuler(railgunMuzzleTarget.localEulerAngles);
+            }
+
+            if (buttstockTarget != null)
+            {
+                railgunButtstockLocalPosition = buttstockTarget.localPosition;
+                railgunButtstockLocalEulerAngles = NormalizeEuler(buttstockTarget.localEulerAngles);
             }
 
             weaponLocalPosition = UseShotgunPose3GripReplica()
@@ -3569,7 +4240,9 @@ namespace SCF.Gameplay
                    + "shotgunPose3LeftGripEulerAngles = " + FormatVector(shotgunPose3LeftGripEulerAngles) + "\n"
                    + "shotgunPose3WeaponAnchorTuningOffset = " + FormatVector(shotgunPose3WeaponAnchorTuningOffset) + "\n"
                    + "railgunMuzzleLocalPosition = " + FormatVector(railgunMuzzleLocalPosition) + "\n"
-                   + "railgunMuzzleLocalEulerAngles = " + FormatVector(railgunMuzzleLocalEulerAngles);
+                   + "railgunMuzzleLocalEulerAngles = " + FormatVector(railgunMuzzleLocalEulerAngles) + "\n"
+                   + "railgunButtstockLocalPosition = " + FormatVector(railgunButtstockLocalPosition) + "\n"
+                   + "railgunButtstockLocalEulerAngles = " + FormatVector(railgunButtstockLocalEulerAngles);
         }
 
         private static Vector3 NormalizeEuler(Vector3 eulerAngles)
@@ -3714,9 +4387,24 @@ namespace SCF.Gameplay
                 return 1f;
             }
 
+            if (activeRearAimGateMode == SCFRearAimGateMode.RightHandRearShot)
+            {
+                return rightHand ? 1f : rightSideRearAimLeftHandWeight;
+            }
+
+            if (activeRearAimGateMode == SCFRearAimGateMode.InwardTwoHandTurn)
+            {
+                return rightHand ? 1f : inwardRearAimLeftHandWeight;
+            }
+
+            if (detachLeftHandDuringWallRun && motor.IsWallRunning)
+            {
+                return rightHand ? wallRunRightHandCarryWeight : wallRunLeftHandCarryWeight;
+            }
+
             if (detachBothHandsDuringClimb && motor.IsClimbing)
             {
-                return climbHandCarryWeight;
+                return rightHand ? climbRightHandCarryWeight : climbHandCarryWeight;
             }
 
             if (detachLeftHandDuringVault && motor.IsVaulting)
@@ -3732,7 +4420,8 @@ namespace SCF.Gameplay
             return suspendMuzzleAimDuringClimb
                    && detachBothHandsDuringClimb
                    && motor != null
-                   && motor.IsClimbing;
+                   && motor.IsClimbing
+                   && climbRightHandCarryWeight <= 0.001f;
         }
 
         private bool ShouldLowerWeaponForTraversal()
@@ -3740,7 +4429,8 @@ namespace SCF.Gameplay
             return lowerWeaponDuringClimb
                    && detachBothHandsDuringClimb
                    && motor != null
-                   && motor.IsClimbing;
+                   && motor.IsClimbing
+                   && climbRightHandCarryWeight <= 0.001f;
         }
 
         private bool ShouldBlockRailgunFireForTraversal()
@@ -3780,52 +4470,230 @@ namespace SCF.Gameplay
                 weaponSocket.SetParent(socketParent, false);
             }
 
+            if (ShouldParentWeaponSocketToRightHand())
+            {
+                weaponSocket.localPosition = experimentalRightHandSocketLocalPosition;
+                weaponSocket.localScale = Vector3.one;
+                return;
+            }
+
             weaponSocket.localPosition = Vector3.Lerp(restSocketOffset, raisedSocketOffset, raised01);
-            Quaternion restRotation = Quaternion.Euler(restSocketEulerAngles);
-            Quaternion raisedRotation = Quaternion.Euler(raisedSocketEulerAngles);
-            weaponSocket.localRotation = Quaternion.Slerp(restRotation, raisedRotation, raised01);
+        }
+
+        private void ApplyCharacterRightGripCarryPointAuthority()
+        {
+            activeCharacterRightGripCarryPointName = string.Empty;
+        }
+
+        private bool ShouldUseCharacterRightGripCarryPointAuthority()
+        {
+            return useCharacterRightGripCarryPoints
+                   && UsesExperimentalFireSolutionAuthority()
+                   && activeWeapon != null
+                   && rightGrip != null
+                   && !(useCharacterWeaponPlacementPoints && HasAnyCharacterWeaponPlacementPoint());
+        }
+
+        private bool ApplyCharacterWeaponPlacementAuthority()
+        {
+            activeCharacterWeaponPlacementPointName = string.Empty;
+            return false;
+        }
+
+        private void AlignWeaponGripToWorldPose(Transform grip, Transform target, float blend)
+        {
+        }
+
+        private bool IsGeneratedCharacterCarryPoint(Transform point)
+        {
+            return useGeneratedCharacterCarryPoints
+                   && bodyKeepoutSolver != null
+                   && bodyKeepoutSolver.OwnsGeneratedCarryPoint(point);
+        }
+
+        private void AlignWeaponBodyContactToGeneratedCarryPoint(Transform carryPoint, float blend)
+        {
+        }
+
+        private void PinGeneratedBodyContactAfterAim()
+        {
+        }
+
+        private Quaternion ResolveGeneratedCarryWeaponRotation(Transform carryPoint)
+        {
+            Transform muzzle = ResolveRailgunMuzzleTransform();
+            Vector3 desiredForward = ResolveGeneratedCarryForward(carryPoint);
+            if (muzzle == null || desiredForward.sqrMagnitude <= 0.0001f || muzzle.forward.sqrMagnitude <= 0.0001f)
+            {
+                return activeWeapon.transform.rotation;
+            }
+
+            Vector3 planarForward = Vector3.ProjectOnPlane(desiredForward, Vector3.up);
+            Vector3 stableForward = planarForward.sqrMagnitude > 0.0001f ? planarForward.normalized : desiredForward.normalized;
+            Quaternion rootToMuzzle = Quaternion.Inverse(activeWeapon.transform.rotation) * muzzle.rotation;
+            Quaternion targetMuzzleRotation = Quaternion.LookRotation(stableForward, Vector3.up);
+            return targetMuzzleRotation * Quaternion.Inverse(rootToMuzzle);
+        }
+
+        private Vector3 ResolveGeneratedCarryForward(Transform carryPoint)
+        {
+            if (motor != null && motor.BodyFacingDirection.sqrMagnitude > 0.0001f)
+            {
+                return motor.BodyFacingDirection.normalized;
+            }
+
+            if (carryPoint != null && carryPoint.forward.sqrMagnitude > 0.0001f)
+            {
+                return Vector3.ProjectOnPlane(carryPoint.forward, Vector3.up).sqrMagnitude > 0.0001f
+                    ? Vector3.ProjectOnPlane(carryPoint.forward, Vector3.up).normalized
+                    : carryPoint.forward.normalized;
+            }
+
+            Vector3 fallback = Vector3.ProjectOnPlane(transform.forward, Vector3.up);
+            return fallback.sqrMagnitude > 0.0001f ? fallback.normalized : transform.forward;
+        }
+
+        private bool ShouldUseCharacterWeaponPlacementAuthority()
+        {
+            return useCharacterWeaponPlacementPoints
+                   && UsesExperimentalFireSolutionAuthority()
+                   && activeWeapon != null;
+        }
+
+        private bool ShouldUseAirborneAimCarry()
+        {
+            return motor != null && (motor.IsAirborne || motor.IsJumpCharging) && motor.AimHeld;
+        }
+
+        private bool ShouldUseAirborneRegularCarry()
+        {
+            return motor != null && (motor.IsAirborne || motor.IsJumpCharging) && !motor.AimHeld;
+        }
+
+        private bool ShouldAllowWeaponUpperBodyPoseLayerDuringArmedJump()
+        {
+            return allowWeaponUpperBodyPoseLayerDuringArmedJump
+                   && activeWeapon != null
+                   && motor != null
+                   && (motor.IsAirborne || motor.IsJumpCharging);
+        }
+
+        private bool TryResolveCharacterWeaponPlacementPoint(out Transform placementPoint)
+        {
+            if (!HasAnyCharacterWeaponPlacementPoint())
+            {
+                CacheCharacterWeaponPlacementPoints();
+            }
+
+            placementPoint = null;
+            if (!ShouldUseCharacterWeaponPlacementAuthority())
+            {
+                return false;
+            }
+
+            if (activeRearAimGateMode == SCFRearAimGateMode.RightHandRearShot)
+            {
+                placementPoint = FirstNonNull(oneHandWeaponPlacementPoint, hipAimWeaponPlacementPoint, shoulderAimWeaponPlacementPoint, runWeaponPlacementPoint, idleWeaponPlacementPoint);
+            }
+            else if (ShouldUseAirborneAimCarry())
+            {
+                placementPoint = FirstNonNull(shoulderAimWeaponPlacementPoint, hipAimWeaponPlacementPoint, runWeaponPlacementPoint, idleWeaponPlacementPoint, oneHandWeaponPlacementPoint);
+            }
+            else if (ShouldUseAirborneRegularCarry())
+            {
+                placementPoint = FirstNonNull(runWeaponPlacementPoint, idleWeaponPlacementPoint, shoulderAimWeaponPlacementPoint, hipAimWeaponPlacementPoint, oneHandWeaponPlacementPoint);
+            }
+            else if (motor != null && motor.AimHeld)
+            {
+                placementPoint = motor.RunHeld
+                    ? FirstNonNull(runWeaponPlacementPoint, hipAimWeaponPlacementPoint, shoulderAimWeaponPlacementPoint, idleWeaponPlacementPoint, oneHandWeaponPlacementPoint)
+                    : FirstNonNull(shoulderAimWeaponPlacementPoint, hipAimWeaponPlacementPoint, idleWeaponPlacementPoint, oneHandWeaponPlacementPoint);
+            }
+            else if (motor != null && motor.SprintHeld)
+            {
+                placementPoint = FirstNonNull(sprintWeaponPlacementPoint, runWeaponPlacementPoint, idleWeaponPlacementPoint, hipAimWeaponPlacementPoint, shoulderAimWeaponPlacementPoint, oneHandWeaponPlacementPoint);
+            }
+            else if (motor != null && motor.RunHeld)
+            {
+                placementPoint = FirstNonNull(hipAimWeaponPlacementPoint, idleWeaponPlacementPoint, runWeaponPlacementPoint, shoulderAimWeaponPlacementPoint, oneHandWeaponPlacementPoint);
+            }
+            else
+            {
+                placementPoint = FirstNonNull(idleWeaponPlacementPoint, runWeaponPlacementPoint, hipAimWeaponPlacementPoint, shoulderAimWeaponPlacementPoint, oneHandWeaponPlacementPoint);
+            }
+
+            return placementPoint != null;
+        }
+
+        private bool HasAnyCharacterWeaponPlacementPoint()
+        {
+            return idleWeaponPlacementPoint != null
+                   || hipAimWeaponPlacementPoint != null
+                   || shoulderAimWeaponPlacementPoint != null
+                   || runWeaponPlacementPoint != null
+                   || sprintWeaponPlacementPoint != null
+                   || oneHandWeaponPlacementPoint != null;
+        }
+
+        private bool TryResolveCharacterRightGripCarryPoint(out Transform carryPoint)
+        {
+            if (!HasAnyCharacterRightGripCarryPoint())
+            {
+                CacheCharacterRightGripCarryPoints();
+            }
+
+            carryPoint = null;
+            if (!ShouldUseCharacterRightGripCarryPointAuthority())
+            {
+                return false;
+            }
+
+            if (activeRearAimGateMode == SCFRearAimGateMode.RightHandRearShot)
+            {
+                carryPoint = FirstNonNull(oneHandRightGripCarryPoint, hipAimRightGripCarryPoint, shoulderAimRightGripCarryPoint, runRightGripCarryPoint, idleRightGripCarryPoint);
+            }
+            else if (ShouldUseAirborneAimCarry())
+            {
+                carryPoint = FirstNonNull(shoulderAimRightGripCarryPoint, hipAimRightGripCarryPoint, runRightGripCarryPoint, idleRightGripCarryPoint);
+            }
+            else if (ShouldUseAirborneRegularCarry())
+            {
+                carryPoint = FirstNonNull(runRightGripCarryPoint, idleRightGripCarryPoint, shoulderAimRightGripCarryPoint, hipAimRightGripCarryPoint);
+            }
+            else if (motor != null && motor.AimHeld)
+            {
+                carryPoint = motor.RunHeld
+                    ? FirstNonNull(runRightGripCarryPoint, hipAimRightGripCarryPoint, shoulderAimRightGripCarryPoint, idleRightGripCarryPoint)
+                    : FirstNonNull(shoulderAimRightGripCarryPoint, hipAimRightGripCarryPoint, idleRightGripCarryPoint);
+            }
+            else if (motor != null && motor.SprintHeld)
+            {
+                carryPoint = FirstNonNull(sprintRightGripCarryPoint, runRightGripCarryPoint, idleRightGripCarryPoint, hipAimRightGripCarryPoint, shoulderAimRightGripCarryPoint);
+            }
+            else if (motor != null && motor.RunHeld)
+            {
+                carryPoint = FirstNonNull(runRightGripCarryPoint, idleRightGripCarryPoint, hipAimRightGripCarryPoint, shoulderAimRightGripCarryPoint);
+            }
+            else
+            {
+                carryPoint = FirstNonNull(idleRightGripCarryPoint, runRightGripCarryPoint, hipAimRightGripCarryPoint, shoulderAimRightGripCarryPoint);
+            }
+
+            return carryPoint != null;
+        }
+
+        private bool HasAnyCharacterRightGripCarryPoint()
+        {
+            return idleRightGripCarryPoint != null
+                   || hipAimRightGripCarryPoint != null
+                   || shoulderAimRightGripCarryPoint != null
+                   || runRightGripCarryPoint != null
+                   || sprintRightGripCarryPoint != null
+                   || oneHandRightGripCarryPoint != null;
         }
 
         private void ApplyMuzzleAimAuthority()
         {
-            if (!muzzleDrivesWeaponAim || activeWeapon == null || muzzleAimWeight <= 0.001f)
-            {
-                return;
-            }
-
-            if (ShouldSuspendMuzzleAimForTraversal())
-            {
-                return;
-            }
-
-            if (muzzleAimOnlyWhileAimHeld && (motor == null || !motor.AimHeld))
-            {
-                return;
-            }
-
-            Transform muzzle = ResolveRailgunMuzzleTransform();
-            if (muzzle == null || !TryResolveMuzzleAimDirection(muzzle, out Vector3 desiredDirection))
-            {
-                return;
-            }
-
-            Vector3 currentDirection = muzzle.forward;
-            if (currentDirection.sqrMagnitude <= 0.0001f || desiredDirection.sqrMagnitude <= 0.0001f)
-            {
-                return;
-            }
-
-            float blend = (1f - Mathf.Exp(-muzzleAimSharpness * Time.deltaTime)) * Mathf.Clamp01(muzzleAimWeight);
-            if (aimMuzzleAroundRightGripPivot && TryResolveMuzzleAimPivot(out Vector3 pivot))
-            {
-                ApplyGripPivotMuzzleAim(muzzle, currentDirection.normalized, desiredDirection.normalized, blend, pivot);
-                return;
-            }
-
-            Transform aimRoot = weaponSocket != null ? weaponSocket : activeWeapon.transform;
-            Quaternion correction = Quaternion.FromToRotation(currentDirection.normalized, desiredDirection.normalized);
-            Quaternion targetRotation = correction * aimRoot.rotation;
-            aimRoot.rotation = Quaternion.Slerp(aimRoot.rotation, targetRotation, blend);
         }
 
         private bool TryResolveMuzzleAimPivot(out Vector3 pivot)
@@ -3842,55 +4710,6 @@ namespace SCF.Gameplay
 
         private void ApplyGripPivotMuzzleAim(Transform muzzle, Vector3 currentDirection, Vector3 desiredDirection, float blend, Vector3 pivot)
         {
-            Transform aimRoot = activeWeapon != null ? activeWeapon.transform : weaponSocket;
-            if (aimRoot == null || muzzle == null)
-            {
-                return;
-            }
-
-            Vector3 lockedPivotWorldPosition = pivot;
-            Quaternion rootStartRotation = aimRoot.rotation;
-            Vector3 rootStartPosition = aimRoot.position;
-
-            Vector3 planarCurrent = Vector3.ProjectOnPlane(currentDirection, Vector3.up);
-            Vector3 planarDesired = Vector3.ProjectOnPlane(desiredDirection, Vector3.up);
-            float yaw = 0f;
-            if (planarCurrent.sqrMagnitude > 0.0001f && planarDesired.sqrMagnitude > 0.0001f)
-            {
-                yaw = SignedAngleAroundAxis(planarCurrent.normalized, planarDesired.normalized, Vector3.up) * muzzleSidePressure;
-            }
-
-            Vector3 yawedDirection = Quaternion.AngleAxis(yaw, Vector3.up) * currentDirection;
-            Vector3 pitchAxis = Vector3.Cross(yawedDirection, Vector3.up);
-            if (pitchAxis.sqrMagnitude <= 0.0001f)
-            {
-                pitchAxis = aimRoot.right;
-            }
-
-            pitchAxis.Normalize();
-            Vector3 desiredAfterYawPlane = Vector3.ProjectOnPlane(desiredDirection, pitchAxis);
-            Vector3 currentAfterYawPlane = Vector3.ProjectOnPlane(yawedDirection, pitchAxis);
-            float pitch = 0f;
-            if (desiredAfterYawPlane.sqrMagnitude > 0.0001f && currentAfterYawPlane.sqrMagnitude > 0.0001f)
-            {
-                pitch = SignedAngleAroundAxis(currentAfterYawPlane.normalized, desiredAfterYawPlane.normalized, pitchAxis) * muzzleVerticalPressure;
-            }
-
-            Quaternion correction = Quaternion.AngleAxis(pitch, pitchAxis) * Quaternion.AngleAxis(yaw, Vector3.up);
-            Quaternion targetRotation = correction * rootStartRotation;
-            aimRoot.rotation = Quaternion.Slerp(rootStartRotation, targetRotation, blend);
-
-            if (!TryResolveMuzzleAimPivot(out Vector3 pivotAfterRotation))
-            {
-                aimRoot.SetPositionAndRotation(rootStartPosition, rootStartRotation);
-                return;
-            }
-
-            aimRoot.position += lockedPivotWorldPosition - pivotAfterRotation;
-            if (!float.IsFinite(aimRoot.position.x) || !float.IsFinite(aimRoot.position.y) || !float.IsFinite(aimRoot.position.z))
-            {
-                aimRoot.SetPositionAndRotation(rootStartPosition, rootStartRotation);
-            }
         }
 
         private bool TryResolveMuzzleAimDirection(Transform muzzle, out Vector3 direction)
@@ -3928,7 +4747,8 @@ namespace SCF.Gameplay
             if (!holdWeaponPoseForSelfAimProtection
                 || activeWeapon == null
                 || motor == null
-                || !motor.AimHeld)
+                || !motor.AimHeld
+                || activeRearAimGateMode != SCFRearAimGateMode.None)
             {
                 return false;
             }
@@ -3966,24 +4786,7 @@ namespace SCF.Gameplay
 
         private bool ShouldUseEyeCarryForMuzzleTarget(Transform muzzle, Vector3 targetPoint)
         {
-            if (!useEyeCarryDirectionForBehindMuzzleTargets || muzzle == null)
-            {
-                return false;
-            }
-
-            Vector3 muzzleForward = muzzle.forward;
-            if (muzzleForward.sqrMagnitude <= 0.0001f)
-            {
-                return false;
-            }
-
-            Vector3 muzzleToTarget = targetPoint - muzzle.position;
-            if (muzzleToTarget.sqrMagnitude <= 0.0001f)
-            {
-                return true;
-            }
-
-            return Vector3.Dot(muzzleForward.normalized, muzzleToTarget) <= behindMuzzleTargetSlack;
+            return false;
         }
 
         private Vector3 ResolveEyeCarryDirection(Transform muzzle)
@@ -4007,26 +4810,100 @@ namespace SCF.Gameplay
             return transform.forward.sqrMagnitude > 0.0001f ? transform.forward.normalized : Vector3.forward;
         }
 
+        private void UpdateActionRearAimGateState()
+        {
+            activeRearAimGateMode = SCFRearAimGateMode.None;
+            activeRearAimYaw = 0f;
+
+            if (activeWeapon == null
+                || motor == null
+                || !motor.AimHeld
+                || !motor.HasAimDirection)
+            {
+                return;
+            }
+
+            if (!TryResolveAimYaw(out activeRearAimYaw))
+            {
+                return;
+            }
+
+            if (ShouldUseDominantSideAimGate(activeRearAimYaw))
+            {
+                activeRearAimGateMode = dominantSideAimUsesOneHand
+                    ? SCFRearAimGateMode.RightHandRearShot
+                    : SCFRearAimGateMode.InwardTwoHandTurn;
+                return;
+            }
+
+            if (!useActionRearAimGate || !IsActionRearAimGateState())
+            {
+                return;
+            }
+
+            if (Mathf.Abs(activeRearAimYaw) < actionRearAimYawThreshold)
+            {
+                return;
+            }
+
+            bool aimIsOnRightSide = activeRearAimYaw > 0f;
+            activeRearAimGateMode = aimIsOnRightSide && rightSideRearAimUsesOneHand
+                ? SCFRearAimGateMode.RightHandRearShot
+                : SCFRearAimGateMode.InwardTwoHandTurn;
+        }
+
+        private bool TryResolveAimYaw(out float yaw)
+        {
+            yaw = 0f;
+            if (motor == null || !motor.HasAimDirection)
+            {
+                return false;
+            }
+
+            Vector3 bodyForward = motor.BodyFacingDirection.sqrMagnitude > 0.0001f
+                ? motor.BodyFacingDirection
+                : transform.forward;
+            bodyForward = Vector3.ProjectOnPlane(bodyForward, Vector3.up);
+
+            Vector3 aimForward = Vector3.ProjectOnPlane(motor.AimDirection, Vector3.up);
+            if (bodyForward.sqrMagnitude <= 0.0001f || aimForward.sqrMagnitude <= 0.0001f)
+            {
+                return false;
+            }
+
+            yaw = SignedAngleAroundAxis(bodyForward.normalized, aimForward.normalized, Vector3.up);
+            return true;
+        }
+
+        private bool ShouldUseDominantSideAimGate(float yaw)
+        {
+            if (!useExperimentalDominantSideAimGate
+                || !UsesExperimentalFireSolutionAuthority()
+                || motor == null
+                || !motor.AimHeld)
+            {
+                return false;
+            }
+
+            if (Mathf.Abs(yaw) < dominantSideAimYawThreshold)
+            {
+                return false;
+            }
+
+            return dominantGripSideIsRight ? yaw > 0f : yaw < 0f;
+        }
+
+        private bool IsActionRearAimGateState()
+        {
+            return motor != null
+                   && (motor.IsCombatRolling
+                       || motor.IsVaulting
+                       || motor.IsAirborne
+                       || motor.IsWallRunning);
+        }
+
         private void ClampSelectedWeaponLocalXAxis(bool forceNeutral = false)
         {
-            if (!clampSelectedWeaponLocalX || activeWeapon == null || IsReferenceShotgunInstance())
-            {
-                return;
-            }
-
-            Vector3 euler = NormalizeEuler(activeWeapon.transform.localEulerAngles);
-            float neutralX = NormalizeEulerAxis(selectedWeaponNeutralLocalX);
-            float limit = forceNeutral || ShouldHoldSelectedWeaponXNeutral() ? 0f : selectedWeaponMovingLocalXLimit;
-            float deltaFromNeutral = Mathf.DeltaAngle(neutralX, euler.x);
-            float clampedDelta = Mathf.Clamp(deltaFromNeutral, -limit, limit);
-            float clampedX = NormalizeEulerAxis(neutralX + clampedDelta);
-            if (Mathf.Abs(Mathf.DeltaAngle(euler.x, clampedX)) <= 0.001f)
-            {
-                return;
-            }
-
-            euler.x = clampedX;
-            activeWeapon.transform.localRotation = Quaternion.Euler(euler);
         }
 
         private bool ShouldHoldSelectedWeaponXNeutral()
@@ -4052,7 +4929,42 @@ namespace SCF.Gameplay
 
         private Transform ResolveSocketParent()
         {
+            if (ShouldParentWeaponSocketToRightHand())
+            {
+                if (rightArm.Hand == null && animator != null)
+                {
+                    CacheBones();
+                }
+
+                return FirstNonNull(rightArm.Hand, rightArm.GripContact, chestAnchor, animator != null ? animator.transform : null, transform);
+            }
+
             return FirstNonNull(chestAnchor, animator != null ? animator.transform : null, transform);
+        }
+
+        private string ResolveWeaponSocketName()
+        {
+            if (ShouldParentWeaponSocketToRightHand())
+            {
+                return string.IsNullOrWhiteSpace(experimentalRightHandSocketName)
+                    ? RightHandWeaponSocketName
+                    : experimentalRightHandSocketName;
+            }
+
+            return string.IsNullOrWhiteSpace(torsoSocketName) ? "SCF_ChestWeaponSocket" : torsoSocketName;
+        }
+
+        private bool ShouldParentWeaponSocketToRightHand()
+        {
+            return ShouldUseRightHandWeaponOwnership()
+                   && experimentalParentWeaponSocketToRightHand;
+        }
+
+        private bool ShouldUseRightHandWeaponOwnership()
+        {
+            return experimentalRightGripOwnsWeapon
+                   && HasSoldierVisualIdentity()
+                   && !IsReferenceShotgunInstance();
         }
 
         private bool CanApplyHandIk()
@@ -4067,171 +4979,581 @@ namespace SCF.Gameplay
         private bool ShouldApplyBoneFallback()
         {
             return CanApplyHandIk()
+                   && !ShouldUseExperimentalWristOnlyGripLocks()
                    && genericBoneFallbackWeight > 0.001f
-                   && (animator == null || !animator.isHuman || applyBoneFallbackForHumanoids);
+                   && (ShouldUseExperimentalIndexGripContacts() || animator == null || !animator.isHuman || applyBoneFallbackForHumanoids);
+        }
+
+        private bool ShouldUseExperimentalWristOnlyGripLocks()
+        {
+            return UsesExperimentalFireSolutionAuthority() && !UsesLegacyTpsWeaponFit();
+        }
+
+        private bool ShouldUseExperimentalIndexGripContacts()
+        {
+            return useExperimentalIndexFingerGripContacts
+                   && HasExperimentalSoldierVisualIdentity();
+        }
+
+        private bool UsesExperimentalFireSolutionAuthority()
+        {
+            return useExperimentalFireSolutionAuthority
+                   && ShouldUseExperimentalIndexGripContacts();
+        }
+
+        private float ResolveExperimentalGripContactLockWeight(bool rightHand)
+        {
+            if (!UsesExperimentalFireSolutionAuthority() || activeWeapon == null)
+            {
+                return 0f;
+            }
+
+            if (rightHand)
+            {
+                return experimentalHardLockRightGripContact ? Mathf.Clamp01(experimentalRightGripContactLockWeight) : 0f;
+            }
+
+            if (!experimentalHardLockLeftGripContact)
+            {
+                return 0f;
+            }
+
+            return activeRearAimGateMode == SCFRearAimGateMode.RightHandRearShot
+                ? Mathf.Clamp01(experimentalOneHandLeftGripContactLockWeight)
+                : Mathf.Clamp01(experimentalLeftGripContactLockWeight);
+        }
+
+        private void ApplyExperimentalWeaponGripOwnership()
+        {
+        }
+
+        private void ApplyWeaponRotationAroundRightGrip(Quaternion targetGripRotation, float weight)
+        {
+        }
+
+        private bool TryResolveExperimentalRightGripTargetRotation(out Quaternion targetGripRotation)
+        {
+            targetGripRotation = Quaternion.identity;
+            if (!TryResolveExperimentalDesiredRightPalmFrame(out Quaternion palmFrame))
+            {
+                return false;
+            }
+
+            targetGripRotation = palmFrame * Quaternion.Euler(experimentalRightPalmToPistolGripEulerOffset);
+            return true;
+        }
+
+        private bool TryResolveExperimentalDesiredRightPalmFrame(out Quaternion palmFrame)
+        {
+            palmFrame = Quaternion.identity;
+            if (rightArm.Hand == null)
+            {
+                return false;
+            }
+
+            if (!TryResolveExperimentalRightPalmAimForward(out Vector3 forward))
+            {
+                return TryResolveCurrentRightPalmFrame(out palmFrame);
+            }
+
+            Vector3 up = Vector3.ProjectOnPlane(Vector3.up, forward);
+            if (up.sqrMagnitude <= 0.0001f && TryResolveCurrentRightPalmFrame(out Quaternion currentPalmFrame))
+            {
+                up = Vector3.ProjectOnPlane(currentPalmFrame * Vector3.up, forward);
+            }
+
+            if (up.sqrMagnitude <= 0.0001f)
+            {
+                up = rightArm.Hand.up;
+            }
+
+            return TryBuildLookRotation(forward, up, out palmFrame);
+        }
+
+        private bool TryResolveExperimentalRightPalmAimForward(out Vector3 forward)
+        {
+            forward = Vector3.zero;
+            if (rightArm.Hand == null)
+            {
+                return false;
+            }
+
+            Vector3 origin = rightArm.Hand.position;
+            if (experimentalRightPalmPointsAtTarget && motor != null && motor.AimHeld)
+            {
+                if (motor.HasAimWorldPoint)
+                {
+                    Transform muzzle = ResolveRailgunMuzzleTransform();
+                    Vector3 targetPoint = ResolveMuzzleAimFocusPoint(muzzle, motor.AimWorldPoint, ResolveFaceOrigin());
+                    forward = targetPoint - origin;
+                }
+                else if (motor.HasAimDirection)
+                {
+                    forward = motor.AimDirection;
+                }
+            }
+
+            if (forward.sqrMagnitude <= 0.0001f && motor != null && motor.BodyFacingDirection.sqrMagnitude > 0.0001f)
+            {
+                forward = motor.BodyFacingDirection;
+            }
+
+            if (forward.sqrMagnitude <= 0.0001f && rightArm.Hand.forward.sqrMagnitude > 0.0001f)
+            {
+                forward = rightArm.Hand.forward;
+            }
+
+            return forward.sqrMagnitude > 0.0001f;
+        }
+
+        private bool TryResolveCurrentRightPalmFrame(out Quaternion palmFrame)
+        {
+            palmFrame = Quaternion.identity;
+            if (rightArm.Hand == null)
+            {
+                return false;
+            }
+
+            Transform index = FirstNonNull(rightArm.IndexContact, rightArm.GripContact);
+            Vector3 forward = ResolveFingerDirection(index, rightArm.Hand);
+            if (forward.sqrMagnitude <= 0.0001f)
+            {
+                forward = rightArm.Hand.forward;
+            }
+
+            Vector3 thumbDirection = ResolveFingerDirection(rightArm.ThumbContact, rightArm.Hand);
+            Vector3 up = Vector3.ProjectOnPlane(thumbDirection, forward);
+            if (up.sqrMagnitude <= 0.0001f)
+            {
+                up = Vector3.ProjectOnPlane(rightArm.Hand.up, forward);
+            }
+
+            return TryBuildLookRotation(forward, up, out palmFrame);
+        }
+
+        private static Vector3 ResolveFingerDirection(Transform fingerRoot, Transform hand)
+        {
+            if (fingerRoot != null)
+            {
+                Transform child = FindFirstChildTransform(fingerRoot);
+                if (child != null)
+                {
+                    Vector3 childDirection = child.position - fingerRoot.position;
+                    if (childDirection.sqrMagnitude > 0.0001f)
+                    {
+                        return childDirection;
+                    }
+                }
+
+                if (hand != null)
+                {
+                    Vector3 rootDirection = fingerRoot.position - hand.position;
+                    if (rootDirection.sqrMagnitude > 0.0001f)
+                    {
+                        return rootDirection;
+                    }
+                }
+            }
+
+            return hand != null ? hand.forward : Vector3.zero;
+        }
+
+        private void ApplyExperimentalGripContactLocks()
+        {
+            if (!UsesExperimentalFireSolutionAuthority() || activeWeapon == null)
+            {
+                return;
+            }
+
+            ApplyExperimentalGripContactLock(rightArm, rightGrip, true);
+            ApplyExperimentalGripContactLock(leftArm, leftGrip, false);
+        }
+
+        private void ApplyExperimentalGripContactLock(ArmRig rig, Transform grip, bool rightHand)
+        {
+            Transform effector = rig.EndEffector;
+            float lockWeight = ResolveExperimentalGripContactLockWeight(rightHand);
+            if (rig.Hand == null || effector == null || grip == null || lockWeight <= 0.001f)
+            {
+                return;
+            }
+
+            if (ShouldUseExperimentalWristOnlyGripLocks())
+            {
+                ApplyExperimentalWristOnlyGripLock(rig, grip, effector, lockWeight, rightHand);
+                return;
+            }
+
+            Vector3 targetPosition = ResolveAnatomyLimitedTarget(rig, grip.position, rightHand ? rightArmReachWeight : leftArmReachWeight, rightHand, out float reach01);
+            float constrainedLockWeight = Mathf.Clamp01(lockWeight * ResolveGripReachWeight(reach01));
+            if (solveGripContactLocksThroughArmChain)
+            {
+                RotateArmChainTowardTarget(rig, effector, targetPosition, Mathf.Clamp01(constrainedLockWeight * gripContactArmSolveWeight));
+                ApplyForearmJointGuardrail(rig, rightHand, constrainedLockWeight);
+                targetPosition = ResolveAnatomyLimitedTarget(rig, grip.position, rightHand ? rightArmReachWeight : leftArmReachWeight, rightHand, out reach01);
+                constrainedLockWeight = Mathf.Clamp01(lockWeight * ResolveGripReachWeight(reach01));
+            }
+
+            rig.Hand.position += ResolveWristLimitedContactDelta(targetPosition - effector.position) * constrainedLockWeight;
+
+            if (rightHand)
+            {
+                ApplyExperimentalRightPalmAimToHand(constrainedLockWeight);
+                ApplyExperimentalRightFingerWrap(constrainedLockWeight);
+            }
+
+            if (!rotateExperimentalIndexFingerGripContacts)
+            {
+                return;
+            }
+
+            float rotationWeight = Mathf.Clamp01(constrainedLockWeight * experimentalIndexFingerGripRotationWeight);
+            if (rotationWeight <= 0.001f)
+            {
+                return;
+            }
+
+            Quaternion contactToGrip = grip.rotation * Quaternion.Inverse(effector.rotation);
+            Quaternion targetRotation = ResolveWristLimitedRotation(rig, contactToGrip * rig.Hand.rotation, rig.Hand.rotation);
+            rig.Hand.rotation = Quaternion.Slerp(rig.Hand.rotation, targetRotation, rotationWeight);
+        }
+
+        private void ApplyExperimentalWristOnlyGripLock(ArmRig rig, Transform grip, Transform effector, float lockWeight, bool rightHand)
+        {
+            if (rig.Hand == null || grip == null || effector == null || lockWeight <= 0.001f)
+            {
+                return;
+            }
+
+            float rotationWeight = Mathf.Clamp01(lockWeight * experimentalWristOnlyGripRotationWeight);
+            if (rotationWeight > 0.001f)
+            {
+                Quaternion targetRotation;
+                if (effector == rig.Hand)
+                {
+                    targetRotation = grip.rotation;
+                }
+                else
+                {
+                    Quaternion contactToGrip = grip.rotation * Quaternion.Inverse(effector.rotation);
+                    targetRotation = contactToGrip * rig.Hand.rotation;
+                }
+
+                targetRotation = ResolveWristLimitedRotation(rig, targetRotation, rig.Hand.rotation);
+                rig.Hand.rotation = Quaternion.Slerp(rig.Hand.rotation, targetRotation, rotationWeight);
+            }
+
+            if (rightHand)
+            {
+                ApplyExperimentalRightPalmAimToHand(lockWeight);
+                ApplyExperimentalRightFingerWrap(lockWeight);
+            }
+        }
+
+        private void ApplyExperimentalRightPalmAimToHand(float weight)
+        {
+            if (!experimentalRightPalmPointsAtTarget
+                || rightArm.Hand == null
+                || weight <= 0.001f
+                || !TryResolveCurrentRightPalmFrame(out Quaternion currentPalmFrame)
+                || !TryResolveExperimentalDesiredRightPalmFrame(out Quaternion desiredPalmFrame))
+            {
+                return;
+            }
+
+            Quaternion delta = desiredPalmFrame * Quaternion.Inverse(currentPalmFrame);
+            Quaternion targetHandRotation = delta * rightArm.Hand.rotation;
+            float rotationWeight = Mathf.Clamp01(weight * experimentalRightPalmAimWeight);
+            rightArm.Hand.rotation = Quaternion.Slerp(rightArm.Hand.rotation, targetHandRotation, rotationWeight);
+        }
+
+        private void ApplyExperimentalRightFingerWrap(float weight)
+        {
+            if (!experimentalWrapRightFingersAroundGrip || rightGrip == null || weight <= 0.001f)
+            {
+                return;
+            }
+
+            float wrapWeight = Mathf.Clamp01(weight * experimentalRightFingerWrapWeight);
+            RotateFingerTowardGrip(rightArm.IndexContact, rightGrip.TransformPoint(experimentalRightIndexWrapLocalOffset), wrapWeight);
+            RotateFingerTowardGrip(rightArm.ThumbContact, rightGrip.TransformPoint(experimentalRightThumbWrapLocalOffset), wrapWeight);
+        }
+
+        private static void RotateFingerTowardGrip(Transform fingerRoot, Vector3 targetPosition, float weight)
+        {
+            if (fingerRoot == null || weight <= 0.001f)
+            {
+                return;
+            }
+
+            Transform fingerTip = FindFirstChildTransform(fingerRoot);
+            if (fingerTip == null)
+            {
+                return;
+            }
+
+            RotateBoneTowardTarget(fingerRoot, fingerTip, targetPosition, weight);
+        }
+
+        private float ResolveExperimentalGripOwnershipWeight()
+        {
+            if (!ShouldUseRightHandWeaponOwnership()
+                || activeWeapon == null
+                || !experimentalRightGripOwnsWeapon)
+            {
+                return 0f;
+            }
+
+            return Mathf.Clamp01(experimentalRightGripOwnershipWeight);
         }
 
         private void ApplyHumanoidArmIk(
             Animator targetAnimator,
             AvatarIKGoal goal,
-            AvatarIKHint hint,
             Transform grip,
-            Transform elbowHint,
             ArmRig rig,
             float weight,
-            float reachWeight,
-            float hintWeight)
+            float reachWeight)
         {
             if (grip == null || weight <= 0.001f)
             {
                 targetAnimator.SetIKPositionWeight(goal, 0f);
                 targetAnimator.SetIKRotationWeight(goal, 0f);
-                targetAnimator.SetIKHintPositionWeight(hint, 0f);
                 return;
             }
 
-            Vector3 targetPosition = ResolveReachLimitedTarget(rig, grip.position, reachWeight, out float reach01);
-            float finalPositionWeight = Mathf.Clamp01(weight);
-            float finalRotationWeight = Mathf.Clamp01(weight * Mathf.Lerp(unreachableRotationWeight, 1f, reach01));
+            bool rightHand = goal == AvatarIKGoal.RightHand;
+            Vector3 targetPosition = ResolveAnatomyLimitedTarget(rig, grip.position, reachWeight, rightHand, out float reach01);
+            float reachWeight01 = ResolveGripReachWeight(reach01);
+            float finalPositionWeight = Mathf.Clamp01(weight * reachWeight01);
+            float finalRotationWeight = Mathf.Clamp01(weight * Mathf.Lerp(unreachableRotationWeight, 1f, reach01) * reachWeight01);
 
             targetAnimator.SetIKPositionWeight(goal, finalPositionWeight);
             targetAnimator.SetIKRotationWeight(goal, finalRotationWeight);
             targetAnimator.SetIKPosition(goal, targetPosition);
-            targetAnimator.SetIKRotation(goal, grip.rotation);
-
-            if (ShouldUseElbowHintTargets() && elbowHint != null)
-            {
-                targetAnimator.SetIKHintPositionWeight(hint, Mathf.Clamp01(finalPositionWeight * hintWeight));
-                targetAnimator.SetIKHintPosition(hint, elbowHint.position);
-            }
-            else
-            {
-                targetAnimator.SetIKHintPositionWeight(hint, 0f);
-            }
+            targetAnimator.SetIKRotation(goal, ResolveWristLimitedRotation(rig, grip.rotation, rig.Hand != null ? rig.Hand.rotation : grip.rotation));
         }
 
-        private void ApplyGenericArmToGrip(ArmRig rig, Transform grip, float weight, float reachWeight)
+        private void ApplyGenericArmToGrip(ArmRig rig, Transform grip, float weight, float reachWeight, bool rightHand)
         {
-            if (rig.Hand == null || grip == null || weight <= 0.001f)
+            Transform effector = rig.EndEffector;
+            float hardLockWeight = ResolveExperimentalGripContactLockWeight(rightHand);
+            if (rig.Hand == null || effector == null || grip == null || (weight <= 0.001f && hardLockWeight <= 0.001f))
             {
                 return;
             }
 
-            float adjustedWeight = Mathf.Clamp01(weight * genericBoneFallbackWeight * reachWeight);
-            Vector3 targetPosition = ResolveReachLimitedTarget(rig, grip.position, reachWeight, out float reach01);
+            float effectiveWeight = Mathf.Max(weight, hardLockWeight);
+            float effectiveReachWeight = hardLockWeight > 0.001f ? Mathf.Max(1f, reachWeight) : reachWeight;
+            Vector3 targetPosition = ResolveAnatomyLimitedTarget(rig, grip.position, effectiveReachWeight, rightHand, out float reach01);
+            float reachWeight01 = ResolveGripReachWeight(reach01);
+            float adjustedWeight = Mathf.Clamp01(effectiveWeight * genericBoneFallbackWeight * effectiveReachWeight * reachWeight01);
+            float constrainedHardLockWeight = Mathf.Clamp01(hardLockWeight * reachWeight01);
             int iterations = Mathf.Clamp(genericSolveIterations, 1, 8);
-            for (int i = 0; i < iterations; i++)
-            {
-                float passWeight = adjustedWeight * (1f - i * 0.12f);
-                RotateBoneTowardTarget(rig.Shoulder, rig.Hand, targetPosition, passWeight * 0.28f);
-                RotateBoneTowardTarget(rig.UpperArm, rig.Hand, targetPosition, passWeight * 0.68f);
-                RotateBoneTowardTarget(rig.Forearm, rig.Hand, targetPosition, passWeight);
-            }
+            RotateArmChainTowardTarget(rig, effector, targetPosition, adjustedWeight, iterations);
+            ApplyForearmJointGuardrail(rig, rightHand, adjustedWeight);
 
-            rig.Hand.rotation = Quaternion.Slerp(rig.Hand.rotation, grip.rotation, adjustedWeight * 0.75f);
             float finalPositionWeight = Mathf.Clamp01(adjustedWeight * finalGripPositionWeight);
-            float finalRotationWeight = Mathf.Clamp01(adjustedWeight * finalGripRotationWeight);
-            rig.Hand.position = Vector3.Lerp(rig.Hand.position, targetPosition, finalPositionWeight);
-            rig.Hand.rotation = Quaternion.Slerp(rig.Hand.rotation, grip.rotation, finalRotationWeight);
+            float finalRotationWeight = Mathf.Clamp01(adjustedWeight * finalGripRotationWeight * Mathf.Lerp(unreachableRotationWeight, 1f, reach01));
+            finalPositionWeight = Mathf.Max(finalPositionWeight, constrainedHardLockWeight);
+            Quaternion wristBaseline = rig.Hand.rotation;
+            Quaternion wristLimitedGripRotation = ResolveWristLimitedRotation(rig, grip.rotation, wristBaseline);
+            if (effector == rig.Hand)
+            {
+                rig.Hand.rotation = Quaternion.Slerp(rig.Hand.rotation, wristLimitedGripRotation, adjustedWeight * 0.75f);
+                rig.Hand.position = Vector3.Lerp(rig.Hand.position, targetPosition, finalPositionWeight);
+                rig.Hand.rotation = Quaternion.Slerp(rig.Hand.rotation, wristLimitedGripRotation, finalRotationWeight);
+                return;
+            }
+
+            float contactPositionWeight = Mathf.Clamp01(finalPositionWeight * experimentalIndexFingerGripPositionWeight);
+            contactPositionWeight = Mathf.Max(contactPositionWeight, constrainedHardLockWeight);
+            Vector3 contactDelta = ResolveWristLimitedContactDelta(targetPosition - effector.position);
+            rig.Hand.position = Vector3.Lerp(rig.Hand.position, rig.Hand.position + contactDelta, contactPositionWeight);
+
+            if (rotateExperimentalIndexFingerGripContacts)
+            {
+                float contactRotationWeight = Mathf.Clamp01(finalRotationWeight * experimentalIndexFingerGripRotationWeight);
+                Quaternion contactToGrip = grip.rotation * Quaternion.Inverse(effector.rotation);
+                Quaternion targetRotation = ResolveWristLimitedRotation(rig, contactToGrip * rig.Hand.rotation, rig.Hand.rotation);
+                rig.Hand.rotation = Quaternion.Slerp(rig.Hand.rotation, targetRotation, contactRotationWeight);
+            }
         }
 
-        private void ApplyManualElbowHintAssist()
+        private void RotateArmChainTowardTarget(ArmRig rig, Transform endEffector, Vector3 targetPosition, float weight)
         {
-            if (!useManualElbowHintAssist || !ShouldUseElbowHintTargets() || !CanApplyHandIk())
+            RotateArmChainTowardTarget(rig, endEffector, targetPosition, weight, Mathf.Clamp(genericSolveIterations, 1, 8));
+        }
+
+        private static void RotateArmChainTowardTarget(ArmRig rig, Transform endEffector, Vector3 targetPosition, float weight, int iterations)
+        {
+            if (endEffector == null || weight <= 0.001f)
             {
                 return;
             }
 
-            ApplyManualArmIk(rightArm, rightGrip, rightElbowHint, currentRightHandWeight, rightArmReachWeight, rightElbowHintWeight);
-            ApplyManualArmIk(leftArm, leftGrip, leftElbowHint, currentLeftHandWeight, leftArmReachWeight, leftElbowHintWeight);
+            int safeIterations = Mathf.Clamp(iterations, 1, 8);
+            for (int i = 0; i < safeIterations; i++)
+            {
+                float passWeight = weight * (1f - i * 0.12f);
+                RotateBoneTowardTarget(rig.Shoulder, endEffector, targetPosition, passWeight * 0.28f);
+                RotateBoneTowardTarget(rig.UpperArm, endEffector, targetPosition, passWeight * 0.68f);
+                RotateBoneTowardTarget(rig.Forearm, endEffector, targetPosition, passWeight);
+            }
         }
 
-        private void ApplyManualArmIk(ArmRig rig, Transform grip, Transform elbowHint, float handWeight, float reachWeight, float hintWeight)
+        private void ApplyForearmJointGuardrail(ArmRig rig, bool rightHand, float weight)
         {
-            if (rig.UpperArm == null
+            if (!useAnatomyAwareIk
+                || !constrainForearmJointAgainstBody
+                || bodyKeepoutSolver == null
+                || rig.UpperArm == null
                 || rig.Forearm == null
-                || rig.Hand == null
-                || grip == null
-                || elbowHint == null
-                || handWeight <= 0.001f
-                || hintWeight <= 0.001f)
+                || weight <= 0.001f)
             {
                 return;
             }
 
-            float weight = Mathf.Clamp01(handWeight * hintWeight * manualElbowHintAssistWeight);
-            if (weight <= 0.001f)
+            Vector3 desiredJointPosition = bodyKeepoutSolver.ResolveJointPosition(rig.Forearm.position, rightHand, out bool adjusted);
+            if (!adjusted)
             {
                 return;
             }
 
-            Vector3 targetPosition = ResolveReachLimitedTarget(rig, grip.position, reachWeight, out _);
-            int iterations = Mathf.Clamp(manualArmSolveIterations, 1, 4);
-            for (int i = 0; i < iterations; i++)
-            {
-                ApplyTwoBoneElbowHint(rig, targetPosition, elbowHint.position, weight);
-            }
-
-            float handLockWeight = Mathf.Clamp01(weight * Mathf.Min(manualArmHandLockWeight, 0.35f));
-            if (handLockWeight > 0.001f)
-            {
-                rig.Hand.position = Vector3.Lerp(rig.Hand.position, targetPosition, handLockWeight);
-                rig.Hand.rotation = Quaternion.Slerp(rig.Hand.rotation, grip.rotation, handLockWeight);
-            }
+            Vector3 currentDirection = rig.Forearm.position - rig.UpperArm.position;
+            Vector3 targetDirection = desiredJointPosition - rig.UpperArm.position;
+            RotateBoneFromTo(rig.UpperArm, currentDirection, targetDirection, Mathf.Clamp01(weight * forearmJointGuardrailWeight));
         }
 
-        private static void ApplyTwoBoneElbowHint(ArmRig rig, Vector3 targetPosition, Vector3 hintPosition, float weight)
+        private Quaternion ResolveWristLimitedRotation(ArmRig rig, Quaternion desiredRotation, Quaternion animatedRotation)
         {
-            Vector3 root = rig.UpperArm.position;
-            float upperLength = Vector3.Distance(root, rig.Forearm.position);
-            float lowerLength = Vector3.Distance(rig.Forearm.position, rig.Hand.position);
-            if (upperLength <= 0.0001f || lowerLength <= 0.0001f)
+            if (!constrainWristRotation
+                || rig.Hand == null
+                || maxWristRotationFromAnimatedPose >= 89.9f
+                || wristRotationLimitWeight <= 0.001f)
             {
-                return;
+                return desiredRotation;
             }
 
-            Vector3 rootToTarget = targetPosition - root;
-            float targetDistance = rootToTarget.magnitude;
-            if (targetDistance <= 0.0001f)
+            Quaternion limitedRotation = ClampRotationDelta(animatedRotation, desiredRotation, maxWristRotationFromAnimatedPose);
+            return Quaternion.Slerp(desiredRotation, limitedRotation, wristRotationLimitWeight);
+        }
+
+        private Vector3 ResolveWristLimitedContactDelta(Vector3 delta)
+        {
+            if (!limitWristContactTranslation || maxWristContactTranslation <= 0f)
             {
-                return;
+                return delta;
             }
 
-            float maxLength = Mathf.Max(0.0001f, upperLength + lowerLength - 0.0001f);
-            float minLength = Mathf.Max(0.0001f, Mathf.Abs(upperLength - lowerLength) + 0.0001f);
-            float solvedDistance = Mathf.Clamp(targetDistance, minLength, maxLength);
-            Vector3 aimDirection = rootToTarget / targetDistance;
-            Vector3 currentPole = Vector3.ProjectOnPlane(rig.Forearm.position - root, aimDirection);
-            Vector3 desiredPole = Vector3.ProjectOnPlane(hintPosition - root, aimDirection);
-
-            if (desiredPole.sqrMagnitude <= 0.0001f)
+            float magnitude = delta.magnitude;
+            if (magnitude <= maxWristContactTranslation || magnitude <= 0.0001f)
             {
-                desiredPole = currentPole;
+                return delta;
             }
 
-            if (desiredPole.sqrMagnitude <= 0.0001f)
+            return delta / magnitude * maxWristContactTranslation;
+        }
+
+        private static Quaternion ClampRotationDelta(Quaternion baseRotation, Quaternion desiredRotation, float maxDegrees)
+        {
+            float safeMax = Mathf.Max(0f, maxDegrees);
+            Quaternion delta = desiredRotation * Quaternion.Inverse(baseRotation);
+            delta.ToAngleAxis(out float angle, out Vector3 axis);
+            if (axis.sqrMagnitude <= 0.0001f
+                || float.IsNaN(axis.x)
+                || float.IsNaN(axis.y)
+                || float.IsNaN(axis.z)
+                || float.IsNaN(angle))
             {
-                desiredPole = Vector3.Cross(aimDirection, Vector3.up);
+                return desiredRotation;
             }
 
-            if (desiredPole.sqrMagnitude <= 0.0001f)
+            if (angle > 180f)
             {
-                desiredPole = Vector3.Cross(aimDirection, Vector3.right);
+                angle -= 360f;
             }
 
-            if (desiredPole.sqrMagnitude <= 0.0001f)
+            float clampedAngle = Mathf.Clamp(angle, -safeMax, safeMax);
+            return Quaternion.AngleAxis(clampedAngle, axis.normalized) * baseRotation;
+        }
+
+        private Vector3 ResolveAnatomyLimitedTarget(ArmRig rig, Vector3 targetPosition, float reachWeight, bool rightHand, out float reach01)
+        {
+            Vector3 limitedTarget = ResolveReachLimitedTarget(rig, targetPosition, reachWeight, out reach01);
+            if (useDynamicBodyKeepoutZones && bodyKeepoutSolver != null)
             {
-                return;
+                Transform armRoot = FirstNonNull(rig.Shoulder, rig.UpperArm, rig.Hand, chestAnchor, animator != null ? animator.transform : null, transform);
+                limitedTarget = bodyKeepoutSolver.ResolveArmTarget(armRoot.position, limitedTarget, rightHand, out _);
             }
 
-            Vector3 poleDirection = desiredPole.normalized;
-            float elbowAlongTarget = ((upperLength * upperLength) + (solvedDistance * solvedDistance) - (lowerLength * lowerLength))
-                                      / Mathf.Max(0.0001f, 2f * solvedDistance);
-            float elbowOutFromTargetLine = Mathf.Sqrt(Mathf.Max(0f, (upperLength * upperLength) - (elbowAlongTarget * elbowAlongTarget)));
-            Vector3 desiredElbowPosition = root + aimDirection * elbowAlongTarget + poleDirection * elbowOutFromTargetLine;
+            return ResolveBodySideLimitedTarget(rig, limitedTarget, rightHand);
+        }
 
-            RotateBoneFromTo(rig.UpperArm, rig.Forearm.position - root, desiredElbowPosition - root, weight);
-            RotateBoneFromTo(rig.Forearm, rig.Hand.position - rig.Forearm.position, targetPosition - rig.Forearm.position, weight);
+        private Vector3 ResolveBodySideLimitedTarget(ArmRig rig, Vector3 targetPosition, bool rightHand)
+        {
+            if (!useAnatomyAwareIk || !constrainGripTargetsAgainstBody)
+            {
+                return targetPosition;
+            }
+
+            Transform body = chestAnchor != null ? chestAnchor : (animator != null ? animator.transform : transform);
+            if (body == null)
+            {
+                return targetPosition;
+            }
+
+            Vector3 bodyRight = ResolvePlanarAxis(body.right, Vector3.right);
+            Vector3 bodyForward = ResolvePlanarAxis(body.forward, Vector3.forward);
+            Vector3 bodyOrigin = body.position;
+            float bodyScale = Mathf.Max(0.25f, ResolveArmLength(rig) * 0.5f);
+            float crossAllowance = bodyScale * gripTargetBodyCrossAllowance;
+            float behindAllowance = bodyScale * gripTargetBehindBodyAllowance;
+            Vector3 offset = targetPosition - bodyOrigin;
+            float side = Vector3.Dot(offset, bodyRight);
+            float forward = Vector3.Dot(offset, bodyForward);
+
+            if (rightHand && side < -crossAllowance)
+            {
+                targetPosition += bodyRight * (-crossAllowance - side);
+            }
+            else if (!rightHand && side > crossAllowance)
+            {
+                targetPosition -= bodyRight * (side - crossAllowance);
+            }
+
+            if (forward < -behindAllowance)
+            {
+                targetPosition += bodyForward * (-behindAllowance - forward);
+            }
+
+            return targetPosition;
+        }
+
+        private static Vector3 ResolvePlanarAxis(Vector3 axis, Vector3 fallback)
+        {
+            Vector3 planar = Vector3.ProjectOnPlane(axis, Vector3.up);
+            if (planar.sqrMagnitude > 0.0001f)
+            {
+                return planar.normalized;
+            }
+
+            if (axis.sqrMagnitude > 0.0001f)
+            {
+                return axis.normalized;
+            }
+
+            return fallback.normalized;
+        }
+
+        private float ResolveGripReachWeight(float reach01)
+        {
+            if (!useAnatomyAwareIk)
+            {
+                return 1f;
+            }
+
+            return Mathf.Lerp(unreachableGripWeightFloor, 1f, Mathf.Clamp01(reach01));
         }
 
         private Vector3 ResolveReachLimitedTarget(ArmRig rig, Vector3 targetPosition, float reachWeight, out float reach01)
@@ -4281,9 +5603,14 @@ namespace SCF.Gameplay
                 length += Vector3.Distance(rig.Forearm.position, rig.Hand.position);
             }
 
+            if (rig.Hand != null && rig.GripContact != null && rig.GripContact != rig.Hand)
+            {
+                length += Vector3.Distance(rig.Hand.position, rig.GripContact.position);
+            }
+
             if (length <= 0.0001f && rig.Shoulder != null && rig.Hand != null)
             {
-                length = Vector3.Distance(rig.Shoulder.position, rig.Hand.position);
+                length = Vector3.Distance(rig.Shoulder.position, rig.EndEffector.position);
             }
 
             return length;
@@ -4295,8 +5622,6 @@ namespace SCF.Gameplay
             targetAnimator.SetIKRotationWeight(AvatarIKGoal.RightHand, 0f);
             targetAnimator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 0f);
             targetAnimator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 0f);
-            targetAnimator.SetIKHintPositionWeight(AvatarIKHint.RightElbow, 0f);
-            targetAnimator.SetIKHintPositionWeight(AvatarIKHint.LeftElbow, 0f);
         }
 
         private void ClearWeapon()
@@ -4310,8 +5635,7 @@ namespace SCF.Gameplay
 
             rightGrip = null;
             leftGrip = null;
-            rightElbowHint = null;
-            leftElbowHint = null;
+            buttstockTarget = null;
             raised01 = 0f;
             currentRightHandWeight = 0f;
             currentLeftHandWeight = 0f;
@@ -4334,8 +5658,7 @@ namespace SCF.Gameplay
             leftGrip = null;
             referenceWeaponAnchor = null;
             railgunMuzzleTarget = null;
-            rightElbowHint = null;
-            leftElbowHint = null;
+            buttstockTarget = null;
         }
 
         private void DestroyShotgunPose3GripTargets()
@@ -4373,6 +5696,86 @@ namespace SCF.Gameplay
         {
             return !string.IsNullOrWhiteSpace(characterName)
                    && characterName.IndexOf("soldierExp", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private bool UsesLegacyTpsWeaponFit()
+        {
+            return false;
+        }
+
+        private bool UsesAuthoredWeaponPrefabAnchorsOnly()
+        {
+            return preferWeaponPrefabAnchors
+                   && activeWeapon != null
+                   && !IsReferenceShotgunInstance();
+        }
+
+        private Transform FindWeaponPrefabAnchor(string anchorName)
+        {
+            if (activeWeapon == null || string.IsNullOrWhiteSpace(anchorName))
+            {
+                return null;
+            }
+
+            if (UsesAuthoredWeaponPrefabAnchorsOnly())
+            {
+                Transform modelRoot = FindRailgunModelRoot();
+                Transform modelAnchor = FindDescendantByName(modelRoot, anchorName);
+                if (modelAnchor != null)
+                {
+                    return modelAnchor;
+                }
+            }
+
+            Transform direct = FindDirectChild(activeWeapon.transform, anchorName);
+            return direct != null ? direct : FindDescendantByName(activeWeapon.transform, anchorName);
+        }
+
+        private Transform FindRailgunModelRoot()
+        {
+            return activeWeapon != null ? FindDirectChild(activeWeapon.transform, RailgunModelRootName) : null;
+        }
+
+        private void PruneDuplicateWeaponAnchorInstances(string anchorName, Transform keep)
+        {
+            if (!UsesAuthoredWeaponPrefabAnchorsOnly() || activeWeapon == null || keep == null || string.IsNullOrWhiteSpace(anchorName))
+            {
+                return;
+            }
+
+            Transform[] transforms = activeWeapon.GetComponentsInChildren<Transform>(true);
+            for (int i = transforms.Length - 1; i >= 0; i--)
+            {
+                Transform candidate = transforms[i];
+                if (candidate == null || candidate == keep || !string.Equals(candidate.name, anchorName, StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                DestroyUnityObject(candidate.gameObject);
+            }
+        }
+
+        private bool HasExperimentalSoldierVisualIdentity()
+        {
+            if (IsExperimentalSoldierCharacter(activeCharacterName))
+            {
+                return true;
+            }
+
+            Transform current = animator != null ? animator.transform : null;
+            while (current != null && current != transform)
+            {
+                if (IsExperimentalSoldierCharacter(current.name)
+                    || string.Equals(current.name, "SCF_Selected_SCF_Player", StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+
+                current = current.parent;
+            }
+
+            return false;
         }
 
         private bool HasSoldierVisualIdentity()
@@ -4458,12 +5861,7 @@ namespace SCF.Gameplay
 
         private static void RotateBoneFromTo(Transform bone, Vector3 currentDirection, Vector3 targetDirection, float weight)
         {
-            if (bone == null || weight <= 0.001f)
-            {
-                return;
-            }
-
-            if (currentDirection.sqrMagnitude <= 0.0001f || targetDirection.sqrMagnitude <= 0.0001f)
+            if (bone == null || weight <= 0.001f || currentDirection.sqrMagnitude <= 0.0001f || targetDirection.sqrMagnitude <= 0.0001f)
             {
                 return;
             }
@@ -4495,6 +5893,50 @@ namespace SCF.Gameplay
 
             float angle = Vector3.Angle(from, to);
             return angle * (Vector3.Dot(axis, Vector3.Cross(from, to)) < 0f ? -1f : 1f);
+        }
+
+        private static bool TryBuildLookRotation(Vector3 forward, Vector3 up, out Quaternion rotation)
+        {
+            rotation = Quaternion.identity;
+            if (forward.sqrMagnitude <= 0.0001f)
+            {
+                return false;
+            }
+
+            Vector3 safeForward = forward.normalized;
+            Vector3 safeUp = up - Vector3.Project(up, safeForward);
+            if (safeUp.sqrMagnitude <= 0.0001f)
+            {
+                safeUp = Vector3.up - Vector3.Project(Vector3.up, safeForward);
+            }
+
+            if (safeUp.sqrMagnitude <= 0.0001f)
+            {
+                safeUp = Vector3.Cross(safeForward, Vector3.right);
+            }
+
+            if (safeUp.sqrMagnitude <= 0.0001f)
+            {
+                safeUp = Vector3.Cross(safeForward, Vector3.forward);
+            }
+
+            if (safeUp.sqrMagnitude <= 0.0001f)
+            {
+                return false;
+            }
+
+            rotation = Quaternion.LookRotation(safeForward, safeUp.normalized);
+            return true;
+        }
+
+        private static Transform FindFirstChildTransform(Transform root)
+        {
+            if (root == null || root.childCount <= 0)
+            {
+                return null;
+            }
+
+            return root.GetChild(0);
         }
 
         private static Transform FirstNonNull(params Transform[] transforms)
@@ -4549,6 +5991,52 @@ namespace SCF.Gameplay
             return null;
         }
 
+        private static Transform FindDescendantByNameExcluding(Transform root, string childName, Transform excludedRoot)
+        {
+            if (root == null || string.IsNullOrWhiteSpace(childName))
+            {
+                return null;
+            }
+
+            Transform[] transforms = root.GetComponentsInChildren<Transform>(true);
+            for (int i = 0; i < transforms.Length; i++)
+            {
+                Transform candidate = transforms[i];
+                if (candidate == null || (excludedRoot != null && candidate.IsChildOf(excludedRoot)))
+                {
+                    continue;
+                }
+
+                if (string.Equals(candidate.name, childName, StringComparison.Ordinal))
+                {
+                    return candidate;
+                }
+            }
+
+            return null;
+        }
+
+        private static Transform FindDescendantByCompactName(Transform root, string childName)
+        {
+            if (root == null || string.IsNullOrWhiteSpace(childName))
+            {
+                return null;
+            }
+
+            string compactChildName = Compact(childName);
+            Transform[] transforms = root.GetComponentsInChildren<Transform>(true);
+            for (int i = 0; i < transforms.Length; i++)
+            {
+                Transform candidate = transforms[i];
+                if (candidate != null && Compact(candidate.name) == compactChildName)
+                {
+                    return candidate;
+                }
+            }
+
+            return null;
+        }
+
         private static void DestroyUnityObject(UnityEngine.Object target)
         {
             if (target == null)
@@ -4577,6 +6065,36 @@ namespace SCF.Gameplay
             int bestScore = int.MaxValue;
             FindFirstBoneRecursive(root, patterns, 0, ref best, ref bestScore);
             return best;
+        }
+
+        private static Transform FindExactBone(Transform root, string boneName)
+        {
+            if (root == null || string.IsNullOrWhiteSpace(boneName))
+            {
+                return null;
+            }
+
+            string compactBoneName = Compact(boneName);
+            return FindExactBoneRecursive(root, compactBoneName);
+        }
+
+        private static Transform FindExactBoneRecursive(Transform node, string compactBoneName)
+        {
+            if (Compact(node.name) == compactBoneName)
+            {
+                return node;
+            }
+
+            for (int i = 0; i < node.childCount; i++)
+            {
+                Transform match = FindExactBoneRecursive(node.GetChild(i), compactBoneName);
+                if (match != null)
+                {
+                    return match;
+                }
+            }
+
+            return null;
         }
 
         private static void FindFirstBoneRecursive(Transform node, string[] patterns, int depth, ref Transform best, ref int bestScore)

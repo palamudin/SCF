@@ -121,6 +121,7 @@ namespace SCF.Gameplay
                     return FindTag(jumpingRequiredTag);
 
                 case CharacterMobilityState.CombatRoll:
+                case CharacterMobilityState.Slide:
                     return FindTag(combatRollRequiredTag);
 
                 case CharacterMobilityState.WallRun:

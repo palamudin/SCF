@@ -5,6 +5,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.Animations;
+using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 
 namespace SCF.Gameplay
@@ -31,6 +32,7 @@ namespace SCF.Gameplay
         [SerializeField] private SCFCharacterVisualSlot localVisualSlot;
         [SerializeField] private SCFWeaponVisualSlot localWeaponSlot;
         [SerializeField] private SCFMotionSelector localMotionSelector;
+        [SerializeField] private IsometricPlayerInput localInput;
         [SerializeField, Min(1f)] private float maxHealth = 100f;
         [SerializeField, Min(1f)] private float railgunDamage = 34f;
 
@@ -45,6 +47,12 @@ namespace SCF.Gameplay
         [SerializeField] private bool leaveRoomOnDeath = true;
         [SerializeField] private bool disconnectOnDeath;
 
+        [Header("Death Echo")]
+        [SerializeField] private bool spawnDeathEcho = true;
+        [SerializeField, Min(1f)] private float deathEchoLifetime = 60f;
+        [SerializeField, Min(0.1f)] private float deathEchoDisturbedLifetime = 6f;
+        [SerializeField, Min(0.1f)] private float deathEchoFadeDuration = 8f;
+
         [Header("Sync")]
         [SerializeField, Range(2f, 30f)] private float stateSendRate = 12f;
         [SerializeField, Min(0.1f)] private float remoteMoveSharpness = 16f;
@@ -53,6 +61,8 @@ namespace SCF.Gameplay
 
         [Header("GUI")]
         [SerializeField] private Rect panelRect = new Rect(16f, 510f, 290f, 170f);
+        [SerializeField] private bool showInputBindingPanel = true;
+        [SerializeField] private Rect inputBindingPanelRect = new Rect(16f, 688f, 290f, 132f);
         [SerializeField] private Vector2 collapsedPanelSize = new Vector2(112f, 30f);
 
         private readonly Dictionary<int, RemoteAvatar> remoteAvatars = new Dictionary<int, RemoteAvatar>();
@@ -63,10 +73,12 @@ namespace SCF.Gameplay
         private bool localDead;
         private float localDeathLeaveTime;
         private SCFNetworkDeathCue localDeathCue;
+        private Transform hiddenLocalDeathVisual;
         private bool localSpawnOffsetApplied;
         private Material remoteBlueMaterial;
         private Material remoteRedMaterial;
         private Material beamMaterial;
+        private SCFInputBinding pendingInputBinding;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void AutoCreate()
@@ -122,6 +134,21 @@ namespace SCF.Gameplay
             }
 
             panelRect = GUILayout.Window(GuiWindowId, panelRect, DrawPanel, "SCF Multiplayer");
+            if (showInputBindingPanel)
+            {
+                inputBindingPanelRect.x = panelRect.x;
+                inputBindingPanelRect.y = panelRect.yMax + 8f;
+                inputBindingPanelRect.width = panelRect.width;
+                inputBindingPanelRect = GUILayout.Window(GuiWindowId + 1, inputBindingPanelRect, DrawInputBindingPanel, "SCF Controls");
+            }
+            else
+            {
+                Rect controlsOpenRect = new Rect(panelRect.x, panelRect.yMax + 8f, collapsedPanelSize.x, collapsedPanelSize.y);
+                if (GUI.Button(controlsOpenRect, "Controls"))
+                {
+                    showInputBindingPanel = true;
+                }
+            }
         }
 
         private void DrawPanel(int windowId)
@@ -171,6 +198,86 @@ namespace SCF.Gameplay
 
             GUILayout.Label("Remote soldiers: " + remoteAvatars.Count);
             GUI.DragWindow(new Rect(0f, 0f, 10000f, 22f));
+        }
+
+        private void DrawInputBindingPanel(int windowId)
+        {
+            ResolveLocalReferences();
+            if (localInput == null)
+            {
+                GUILayout.Label("Input: none");
+                if (GUILayout.Button("Hide", GUILayout.Width(70f)))
+                {
+                    showInputBindingPanel = false;
+                }
+
+                GUI.DragWindow(new Rect(0f, 0f, 10000f, 22f));
+                return;
+            }
+
+            DrawBindingRow(SCFInputBinding.Jump);
+            DrawBindingRow(SCFInputBinding.WalkToggle);
+            DrawBindingRow(SCFInputBinding.Slide);
+
+            using (new GUILayout.HorizontalScope())
+            {
+                if (GUILayout.Button("Reset", GUILayout.Width(70f), GUILayout.Height(23f)))
+                {
+                    localInput.ResetFallbackBindings();
+                    pendingInputBinding = SCFInputBinding.None;
+                }
+
+                if (GUILayout.Button("Hide", GUILayout.Width(70f), GUILayout.Height(23f)))
+                {
+                    showInputBindingPanel = false;
+                    pendingInputBinding = SCFInputBinding.None;
+                }
+
+                if (pendingInputBinding != SCFInputBinding.None)
+                {
+                    GUILayout.Label("Press key or Esc");
+                }
+            }
+
+            CapturePendingBinding(Event.current);
+            GUI.DragWindow(new Rect(0f, 0f, 10000f, 22f));
+        }
+
+        private void DrawBindingRow(SCFInputBinding binding)
+        {
+            string bindingName = IsometricPlayerInput.FormatBindingName(binding);
+            string keyName = IsometricPlayerInput.FormatBindingKey(localInput.GetFallbackBinding(binding));
+            using (new GUILayout.HorizontalScope())
+            {
+                GUILayout.Label(bindingName + ": " + keyName, GUILayout.Width(150f));
+                if (GUILayout.Button(pendingInputBinding == binding ? "..." : "Rebind", GUILayout.Width(82f), GUILayout.Height(22f)))
+                {
+                    pendingInputBinding = binding;
+                }
+            }
+        }
+
+        private void CapturePendingBinding(Event current)
+        {
+            if (pendingInputBinding == SCFInputBinding.None || current == null || current.type != EventType.KeyDown)
+            {
+                return;
+            }
+
+            if (current.keyCode == KeyCode.Escape)
+            {
+                pendingInputBinding = SCFInputBinding.None;
+                current.Use();
+                return;
+            }
+
+            Key key;
+            if (IsometricPlayerInput.TryConvertKeyCode(current.keyCode, out key))
+            {
+                localInput.SetFallbackBinding(pendingInputBinding, key);
+                pendingInputBinding = SCFInputBinding.None;
+                current.Use();
+            }
         }
 
         private void Connect()
@@ -301,6 +408,11 @@ namespace SCF.Gameplay
                 localMotionSelector = localPlayerRoot.GetComponent<SCFMotionSelector>();
             }
 
+            if (localInput == null && localPlayerRoot != null)
+            {
+                localInput = localPlayerRoot.GetComponent<IsometricPlayerInput>();
+            }
+
             SubscribeToWeaponSlot(localWeaponSlot);
         }
 
@@ -405,6 +517,9 @@ namespace SCF.Gameplay
             {
                 SendDamage(targetActor, railgunDamage);
             }
+
+            NotifyDeathEchoShot(shot.HitCollider);
+            ProbeDeathEchoShot(shot.Muzzle, shot.Impact);
         }
 
         private void HandleShotEvent(object[] data)
@@ -420,7 +535,10 @@ namespace SCF.Gameplay
                 return;
             }
 
-            SpawnNetworkBeam((Vector3)data[1], (Vector3)data[2]);
+            Vector3 start = (Vector3)data[1];
+            Vector3 end = (Vector3)data[2];
+            SpawnNetworkBeam(start, end);
+            ProbeDeathEchoShot(start, end);
         }
 
         private void SendDamage(int targetActor, float damage)
@@ -770,7 +888,8 @@ namespace SCF.Gameplay
             localHealth = 0f;
             knownHealth[PhotonNetwork.LocalPlayer.ActorNumber] = localHealth;
             Transform cueTarget = localVisualSlot != null && localVisualSlot.ActiveVisual != null ? localVisualSlot.ActiveVisual.transform : localPlayerRoot;
-            localDeathCue = PlayDeathCue(cueTarget);
+            SpawnDeathEcho(cueTarget != null ? cueTarget.gameObject : null, localPlayerRoot);
+            HideLocalDeathVisual(cueTarget);
             localDeathLeaveTime = Time.unscaledTime + deathLeaveDelay;
             SendState(true);
         }
@@ -818,6 +937,12 @@ namespace SCF.Gameplay
             }
 
             Transform target = avatar.VisualRoot != null ? avatar.VisualRoot : avatar.Root;
+            if (avatar.DeathEcho == null)
+            {
+                avatar.DeathEcho = SpawnDeathEcho(target != null ? target.gameObject : null, avatar.Root);
+                SetRenderersVisible(target, false);
+            }
+
             avatar.DeathCue = PlayDeathCue(target);
             if (avatar.MotionPlayback != null)
             {
@@ -831,6 +956,85 @@ namespace SCF.Gameplay
             {
                 localDeathCue.ResetPose();
                 localDeathCue = null;
+            }
+
+            if (hiddenLocalDeathVisual != null)
+            {
+                SetRenderersVisible(hiddenLocalDeathVisual, true);
+                hiddenLocalDeathVisual = null;
+            }
+        }
+
+        private SCFDeathEcho SpawnDeathEcho(GameObject sourceVisual, Transform fallbackRoot)
+        {
+            if (!spawnDeathEcho)
+            {
+                return null;
+            }
+
+            return SCFDeathEcho.Spawn(sourceVisual, fallbackRoot, deathEchoLifetime, deathEchoDisturbedLifetime, deathEchoFadeDuration, proceduralDeathDuration);
+        }
+
+        private void HideLocalDeathVisual(Transform target)
+        {
+            if (target == null)
+            {
+                return;
+            }
+
+            hiddenLocalDeathVisual = target;
+            SetRenderersVisible(hiddenLocalDeathVisual, false);
+        }
+
+        private void NotifyDeathEchoShot(Collider hitCollider)
+        {
+            if (hitCollider == null)
+            {
+                return;
+            }
+
+            SCFDeathEcho echo = hitCollider.GetComponentInParent<SCFDeathEcho>();
+            if (echo != null)
+            {
+                echo.NotifyWeaponHit();
+            }
+        }
+
+        private void ProbeDeathEchoShot(Vector3 start, Vector3 end)
+        {
+            Vector3 delta = end - start;
+            float distance = delta.magnitude;
+            if (distance <= 0.001f)
+            {
+                return;
+            }
+
+            RaycastHit[] hits = Physics.RaycastAll(start, delta / distance, distance, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Collide);
+            if (hits == null || hits.Length == 0)
+            {
+                return;
+            }
+
+            for (int i = 0; i < hits.Length; i++)
+            {
+                NotifyDeathEchoShot(hits[i].collider);
+            }
+        }
+
+        private static void SetRenderersVisible(Transform root, bool visible)
+        {
+            if (root == null)
+            {
+                return;
+            }
+
+            Renderer[] renderers = root.GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                if (renderers[i] != null)
+                {
+                    renderers[i].enabled = visible;
+                }
             }
         }
 
@@ -858,6 +1062,7 @@ namespace SCF.Gameplay
             public float NextCollisionDamageTime;
             public RemoteMotionPlayback MotionPlayback;
             public SCFNetworkDeathCue DeathCue;
+            public SCFDeathEcho DeathEcho;
 
             public RemoteAvatar(Transform root)
             {

@@ -410,33 +410,33 @@ BlendTree:
   m_Name: SCF MxM Base Locomotion
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 04685ead0a7483b48b03f4db0c66ba1e, type: 2}
-    m_Threshold: 0
+    m_Motion: {fileID: 7400000, guid: 6786b74627233234ab8360a32f041bef, type: 3}
+    m_Threshold: 0.00005348465
     m_Position: {x: 0, y: 0}
-    m_TimeScale: 1
+    m_TimeScale: 49931.86
     m_CycleOffset: 0
     m_DirectBlendParameter: Blend
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 4529723e9a713344b89e9c06e6b719d6, type: 2}
-    m_Threshold: 2.6
+    m_Motion: {fileID: 7400002, guid: a96fb8268f5bb4b33a9eaba404ee7750, type: 3}
+    m_Threshold: 3.2082245
     m_Position: {x: 0, y: 0}
-    m_TimeScale: 1
+    m_TimeScale: 0.8331381
     m_CycleOffset: 0
     m_DirectBlendParameter: Blend
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 4529723e9a713344b89e9c06e6b719d6, type: 2}
-    m_Threshold: 5.8
+    m_Motion: {fileID: 7400002, guid: 86cd5d643020c4c64a1e2efa095125b8, type: 3}
+    m_Threshold: 4.8086743
     m_Position: {x: 0, y: 0}
-    m_TimeScale: 1
+    m_TimeScale: 0.5556486
     m_CycleOffset: 0
     m_DirectBlendParameter: Blend
     m_Mirror: 0
   m_BlendParameter: Speed
   m_BlendParameterY: Blend
-  m_MinThreshold: 0
-  m_MaxThreshold: 1
+  m_MinThreshold: 0.00005348465
+  m_MaxThreshold: 4.8086743
   m_UseAutomaticThresholds: 0
   m_NormalizedBlendValues: 0
   m_BlendType: 0

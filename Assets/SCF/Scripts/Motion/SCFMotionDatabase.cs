@@ -269,6 +269,17 @@ namespace SCF.Gameplay
 
         public int FindBestLocomotion(Vector2 desiredDirection, float desiredPlanarSpeed, int currentIndex, float currentClipBias, out float bestCost)
         {
+            return FindBestLocomotionExcludingTags(desiredDirection, desiredPlanarSpeed, currentIndex, currentClipBias, SCFMotionTags.None, out bestCost);
+        }
+
+        public int FindBestLocomotionExcludingTags(
+            Vector2 desiredDirection,
+            float desiredPlanarSpeed,
+            int currentIndex,
+            float currentClipBias,
+            SCFMotionTags excludedTags,
+            out float bestCost)
+        {
             int bestIndex = -1;
             bestCost = float.PositiveInfinity;
 
@@ -288,6 +299,11 @@ namespace SCF.Gameplay
                 }
 
                 if (clipData.MotionType != SCFMotionType.Locomotion && clipData.MotionType != SCFMotionType.Idle)
+                {
+                    continue;
+                }
+
+                if (excludedTags != SCFMotionTags.None && (clipData.Tags & excludedTags) != SCFMotionTags.None)
                 {
                     continue;
                 }

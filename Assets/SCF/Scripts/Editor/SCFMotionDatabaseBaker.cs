@@ -16,6 +16,9 @@ namespace SCF.EditorTools
         private const string DynamicParkourAnimationFolder = "Assets/SCF/ThirdParty/DynamicParkour/Animations";
         private const string TpsEquippedWalkPath = "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Walk/walk.fbx";
         private const string TpsEquippedRunPath = "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Run/run.fbx";
+        private const string TpsFreehandsIdlePath = "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Idle/Idle.fbx";
+        private const string TpsFreehandsWalkPath = "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Walk/walk.fbx";
+        private const string TpsFreehandsRunPath = "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Run/run.fbx";
         private const string TpsEquippedWalkForwardClipName = "walk_fwd";
 
         private const float PoseInterval = 0.1f;
@@ -180,34 +183,39 @@ namespace SCF.EditorTools
 
             List<SCFMotionClipData> clips = new List<SCFMotionClipData>();
 
-            AnimationClip idle = FindFirstClip(
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Idle/idle aiming.fbx",
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Idle/idle.fbx",
+            AnimationClip idle = FindClipInAsset(TpsFreehandsIdlePath, "idle_unarmed") ?? FindFirstClip(
+                TpsFreehandsIdlePath,
                 DynamicParkourAnimationFolder + "/Idle.fbx",
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Stand--Idle.anim.fbx",
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Idle/Idle.fbx");
-            AnimationClip walk = FindClipInAsset(TpsEquippedWalkPath, TpsEquippedWalkForwardClipName) ?? FindFirstClip(
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Walk/walk.fbx",
+                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Idle/idle.fbx");
+            AnimationClip walk = FindClipInAsset(TpsFreehandsWalkPath, "walk_fwd_unarmed") ?? FindFirstClip(
+                TpsFreehandsWalkPath,
                 DynamicParkourAnimationFolder + "/Walk.fbx",
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Locomotion--Walk_N.anim.fbx",
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Walk/walk.fbx");
-            AnimationClip run = FindClipInAsset(TpsEquippedRunPath, "run") ?? FindFirstClip(
-                TpsEquippedRunPath,
+                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Walk/walk.fbx");
+            AnimationClip run = FindClipInAsset(TpsFreehandsRunPath, "run_fwd_unarmed") ?? FindFirstClip(
+                TpsFreehandsRunPath,
                 DynamicParkourAnimationFolder + "/Run.fbx",
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Locomotion--Run_N.anim.fbx",
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Run/run.fbx");
-            AnimationClip runBack = FindFirstClip(
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Run/run.fbx",
+                TpsEquippedRunPath);
+            AnimationClip runForwardLeft = FindClipInAsset(TpsFreehandsRunPath, "run_fwd_left_unarmed") ?? run;
+            AnimationClip runForwardRight = FindClipInAsset(TpsFreehandsRunPath, "run_fwd_right_unarmed") ?? run;
+            AnimationClip runLeftUnarmed = FindClipInAsset(TpsFreehandsRunPath, "run_left_unarmed") ?? run;
+            AnimationClip runRightUnarmed = FindClipInAsset(TpsFreehandsRunPath, "run_right_unarmed") ?? run;
+            AnimationClip runBack = FindClipInAsset(TpsFreehandsRunPath, "run_bwd_unarmed") ?? FindFirstClip(
+                TpsFreehandsRunPath,
                 DynamicParkourAnimationFolder + "/Run To Stop.fbx",
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Locomotion--Run_S.anim.fbx",
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Locomotion--Run_N.anim.fbx",
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Run/run.fbx");
+                TpsEquippedRunPath);
+            AnimationClip runBackLeft = FindClipInAsset(TpsFreehandsRunPath, "run_bwd_left_unarmed") ?? runBack;
+            AnimationClip runBackRight = FindClipInAsset(TpsFreehandsRunPath, "run_bwd_right_unarmed") ?? runBack;
             AnimationClip jump = FindFirstClip(
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Jump/jump start.FBX",
+                "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Jump/jump.fbx",
                 DynamicParkourAnimationFolder + "/Jump.fbx",
                 DynamicParkourAnimationFolder + "/Big Jump.fbx",
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Jump--Jump.anim.fbx",
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Jump/jump.fbx");
+                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Jump/jump start.FBX");
             AnimationClip vault = FindFirstClip(
                 DynamicParkourAnimationFolder + "/VaultFence.fbx",
                 DynamicParkourAnimationFolder + "/Step Up.fbx",
@@ -243,13 +251,13 @@ namespace SCF.EditorTools
             AddMotion(clips, "Humanoid Idle", idle, SCFMotionType.Idle, SCFMotionTags.Grounded | SCFMotionTags.Loop, true, 0f, Vector2.zero);
             AddMotion(clips, "Humanoid Walk", walk, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 2.6f, Vector2.up);
             AddMotion(clips, "Humanoid Run", run, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.8f, Vector2.up);
-            AddMotion(clips, "Humanoid Run Forward Left", run, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.8f, new Vector2(-1f, 1f));
-            AddMotion(clips, "Humanoid Run Forward Right", run, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.8f, new Vector2(1f, 1f));
-            AddMotion(clips, "Humanoid Run Left", walkLeft != null ? walkLeft : run, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.2f, Vector2.left, true);
-            AddMotion(clips, "Humanoid Run Right", walkRight != null ? walkRight : run, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.2f, Vector2.right, true);
+            AddMotion(clips, "Humanoid Run Forward Left", runForwardLeft, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.8f, new Vector2(-1f, 1f));
+            AddMotion(clips, "Humanoid Run Forward Right", runForwardRight, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.8f, new Vector2(1f, 1f));
+            AddMotion(clips, "Humanoid Run Left", runLeftUnarmed, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.2f, Vector2.left, true);
+            AddMotion(clips, "Humanoid Run Right", runRightUnarmed, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.2f, Vector2.right, true);
             AddMotion(clips, "Humanoid Run Backward", runBack, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.2f, Vector2.down);
-            AddMotion(clips, "Humanoid Run Backward Left", runBack, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.2f, new Vector2(-1f, -1f));
-            AddMotion(clips, "Humanoid Run Backward Right", runBack, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.2f, new Vector2(1f, -1f));
+            AddMotion(clips, "Humanoid Run Backward Left", runBackLeft, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.2f, new Vector2(-1f, -1f));
+            AddMotion(clips, "Humanoid Run Backward Right", runBackRight, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop, true, 5.2f, new Vector2(1f, -1f));
             AddMotion(clips, "Humanoid Aim Walk Forward", aimWalkForward, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop | SCFMotionTags.Aim | SCFMotionTags.AimWalk, true, 2.6f, Vector2.up, true);
             AddMotion(clips, "Humanoid Aim Walk Backward", aimWalkBackward, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop | SCFMotionTags.Aim | SCFMotionTags.AimWalk, true, 2.6f, Vector2.down, true);
             AddMotion(clips, "Humanoid Aim Walk Left", aimWalkLeft, SCFMotionType.Locomotion, SCFMotionTags.Grounded | SCFMotionTags.Locomotion | SCFMotionTags.Loop | SCFMotionTags.Aim | SCFMotionTags.AimWalk, true, 2.6f, Vector2.left, true);

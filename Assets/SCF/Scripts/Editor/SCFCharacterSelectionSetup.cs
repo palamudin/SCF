@@ -15,6 +15,10 @@ namespace SCF.EditorTools
         private const string ControllerFolder = "Assets/SCF/Animation";
         private const string ControllerPath = ControllerFolder + "/SCF_MxMBaseTraversal.controller";
         private const string ParkourPlayerAnimationFolder = "Assets/RedNotRed/3D Adaptive Parkour System/Animations/Player";
+        private const string ExperimentalSoldierPrefabPath = "Assets/SCF/Prefabs/Char/SCF_Player.prefab";
+        private const string TpsFreehandsIdlePath = "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Idle/Idle.fbx";
+        private const string TpsFreehandsWalkPath = "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Walk/walk.fbx";
+        private const string TpsFreehandsRunPath = "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Run/run.fbx";
         private const string TpsAsphaltFootstep1Path = "Assets/TPS Shooter (Military style)/Sounds/FootstepSounds/Acphalt/FootstepAcphalt_1.ogg";
         private const string TpsAsphaltFootstep2Path = "Assets/TPS Shooter (Military style)/Sounds/FootstepSounds/Acphalt/FootstepAcphalt_2.ogg";
 
@@ -296,22 +300,21 @@ namespace SCF.EditorTools
             };
 
             AssetDatabase.AddObjectToAsset(tree, controller);
-            AddBlendChild(tree, FindFirstClip(
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Idle/idle aiming.fbx",
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Idle/idle.fbx",
+            AddBlendChild(tree, FindClipInAsset(TpsFreehandsIdlePath, "idle_unarmed") ?? FindFirstClip(
+                TpsFreehandsIdlePath,
                 ParkourPlayerAnimationFolder + "/Idle.anim",
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Stand--Idle.anim.fbx",
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Idle/Idle.fbx"), 0f);
-            AddBlendChild(tree, FindFirstClip(
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Walk/walk.fbx",
-                ParkourPlayerAnimationFolder + "/Run.anim",
+                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Idle/idle.fbx"), 0f);
+            AddBlendChild(tree, FindClipInAsset(TpsFreehandsWalkPath, "walk_fwd_unarmed") ?? FindFirstClip(
+                TpsFreehandsWalkPath,
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Locomotion--Walk_N.anim.fbx",
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Walk/walk.fbx"), 2.6f);
-            AddBlendChild(tree, FindFirstClip(
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Run/run.fbx",
                 ParkourPlayerAnimationFolder + "/Run.anim",
+                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Walk/walk.fbx"), 2.6f);
+            AddBlendChild(tree, FindClipInAsset(TpsFreehandsRunPath, "run_fwd_unarmed") ?? FindFirstClip(
+                TpsFreehandsRunPath,
                 "Assets/StarterAssets/ThirdPersonController/Character/Animations/Locomotion--Run_N.anim.fbx",
-                "Assets/TPS Shooter (Military style)/Animations/Humanoid/FreehandsAnimations/Run/run.fbx"), 5.8f);
+                ParkourPlayerAnimationFolder + "/Run.anim",
+                "Assets/TPS Shooter (Military style)/Animations/Humanoid/EquipedAnimations/Run/run.fbx"), 5.8f);
             return tree;
         }
 
@@ -319,7 +322,7 @@ namespace SCF.EditorTools
         {
             List<SCFCharacterCandidate> candidates = new List<SCFCharacterCandidate>();
             AddCandidate(candidates, "TPS Soldier", "Assets/TPS Shooter (Military style)/Models/Soldiers/Player/Soldier.fbx");
-            AddCandidate(candidates, "soldierExp", "Assets/TPS Shooter (Military style)/Models/Soldiers/Player/Soldier.fbx");
+            AddCandidate(candidates, "soldierExp", ExperimentalSoldierPrefabPath);
             AddCandidate(candidates, "Parkour Frank", "Assets/RedNotRed/3D Adaptive Parkour System/Player/Frank.prefab", Vector3.zero, Vector3.zero, Vector3.one * 15f);
             return candidates.ToArray();
         }
@@ -395,6 +398,40 @@ namespace SCF.EditorTools
 
             Debug.LogWarning("SCF base traversal controller could not find a clip from: " + string.Join(", ", paths));
             return null;
+        }
+
+        private static AnimationClip FindClipInAsset(string assetPath, string clipName)
+        {
+            if (string.IsNullOrEmpty(assetPath) || string.IsNullOrEmpty(clipName))
+            {
+                return null;
+            }
+
+            Object[] assets = AssetDatabase.LoadAllAssetsAtPath(assetPath);
+            for (int i = 0; i < assets.Length; i++)
+            {
+                if (assets[i] is AnimationClip clip
+                    && !clip.name.StartsWith("__preview", System.StringComparison.OrdinalIgnoreCase)
+                    && ClipNameMatches(clip.name, clipName))
+                {
+                    return clip;
+                }
+            }
+
+            return null;
+        }
+
+        private static bool ClipNameMatches(string actualName, string requestedName)
+        {
+            if (string.Equals(actualName, requestedName, System.StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            int pipeIndex = actualName.LastIndexOf('|');
+            return pipeIndex >= 0
+                   && pipeIndex < actualName.Length - 1
+                   && string.Equals(actualName.Substring(pipeIndex + 1), requestedName, System.StringComparison.OrdinalIgnoreCase);
         }
 
         private static AnimationClip LoadClip(string path)

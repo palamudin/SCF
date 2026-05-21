@@ -26,6 +26,8 @@ namespace SCF.Gameplay
         [SerializeField, Range(0f, 1.5f)] private float heldAimTorsoWeight = 1f;
         [SerializeField, Range(0f, 180f)] private float heldAimMaxTorsoYaw = 65f;
         [SerializeField] private bool clampHeldAimToLowerBodyFollowLimit = true;
+        [SerializeField] private bool allowHeldAimTorsoDuringActionStates = true;
+        [SerializeField, Min(0.1f)] private float heldAimActionTorsoRotationSharpness = 42f;
 
         [Header("Bone Weights")]
         [SerializeField, Range(0f, 1f)] private float headWeight = 0.42f;
@@ -69,6 +71,7 @@ namespace SCF.Gameplay
             heldAimTorsoWeight = Mathf.Max(0f, heldAimTorsoWeight);
             heldAimMaxTorsoYaw = Mathf.Max(0f, heldAimMaxTorsoYaw);
             torsoRotationSharpness = Mathf.Max(0.1f, torsoRotationSharpness);
+            heldAimActionTorsoRotationSharpness = Mathf.Max(0.1f, heldAimActionTorsoRotationSharpness);
         }
 
         public void Configure(IsometricCharacterMotor characterMotor, Animator targetAnimator)
@@ -103,7 +106,7 @@ namespace SCF.Gameplay
             }
 
             targetTorsoYaw = ResolveTargetYaw();
-            float blend = 1f - Mathf.Exp(-torsoRotationSharpness * Time.deltaTime);
+            float blend = 1f - Mathf.Exp(-ResolveCurrentRotationSharpness() * Time.deltaTime);
             currentTorsoYaw = Mathf.LerpAngle(currentTorsoYaw, targetTorsoYaw, blend);
             ApplyTorsoYaw(currentTorsoYaw * ResolveCurrentAimWeight());
         }
@@ -164,8 +167,7 @@ namespace SCF.Gameplay
                 || !motor.SeparateAimFromLocomotion
                 || !motor.HasAimDirection
                 || (motor.IsWallRunning && !aimTorsoDuringWallRun)
-                || motor.IsObstacleTraversing
-                || motor.IsCombatRolling)
+                || ShouldSuppressTorsoAimForActionState())
             {
                 return 0f;
             }
@@ -196,6 +198,13 @@ namespace SCF.Gameplay
             return torsoAimWeight;
         }
 
+        private float ResolveCurrentRotationSharpness()
+        {
+            return ShouldUseHeldAimActionTorso()
+                ? Mathf.Max(torsoRotationSharpness, heldAimActionTorsoRotationSharpness)
+                : torsoRotationSharpness;
+        }
+
         private float ResolveCurrentYawLimit()
         {
             if (boostTorsoOnAimHeld && motor != null && motor.AimHeld)
@@ -207,6 +216,24 @@ namespace SCF.Gameplay
             }
 
             return Mathf.Max(0f, maxTorsoYaw);
+        }
+
+        private bool ShouldSuppressTorsoAimForActionState()
+        {
+            if (motor == null || (!motor.IsObstacleTraversing && !motor.IsCombatRolling))
+            {
+                return false;
+            }
+
+            return !ShouldUseHeldAimActionTorso();
+        }
+
+        private bool ShouldUseHeldAimActionTorso()
+        {
+            return allowHeldAimTorsoDuringActionStates
+                   && motor != null
+                   && motor.AimHeld
+                   && (motor.IsObstacleTraversing || motor.IsCombatRolling);
         }
 
         private void ApplyTorsoYaw(float yaw)

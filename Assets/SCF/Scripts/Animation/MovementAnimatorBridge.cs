@@ -24,6 +24,8 @@ namespace SCF.Gameplay
         [SerializeField] private string attackingParameter = "Attack";
         [SerializeField] private string combatRollParameter = "CombatRoll";
         [SerializeField] private string combatRollTriggerParameter = "CombatRollTrigger";
+        [SerializeField] private string slideParameter = "Slide";
+        [SerializeField] private string slideTriggerParameter = "SlideTrigger";
         [SerializeField] private string jumpChargingParameter = "JumpCharging";
         [SerializeField] private string jumpingParameter = "Jumping";
         [SerializeField] private string jumpTriggerParameter = "JumpTrigger";
@@ -56,6 +58,8 @@ namespace SCF.Gameplay
         private int attackingHash;
         private int combatRollHash;
         private int combatRollTriggerHash;
+        private int slideHash;
+        private int slideTriggerHash;
         private int jumpChargingHash;
         private int jumpingHash;
         private int jumpTriggerHash;
@@ -83,6 +87,8 @@ namespace SCF.Gameplay
         private bool hasAttacking;
         private bool hasCombatRoll;
         private bool hasCombatRollTrigger;
+        private bool hasSlide;
+        private bool hasSlideTrigger;
         private bool hasJumpCharging;
         private bool hasJumping;
         private bool hasJumpTrigger;
@@ -98,6 +104,7 @@ namespace SCF.Gameplay
         private bool hasJumpCharge;
         private bool hasMobilityState;
         private int observedCombatRollSequence;
+        private int observedSlideSequence;
         private int observedJumpSequence;
         private int observedLandSequence;
         private int observedWallRunSequence;
@@ -204,6 +211,11 @@ namespace SCF.Gameplay
                 animator.SetBool(combatRollHash, motor.IsCombatRolling);
             }
 
+            if (hasSlide)
+            {
+                animator.SetBool(slideHash, motor.IsSliding);
+            }
+
             if (hasJumpCharging)
             {
                 animator.SetBool(jumpChargingHash, motor.IsJumpCharging);
@@ -284,6 +296,8 @@ namespace SCF.Gameplay
             attackingHash = Animator.StringToHash(attackingParameter);
             combatRollHash = Animator.StringToHash(combatRollParameter);
             combatRollTriggerHash = Animator.StringToHash(combatRollTriggerParameter);
+            slideHash = Animator.StringToHash(slideParameter);
+            slideTriggerHash = Animator.StringToHash(slideTriggerParameter);
             jumpChargingHash = Animator.StringToHash(jumpChargingParameter);
             jumpingHash = Animator.StringToHash(jumpingParameter);
             jumpTriggerHash = Animator.StringToHash(jumpTriggerParameter);
@@ -312,6 +326,8 @@ namespace SCF.Gameplay
             hasAttacking = HasParameter(attackingHash, AnimatorControllerParameterType.Bool);
             hasCombatRoll = HasParameter(combatRollHash, AnimatorControllerParameterType.Bool);
             hasCombatRollTrigger = HasParameter(combatRollTriggerHash, AnimatorControllerParameterType.Trigger);
+            hasSlide = HasParameter(slideHash, AnimatorControllerParameterType.Bool);
+            hasSlideTrigger = HasParameter(slideTriggerHash, AnimatorControllerParameterType.Trigger);
             hasJumpCharging = HasParameter(jumpChargingHash, AnimatorControllerParameterType.Bool);
             hasJumping = HasParameter(jumpingHash, AnimatorControllerParameterType.Bool);
             hasJumpTrigger = HasParameter(jumpTriggerHash, AnimatorControllerParameterType.Trigger);
@@ -336,6 +352,15 @@ namespace SCF.Gameplay
                 if (hasCombatRollTrigger)
                 {
                     animator.SetTrigger(combatRollTriggerHash);
+                }
+            }
+
+            if (motor.SlideSequence != observedSlideSequence)
+            {
+                observedSlideSequence = motor.SlideSequence;
+                if (hasSlideTrigger)
+                {
+                    animator.SetTrigger(slideTriggerHash);
                 }
             }
 

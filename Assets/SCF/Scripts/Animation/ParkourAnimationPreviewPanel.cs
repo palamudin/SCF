@@ -13,6 +13,8 @@ namespace SCF.Gameplay
     [DisallowMultipleComponent]
     public sealed class ParkourAnimationPreviewPanel : MonoBehaviour
     {
+        private const float ResizeGripSize = 18f;
+
         private static readonly string[] DefaultClipFolders =
         {
             "Assets/SCF/Animation",
@@ -25,12 +27,12 @@ namespace SCF.Gameplay
 
         [SerializeField] private Animator previewAnimator;
         [SerializeField] private List<AnimationClip> clips = new List<AnimationClip>();
-        [SerializeField] private bool showPanel;
+        [SerializeField] private bool showPanel = true;
         [SerializeField] private KeyCode toggleKey = KeyCode.F7;
         [SerializeField] private bool loopPreview = true;
         [SerializeField] private float playbackSpeed = 1f;
         [SerializeField] private bool pauseScfMotionWhilePreview = true;
-        [SerializeField] private Rect windowRect = new Rect(286f, 78f, 380f, 620f);
+        [SerializeField] private Rect windowRect = new Rect(286f, 78f, 620f, 620f);
         [SerializeField] private Rect collapsedRect = new Rect(286f, 78f, 108f, 30f);
 
         private PlayableGraph graph;
@@ -42,6 +44,7 @@ namespace SCF.Gameplay
         private string searchText = string.Empty;
         private static int nextWindowId = 32000;
         private int windowId;
+        private bool resizingWindow;
 
         private void Reset()
         {
@@ -120,7 +123,6 @@ namespace SCF.Gameplay
 
         public void SetPreviewAnimator(Animator animator)
         {
-            showPanel = false;
             if (previewAnimator == animator)
             {
                 return;
@@ -133,7 +135,6 @@ namespace SCF.Gameplay
         public void Configure(Animator animator, IEnumerable<AnimationClip> animationClips)
         {
             previewAnimator = animator;
-            showPanel = false;
             clips.Clear();
 
             if (animationClips != null)
@@ -220,6 +221,8 @@ namespace SCF.Gameplay
 
             searchText = GUILayout.TextField(searchText ?? string.Empty, GUI.skin.FindStyle("ToolbarSeachTextField") ?? GUI.skin.textField);
 
+            int columns = windowRect.width >= 540f ? 2 : 1;
+            int column = 0;
             scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Height(Mathf.Max(180f, windowRect.height - 176f)));
             for (int i = 0; i < clips.Count; i++)
             {
@@ -229,23 +232,47 @@ namespace SCF.Gameplay
                     continue;
                 }
 
-                Color previousColor = GUI.backgroundColor;
-                if (clip == currentClip)
+                if (column == 0)
                 {
-                    GUI.backgroundColor = new Color(0.55f, 0.82f, 1f, 1f);
+                    GUILayout.BeginHorizontal();
                 }
 
-                if (GUILayout.Button(clip.name, GUILayout.Height(30f)))
-                {
-                    PlayClip(clip);
-                }
+                DrawClipButton(clip);
+                column++;
 
-                GUI.backgroundColor = previousColor;
+                if (column >= columns)
+                {
+                    GUILayout.EndHorizontal();
+                    column = 0;
+                }
+            }
+
+            if (column > 0)
+            {
+                GUILayout.FlexibleSpace();
+                GUILayout.EndHorizontal();
             }
 
             GUILayout.EndScrollView();
             GUILayout.Label(clips.Count + " clips loaded. Toggle with " + toggleKey + ".");
-            GUI.DragWindow(new Rect(0f, 0f, 10000f, 22f));
+            DrawResizeGrip();
+            GUI.DragWindow(new Rect(0f, 0f, Mathf.Max(0f, windowRect.width - ResizeGripSize), 22f));
+        }
+
+        private void DrawClipButton(AnimationClip clip)
+        {
+            Color previousColor = GUI.backgroundColor;
+            if (clip == currentClip)
+            {
+                GUI.backgroundColor = new Color(0.55f, 0.82f, 1f, 1f);
+            }
+
+            if (GUILayout.Button(clip.name, GUILayout.Height(30f)))
+            {
+                PlayClip(clip);
+            }
+
+            GUI.backgroundColor = previousColor;
         }
 
         private bool MatchesSearch(AnimationClip clip)
@@ -354,10 +381,53 @@ namespace SCF.Gameplay
         {
             float maxWidth = Mathf.Max(260f, Screen.width - 24f);
             float maxHeight = Mathf.Max(260f, Screen.height - 24f);
-            windowRect.width = Mathf.Clamp(windowRect.width, 260f, maxWidth);
+            windowRect.width = Mathf.Clamp(windowRect.width, 320f, maxWidth);
             windowRect.height = Mathf.Clamp(windowRect.height, 260f, maxHeight);
             windowRect.x = Mathf.Clamp(windowRect.x, 0f, Mathf.Max(0f, Screen.width - windowRect.width));
             windowRect.y = Mathf.Clamp(windowRect.y, 0f, Mathf.Max(0f, Screen.height - windowRect.height));
+        }
+
+        private void DrawResizeGrip()
+        {
+            Rect gripRect = new Rect(
+                Mathf.Max(0f, windowRect.width - ResizeGripSize),
+                Mathf.Max(0f, windowRect.height - ResizeGripSize),
+                ResizeGripSize,
+                ResizeGripSize);
+
+            GUI.Box(gripRect, string.Empty);
+
+            int controlId = GUIUtility.GetControlID(FocusType.Passive);
+            Event current = Event.current;
+            switch (current.GetTypeForControl(controlId))
+            {
+                case EventType.MouseDown:
+                    if (current.button == 0 && gripRect.Contains(current.mousePosition))
+                    {
+                        resizingWindow = true;
+                        GUIUtility.hotControl = controlId;
+                        current.Use();
+                    }
+                    break;
+
+                case EventType.MouseDrag:
+                    if (resizingWindow && GUIUtility.hotControl == controlId)
+                    {
+                        windowRect.width = Mathf.Clamp(current.mousePosition.x + ResizeGripSize * 0.5f, 320f, Mathf.Max(320f, Screen.width - 24f));
+                        windowRect.height = Mathf.Clamp(current.mousePosition.y + ResizeGripSize * 0.5f, 260f, Mathf.Max(260f, Screen.height - 24f));
+                        current.Use();
+                    }
+                    break;
+
+                case EventType.MouseUp:
+                    if (resizingWindow && GUIUtility.hotControl == controlId)
+                    {
+                        resizingWindow = false;
+                        GUIUtility.hotControl = 0;
+                        current.Use();
+                    }
+                    break;
+            }
         }
     }
 }

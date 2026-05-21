@@ -27,8 +27,7 @@ namespace SCF.Gameplay
         public string rightGrip;
         public string leftGrip;
         public string muzzle;
-        public string rightElbowHint;
-        public string leftElbowHint;
+        public string buttstock;
 
         public static SCFWeaponAnchorNames Default()
         {
@@ -37,8 +36,7 @@ namespace SCF.Gameplay
                 rightGrip = "SCF_RightPistolGrip",
                 leftGrip = "SCF_LeftUnderbarrelGrip",
                 muzzle = "SCF_RailgunMuzzleTarget",
-                rightElbowHint = "SCF_RightElbowHint",
-                leftElbowHint = "SCF_LeftElbowHint"
+                buttstock = "SCF_RailgunButtstock"
             };
         }
     }
@@ -75,8 +73,6 @@ namespace SCF.Gameplay
         [Range(0.5f, 1.05f)] public float maxReachMultiplier;
         [Range(0f, 0.5f)] public float reachSoftZone;
         [Range(0f, 1f)] public float unreachableRotationWeight;
-        [Range(0f, 1f)] public float rightElbowHintWeight;
-        [Range(0f, 1f)] public float leftElbowHintWeight;
 
         public static SCFWeaponAnatomyLimits Default()
         {
@@ -84,9 +80,7 @@ namespace SCF.Gameplay
             {
                 maxReachMultiplier = 0.94f,
                 reachSoftZone = 0.16f,
-                unreachableRotationWeight = 0.35f,
-                rightElbowHintWeight = 0.9f,
-                leftElbowHintWeight = 0.95f
+                unreachableRotationWeight = 0.35f
             };
         }
     }

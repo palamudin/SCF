@@ -949,6 +949,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 8187455079231382173, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
+    - {fileID: 5930158855145388821, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 3893294197879345259, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
       insertIndex: -1
@@ -1070,6 +1071,8 @@ MonoBehaviour:
   attackingParameter: Attack
   combatRollParameter: CombatRoll
   combatRollTriggerParameter: CombatRollTrigger
+  slideParameter: Slide
+  slideTriggerParameter: SlideTrigger
   jumpChargingParameter: JumpCharging
   jumpingParameter: Jumping
   jumpTriggerParameter: JumpTrigger
@@ -1121,9 +1124,25 @@ MonoBehaviour:
   airborneMoveMultiplier: 0.35
   parkourWallJumpKeepsAirMobility: 1
   parkourAirJumpStrength: 0.75
-  parkourAirRollSpeedBonus: 1.2
   combatRollDuration: 0.58
   combatRollSpeed: 8.4
+  slideDuration: 0.78
+  slideMinDuration: 0.22
+  slideSpeed: 8.8
+  slideExitSpeed: 4.4
+  slideMinStartSpeed: 3.6
+  slideMinMoveInput: 0.2
+  slideJumpStrength: 0.62
+  slideJumpPlanarBoost: 1.4
+  slideAirQueueWindow: 0.42
+  allowAirSlide: 1
+  airSlideInitialInputBias: 0.82
+  airSlideMomentumRetention: 0.94
+  airSlideStartBoost: 0.35
+  airSlideLandingMinRemainingTime: 0.42
+  slideMomentumSpeedCap: 13.5
+  slideGroundSteerSharpness: 7.5
+  slideAirSteerSharpness: 12
   parkourHopDuration: 0.13
   parkourHopSpeed: 6.2
   parkourHopForwardDot: 0.35
@@ -1171,8 +1190,6 @@ MonoBehaviour:
   wallRunVisualRotationSharpness: 12
   wallJumpUpwardSpeed: 7.8
   wallJumpAwaySpeed: 2.2
-  wallJumpRollMomentumBonus: 2.8
-  wallJumpRollInputWindow: 0.45
   enableParkourWallClimbUp: 1
   wallClimbUpApproachDot: 0.72
   wallClimbUpSpeed: 4.2
@@ -1209,6 +1226,12 @@ MonoBehaviour:
   lowerBodyMoveThreshold: 0.2
   lowerBodyFollowsAimPastYawLimit: 1
   aimLowerBodyFollowYawLimit: 65
+  lockedMobilityFollowsAimPastYawLimit: 1
+  lockedMobilityAimRotationSharpness: 52
+  actionRearAimTurnsBody: 1
+  actionRearAimYawThreshold: 115
+  actionRearAimTorsoReserveYaw: 28
+  actionRearAimRotationSharpness: 78
   aimSurfaceMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -1234,6 +1257,12 @@ MonoBehaviour:
   enableFallbackBindings: 1
   enableMouseAim: 1
   stickLookDeadZone: 0.18
+  jumpFallbackKey: 1
+  walkToggleFallbackKey: 55
+  slideFallbackKey: 53
+  managePlayModeCursor: 1
+  confineCursorToGameWindow: 1
+  hideCursorUnlessControlAltHeld: 1
   enableTimeFreezeHotkey: 1
   logTimeFreezeToggle: 1
 --- !u!114 &348264564
@@ -1279,7 +1308,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SCF.Gameplay.CursorLockGuard
   keepCursorVisible: 1
   keepCursorUnlocked: 1
-  hideCursorInPlayUnlessControlHeld: 1
+  confineCursorInPlay: 1
+  hideCursorInPlayUnlessControlAltHeld: 1
+  blockWindowsSystemShortcutsInPlay: 1
+  blockWindowsSystemShortcutsInEditor: 1
+  blockWindowsKeyInPlay: 1
+  allowAltEscape: 1
 --- !u!114 &348264566
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1300,7 +1334,7 @@ MonoBehaviour:
     localEulerAngles: {x: 0, y: 0, z: 0}
     localScale: {x: 1, y: 1, z: 1}
   - displayName: soldierExp
-    prefab: {fileID: 100070, guid: 177fbed452af99e48bbca8dfb88faddb, type: 3}
+    prefab: {fileID: 3904412374857613755, guid: 1ba3ae45864fa524b9fcf513ef9c2728, type: 3}
     localPosition: {x: 0, y: 0, z: 0}
     localEulerAngles: {x: 0, y: 0, z: 0}
     localScale: {x: 1, y: 1, z: 1}
@@ -1506,13 +1540,18 @@ MonoBehaviour:
   weaponVisualSlot: {fileID: 0}
   searchInterval: 0.05
   idleSpeedThreshold: 0.15
+  idleExitSpeedThreshold: 0.3
   currentClipBias: 0.08
   preferDirectionalLocomotionWhileAiming: 1
   useDedicatedAimLocomotion: 1
   useAimFrameForAimLocomotion: 1
+  useMotorFacingFrameForFreeLocomotion: 1
   locomotionBlendTime: 0.18
   actionBlendTime: 0.08
   applyFootIK: 1
+  preserveLoopPhaseOnLocomotionSwitch: 1
+  minLocomotionPlaybackSpeed: 0.85
+  maxLocomotionPlaybackSpeed: 1
   syncActionsToMotorTime: 1
   drawDebugTrajectory: 1
   enableWeaponUpperBodyLayer: 1
@@ -1530,6 +1569,7 @@ MonoBehaviour:
   weaponUpperBodyPlaybackSpeed: 1
   weaponUpperBodyBlendSharpness: 12
   freezeWeaponUpperBodyWhenIdle: 1
+  freezeUnaimedCarryUpperBodyWhileMoving: 1
   weaponUpperBodyIdlePoseTime: 0.08
   suppressWeaponLayerDuringTraversal: 1
   jumpClipStart: 0
@@ -1545,6 +1585,9 @@ MonoBehaviour:
   selectedMotionIndex: -1
   selectedMotionName: 
   lastSelectionCost: 0
+  lastLocalMotionDirection: {x: 0, y: 0}
+  lastMotionReferenceDirection: {x: 0, y: 0, z: 0}
+  lastPreservedLoopPhase: 0
   currentWeaponUpperBodyWeight: 0
 --- !u!95 &348264571 stripped
 Animator:
